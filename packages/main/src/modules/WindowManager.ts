@@ -1,7 +1,8 @@
-import { BrowserWindow } from 'electron';
+import { app, BrowserWindow, nativeImage } from 'electron';
 import type { AppInitConfig } from '../AppInitConfig.js';
 import type { AppModule } from '../AppModule.js';
 import { ModuleContext } from '../ModuleContext.js';
+import path from 'node:path';
 
 class WindowManager implements AppModule {
   readonly #preload: { path: string };
@@ -25,6 +26,12 @@ class WindowManager implements AppModule {
   }
 
   async createWindow(): Promise<BrowserWindow> {
+    const icon = app.isPackaged
+      ? path.join(process.resourcesPath, 'buildResources', 'icon.png')
+      : path.join(path.resolve(), 'buildResources', 'icon.png');
+
+    const appIcon = nativeImage.createFromPath(icon);
+
     const browserWindow = new BrowserWindow({
       show: false, // Use the 'ready-to-show' event to show the instantiated BrowserWindow.
       webPreferences: {
@@ -34,6 +41,12 @@ class WindowManager implements AppModule {
         webviewTag: false, // The webview tag is not recommended. Consider alternatives like an iframe or Electron's BrowserView. @see https://www.electronjs.org/docs/latest/api/webview-tag#warning
         preload: this.#preload.path,
       },
+      resizable: true,
+      width: 600,
+      height: 800,
+      minWidth: 600,
+      minHeight: 800,
+      icon: appIcon,
     });
 
     if (this.#renderer instanceof URL) {
