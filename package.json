@@ -1,14 +1,9 @@
 {
-  "name": "root",
-  "description": "Secure boilerplate for Electron app based on Vite",
-  "version": "3.1.0",
+  "name": "prompt-squirrel",
+  "description": "for managing prompts in a squirrel-like manner",
+  "version": "0.0.1",
   "private": true,
   "type": "module",
-  "author": {
-    "email": "kozackunisoft@gmail.com",
-    "name": "Alex Kozack",
-    "url": "https://kozack.me"
-  },
   "main": "packages/entry-point.mjs",
   "workspaces": [
     "packages/*"
@@ -24,9 +19,12 @@
     "typecheck": "npm run typecheck -ws --if-present",
     "create-renderer": "cd packages && npm create vite@latest renderer",
     "integrate-renderer": "npm start --workspace @app/integrate-renderer",
-    "init": "npm run create-renderer && npm run integrate-renderer && npm install"
+    "init": "npm run create-renderer && npm run integrate-renderer && npm install",
+    "check": "biome check packages",
+    "lint": "biome check packages --write"
   },
   "devDependencies": {
+    "@biomejs/biome": "1.9.4",
     "@npmcli/map-workspaces": "4.0.2",
     "@playwright/test": "1.52.0",
     "@types/node": "22.15.27",

@@ -1,5 +1,5 @@
-import {resolveModuleExportNames} from 'mlly';
-import {getChromeMajorVersion} from '@app/electron-versions';
+import { getChromeMajorVersion } from '@app/electron-versions';
+import { resolveModuleExportNames } from 'mlly';
 
 export default /**
  * @type {import('vite').UserConfig}
@@ -30,7 +30,6 @@ export default /**
   plugins: [mockExposed(), handleHotReload()],
 });
 
-
 /**
  * This plugin creates a browser (renderer) version of `preload` package.
  * Basically, it just read all nominals you exported from package and define it as globalThis properties
@@ -50,7 +49,7 @@ export default /**
  */
 function mockExposed() {
   const virtualModuleId = 'virtual:browser.js';
-  const resolvedVirtualModuleId = '\0' + virtualModuleId;
+  const resolvedVirtualModuleId = `\0${virtualModuleId}`;
 
   return {
     name: 'electron-main-exposer',
@@ -77,7 +76,6 @@ function mockExposed() {
   };
 }
 
-
 /**
  * Implement Electron webview reload when some file was changed
  * @return {import('vite').Plugin}
@@ -94,7 +92,9 @@ function handleHotReload() {
         return;
       }
 
-      const rendererWatchServerProvider = config.plugins.find(p => p.name === '@app/renderer-watch-server-provider');
+      const rendererWatchServerProvider = config.plugins.find(
+        (p) => p.name === '@app/renderer-watch-server-provider',
+      );
       if (!rendererWatchServerProvider) {
         throw new Error('Renderer watch server provider not found');
       }

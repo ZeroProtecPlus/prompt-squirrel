@@ -1,5 +1,5 @@
+import { contextBridge } from 'electron';
 import * as exports from './index.js';
-import {contextBridge} from 'electron';
 
 const isExport = (key: string): key is keyof typeof exports => Object.hasOwn(exports, key);
 
