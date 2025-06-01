@@ -21,8 +21,8 @@ process.env.MODE = mode;
  * @type {import('vite').ViteDevServer}
  */
 const rendererWatchServer = await createServer({
-  mode,
-  root: path.resolve('packages/renderer'),
+    mode,
+    root: path.resolve('packages/renderer'),
 });
 
 await rendererWatchServer.listen();
@@ -33,12 +33,12 @@ await rendererWatchServer.listen();
  */
 /** @type {import('vite').Plugin} */
 const rendererWatchServerProvider = {
-  name: '@app/renderer-watch-server-provider',
-  api: {
-    provideRendererWatchServer() {
-      return rendererWatchServer;
+    name: '@app/renderer-watch-server-provider',
+    api: {
+        provideRendererWatchServer() {
+            return rendererWatchServer;
+        },
     },
-  },
 };
 
 /**
@@ -50,9 +50,9 @@ const rendererWatchServerProvider = {
 const packagesToStart = ['packages/preload', 'packages/main'];
 
 for (const pkg of packagesToStart) {
-  await build({
-    mode,
-    root: path.resolve(pkg),
-    plugins: [rendererWatchServerProvider],
-  });
+    await build({
+        mode,
+        root: path.resolve(pkg),
+        plugins: [rendererWatchServerProvider],
+    });
 }

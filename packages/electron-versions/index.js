@@ -1,53 +1,53 @@
 import { execSync } from 'node:child_process';
 
 function getElectronEnv() {
-  return JSON.parse(
-    execSync(`npx electron -p "JSON.stringify(process.versions)"`, {
-      encoding: 'utf-8',
-      env: {
-        ...process.env,
-        ELECTRON_RUN_AS_NODE: 1,
-      },
-    }),
-  );
+    return JSON.parse(
+        execSync(`npx electron -p "JSON.stringify(process.versions)"`, {
+            encoding: 'utf-8',
+            env: {
+                ...process.env,
+                ELECTRON_RUN_AS_NODE: 1,
+            },
+        }),
+    );
 }
 
 function createElectronEnvLoader() {
-  let inMemoryCache = null;
+    let inMemoryCache = null;
 
-  return () => {
-    if (inMemoryCache) {
-      return inMemoryCache;
-    }
+    return () => {
+        if (inMemoryCache) {
+            return inMemoryCache;
+        }
 
-    inMemoryCache = getElectronEnv();
+        inMemoryCache = getElectronEnv();
 
-    return inMemoryCache;
-  };
+        return inMemoryCache;
+    };
 }
 
 const envLoader = createElectronEnvLoader();
 
 export function getElectronVersions() {
-  return envLoader();
+    return envLoader();
 }
 
 export function getChromeVersion() {
-  return getElectronVersions().chrome;
+    return getElectronVersions().chrome;
 }
 
 export function getChromeMajorVersion() {
-  return getMajorVersion(getChromeVersion());
+    return getMajorVersion(getChromeVersion());
 }
 
 export function getNodeVersion() {
-  return getElectronVersions().node;
+    return getElectronVersions().node;
 }
 
 export function getNodeMajorVersion() {
-  return getMajorVersion(getNodeVersion());
+    return getMajorVersion(getNodeVersion());
 }
 
 function getMajorVersion(version) {
-  return Number.parseInt(version.split('.')[0]);
+    return Number.parseInt(version.split('.')[0]);
 }
