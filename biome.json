@@ -32,6 +32,9 @@
 			"suspicious": {
 				"noThenProperty": "off",
 				"noConfusingVoidType": "off"
+			},
+			"a11y": {
+				"useSemanticElements": "off"
 			}
 		}
 	},
@@ -39,7 +42,7 @@
 		"formatter": {
 			"quoteStyle": "single",
 			"trailingCommas": "all",
-			"indentWidth": 2,
+			"indentWidth": 4,
 			"lineWidth": 100,
 			"semicolons": "always"
 		}

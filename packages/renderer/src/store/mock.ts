@@ -1,0 +1,113 @@
+import { NONE_CATEGORY } from '@/components/category/constants';
+
+export const MOCK_CATEGORIES: Category[] = [
+    { id: '1', name: '캐릭터' },
+    { id: '2', name: '의상' },
+    { id: '3', name: '헤어스타일' },
+    { id: '4', name: '장소' },
+    { id: '5', name: '자세' },
+    { id: '6', name: '표정' },
+    { id: '7', name: '구도' },
+    { id: '8', name: '스타일' },
+    { id: '9', name: '장면' },
+];
+
+export const MOCK_TAG: Tag[] = [
+    { id: '1', name: '평점:1', count: 10 },
+    { id: '2', name: '평점:2', count: 20 },
+    { id: '3', name: '평점:3', count: 30 },
+    { id: '4', name: '평점:4', count: 40 },
+    { id: '5', name: '평점:5', count: 50 },
+    { id: '6', name: '좀긴태그이름', count: 60 },
+];
+
+export const MOCK_PROMPTS: Prompt[] = [
+    {
+        id: '1',
+        name: '다양한 헤어스타일 캐릭터',
+        prompt: '1girl, long hair, short hair, bob cut, twin drills, ponytail, braids',
+        category: MOCK_CATEGORIES[0],
+        tags: [MOCK_TAG[0]],
+        createdAt: new Date(),
+    },
+    {
+        id: '2',
+        name: '교복 입은 여고생',
+        prompt: '1girl, school uniform, pleated skirt, white shirt, neck ribbon',
+        category: MOCK_CATEGORIES[1],
+        tags: [MOCK_TAG[1]],
+        createdAt: new Date(),
+    },
+    {
+        id: '3',
+        name: '환상적인 숲속 장소',
+        prompt: 'forest, glowing mushrooms, magical lights, misty atmosphere, ancient trees',
+        category: MOCK_CATEGORIES[2],
+        tags: [MOCK_TAG[2]],
+        createdAt: new Date(),
+    },
+    {
+        id: '4',
+        name: '앉아있는 편안한 자세',
+        prompt: '1girl, sitting, relaxed pose, comfortable, hands on lap',
+        category: MOCK_CATEGORIES[3],
+        tags: [MOCK_TAG[3]],
+        createdAt: new Date(),
+    },
+    {
+        id: '5',
+        name: '한심해하는 얼굴',
+        prompt: 'shaded face, sigh, puzzled, annoyed, facepalm, sideways glance, confused, raised eyebrow, uneven eyes, disdain',
+        category: MOCK_CATEGORIES[4],
+        tags: [MOCK_TAG[0], MOCK_TAG[1], MOCK_TAG[2], MOCK_TAG[3], MOCK_TAG[4], MOCK_TAG[5]],
+        createdAt: new Date(),
+    },
+    {
+        id: '6',
+        name: '클로즈업 얼굴 구도',
+        prompt: '1girl, close up, face focus, high detail eyes, gentle smile',
+        category: MOCK_CATEGORIES[5],
+        tags: [MOCK_TAG[0]],
+        createdAt: new Date(),
+    },
+    {
+        id: '7',
+        name: '카툰풍 그림 스타일',
+        prompt: 'cartoon style, thick outlines, bright colors, simplified shading, comic book feel',
+        category: MOCK_CATEGORIES[6],
+        tags: [MOCK_TAG[1]],
+        createdAt: new Date(),
+    },
+    {
+        id: '8',
+        name: '도시 야경 장면',
+        prompt: 'city night, neon lights, rainy street, lonely atmosphere, cyberpunk elements',
+        category: MOCK_CATEGORIES[7],
+        tags: [MOCK_TAG[2]],
+        createdAt: new Date(),
+    },
+    {
+        id: '9',
+        name: '기본 여성 캐릭터',
+        prompt: '1girl, solo, cute, big eyes, simple background',
+        category: MOCK_CATEGORIES[8],
+        tags: [MOCK_TAG[3]],
+        createdAt: new Date(),
+    },
+    {
+        id: '10',
+        name: '메이드 의상',
+        prompt: '1girl, maid outfit, frilled apron, head dress, long sleeves, lace trim',
+        category: MOCK_CATEGORIES[1],
+        tags: [MOCK_TAG[4]],
+        createdAt: new Date(),
+    },
+    {
+        id: '11',
+        name: '미분류 - 수정 필요',
+        prompt: 'girl, cat ears, tail, holding a fish, in a boat',
+        category: NONE_CATEGORY,
+        tags: [MOCK_TAG[2]],
+        createdAt: new Date(),
+    },
+];

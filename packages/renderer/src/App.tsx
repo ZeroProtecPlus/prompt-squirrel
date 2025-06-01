@@ -1,33 +1,33 @@
-import { useState } from 'react';
-import viteLogo from '/vite.svg';
-import reactLogo from './assets/react.svg';
-import './App.css';
+import PromptList from '@/components/prompt/prompt-list';
+import BaseLayout from '@/layout/base-layout';
+import { useCategoryStore, usePromptStore, useTagStore } from '@/store';
+import { useEffect } from 'react';
+import { TooltipProvider } from './components/ui/tooltip';
 
 function App() {
-  const [count, setCount] = useState(0);
+    const loadCategories = useCategoryStore((state) => state.loadCategories);
+    const loadTags = useTagStore((state) => state.loadTags);
+    const loadPrompts = usePromptStore((state) => state.loadPrompts);
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank" rel="noreferrer">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank" rel="noreferrer">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button type="button" onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">Click on the Vite and React logos to learn more</p>
-    </>
-  );
+    useEffect(() => {
+        async function load() {
+            await loadCategories();
+            await loadTags();
+            await loadPrompts();
+        }
+
+        load();
+    }, [loadCategories, loadTags, loadPrompts]);
+
+    return (
+        <>
+            <TooltipProvider>
+                <BaseLayout>
+                    <PromptList />
+                </BaseLayout>
+            </TooltipProvider>
+        </>
+    );
 }
 
 export default App;
