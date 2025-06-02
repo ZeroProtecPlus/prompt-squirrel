@@ -1,5 +1,5 @@
 type Prompt = {
-    id: string;
+    id: number;
     name: string;
     prompt: string;
     category: Category;
@@ -8,12 +8,12 @@ type Prompt = {
 }
 
 type Tag = {
-    id: string;
+    id: number;
     name: string;
     count: number;
 };
 
 type Category = {
-    id: string;
+    id: number;
     name: string;
 };

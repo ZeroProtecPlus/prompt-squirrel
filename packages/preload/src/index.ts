@@ -1,9 +1,15 @@
 import { ipcRenderer } from 'electron';
 import { sha256sum } from './nodeCrypto.js';
+import { createSender } from './send.js';
 import { versions } from './versions.js';
 
-function send(channel: string, message: string) {
-    return ipcRenderer.invoke(channel, message);
-}
+const categorySender = createSender<ICategoryController, CategoryChannel>();
 
-export { sha256sum, versions, send };
+const categoryApi = {
+    getAllCategories: () => categorySender.send('category:getAllCategories'),
+    addCategory: (name: string) => categorySender.send('category:addCategory', name),
+    removeCategoryByName: (name: string) =>
+        categorySender.send('category:removeCategoryByName', name),
+};
+
+export { sha256sum, versions, categoryApi };

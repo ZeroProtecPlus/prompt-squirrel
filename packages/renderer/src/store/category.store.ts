@@ -1,42 +1,50 @@
 import { STATIC_CATEGORIES } from '@/components/category/constants';
+import { categoryApi } from '@app/preload';
 import { create } from 'zustand';
-import { MOCK_CATEGORIES } from './mock';
 
 type CategoryState = {
-    categories: Category[];
+    categories: CategoryDto[];
 };
 
 type CategoryAction = {
-    addCategory: (category: string) => void;
-    removeCategory: (category: string) => void;
+    addCategory: (category: string) => Promise<void>;
+    removeCategory: (category: string) => Promise<void>;
     loadCategories: () => Promise<void>;
 };
 
 export const useCategoryStore = create<CategoryState & CategoryAction>((set) => ({
     categories: [],
 
-    addCategory: (category: string) => {
-        set((state) => {
-            if (state.categories.some((c) => c.name === category)) {
-                return state;
-            }
-            const newCategory = { id: String(state.categories.length + 1), name: category };
-            return { categories: [...state.categories, newCategory] };
-        });
+    addCategory: async (name: string) => {
+        const response = await categoryApi.addCategory(name);
+        if (!response.success) return Promise.reject(response.error);
+
+        console.log('Category added:', name);
+
+        const category = response.data;
+
+        set((state) => ({
+            categories: [...state.categories, category],
+        }));
     },
 
-    removeCategory: (category: string) => {
+    removeCategory: async (name: string) => {
+        const response = await categoryApi.removeCategoryByName(name);
+        if (!response.success) return Promise.reject(response.error);
+
         set((state) => ({
-            categories: state.categories.filter((c) => c.name !== category),
+            categories: state.categories.filter((c) => c.name !== name),
         }));
     },
 
     loadCategories: async () => {
         console.log('Loading categories...');
-        const categories: Category[] = [...STATIC_CATEGORIES, ...MOCK_CATEGORIES];
+        const response = await categoryApi.getAllCategories();
+        if (!response.success) return Promise.reject(response.error);
+
+        const categories: CategoryDto[] = [...STATIC_CATEGORIES, ...response.data];
 
         set({ categories });
         console.log('Categories loaded:', categories.length);
-        return Promise.resolve();
     },
 }));

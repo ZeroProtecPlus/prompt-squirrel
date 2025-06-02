@@ -3,10 +3,12 @@ import { createModuleRunner } from './ModuleRunner.js';
 import { terminateAppOnLastWindowClose } from './modules/ApplicationTerminatorOnLastWindowClose.js';
 import { autoUpdater } from './modules/AutoUpdater.js';
 import { allowInternalOrigins } from './modules/BlockNotAllowdOrigins.js';
+import { databaseModule } from './modules/DatabaseModule.js';
 import { allowExternalUrls } from './modules/ExternalUrls.js';
 import { hardwareAccelerationMode } from './modules/HardwareAccelerationModule.js';
 import { disallowMultipleAppInstance } from './modules/SingleInstanceApp.js';
 import { createWindowManagerModule } from './modules/WindowManager.js';
+import { ipcModule } from './modules/ipcModule.js';
 
 export async function initApp(initConfig: AppInitConfig) {
     const moduleRunner = createModuleRunner()
@@ -15,6 +17,8 @@ export async function initApp(initConfig: AppInitConfig) {
         .init(terminateAppOnLastWindowClose())
         .init(hardwareAccelerationMode({ enable: false }))
         .init(autoUpdater())
+        .init(databaseModule())
+        .init(ipcModule())
 
         // Install DevTools extension if needed
         // .init(chromeDevToolsExtension({extension: 'VUEJS3_DEVTOOLS'}))
