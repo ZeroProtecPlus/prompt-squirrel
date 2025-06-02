@@ -23,7 +23,7 @@ function registerIpc<T extends object>(channel: IPCChannels, controller: T) {
     for (const methodName of methods) {
         const ipcChannelName = `${channel}:${methodName}`;
         console.log(`  - Registering ${ipcChannelName}`);
-        ipcMain.handle(ipcChannelName, (...args: unknown[]) =>
+        ipcMain.handle(ipcChannelName, (_, ...args: unknown[]) =>
             // biome-ignore lint/suspicious/noExplicitAny: 유틸 함수로서 any를 사용합니다.
             (controller as any)[methodName](...args),
         );

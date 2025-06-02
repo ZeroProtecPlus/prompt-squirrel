@@ -3,7 +3,10 @@ import FilterableList from './filterable-list';
 
 export default function Sidebar() {
     const tags = useTagStore((state) => state.tags);
+
     const categories = useCategoryStore((state) => state.categories);
+    const addCategory = useCategoryStore((state) => state.addCategory);
+    const removeCategory = useCategoryStore((state) => state.removeCategory);
 
     const setSearchFilter = usePromptStore((state) => state.setSearchFilter);
     const search = usePromptStore((state) => state.search);
@@ -12,6 +15,14 @@ export default function Sidebar() {
         console.log('Selected category:', category);
         setSearchFilter('category', category);
         search();
+    }
+
+    async function createNewCategory(value: string) {
+        await addCategory(value);
+    }
+
+    async function deleteCategory(category: Category) {
+        await removeCategory(category.name);
     }
 
     return (
@@ -29,6 +40,8 @@ export default function Sidebar() {
                     placeholder="카테고리 검색..."
                     items={categories}
                     onItemClick={(item) => onCategoryClick(item)}
+                    onEmptyButtonClick={createNewCategory}
+                    onDeleteItem={deleteCategory}
                 />
             </div>
         </div>

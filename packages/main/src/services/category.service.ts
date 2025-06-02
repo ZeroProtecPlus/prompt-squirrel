@@ -1,8 +1,8 @@
 import { Effect } from 'effect';
 import { ServiceException } from '../common/exceptions/service.exception.js';
-import { SelectCategory } from '../database/table/category.js';
 import { toCategoryDto } from '../mapper/category.mapper.js';
 import { CategoryRepository } from '../repository/category.repository.js';
+import { SqliteError } from 'better-sqlite3';
 
 class CategoryService {
     private categoryRepository: CategoryRepository;
@@ -13,6 +13,7 @@ class CategoryService {
 
     getAllCategories(): Effect.Effect<CategoryDto[], ServiceException> {
         return this.categoryRepository.getAllCategories().pipe(
+            Effect.tap(() => Effect.log('Service: getAllCategories')),
             Effect.map((categories) => categories.map(toCategoryDto)),
             Effect.map((categories) => categories.toSorted((a, b) => a.name.localeCompare(b.name))),
             Effect.catchAll((error) => Effect.fail(ServiceException.from(error))),
@@ -21,15 +22,21 @@ class CategoryService {
 
     addCategory(name: string): Effect.Effect<CategoryDto, ServiceException> {
         return this.categoryRepository.addCategory({ name }).pipe(
+            Effect.tap(() => Effect.log('Service: addCategory', { name })),
             Effect.map(toCategoryDto),
-            Effect.catchAll((error) => Effect.fail(ServiceException.from(error))),
+            Effect.catchAll((error: SqliteError) => {
+                if (error instanceof SqliteError && error.code === 'SQLITE_CONSTRAINT') 
+                    return Effect.fail(new ServiceException('Category already exists', error));
+                return Effect.fail(ServiceException.from(error))
+            }),
         );
     }
 
     removeCategoryByName(name: string): Effect.Effect<void, ServiceException> {
-        return this.categoryRepository
-            .removeCategoryByName(name)
-            .pipe(Effect.catchAll((error) => Effect.fail(ServiceException.from(error))));
+        return this.categoryRepository.removeCategoryByName(name).pipe(
+            Effect.tap(() => Effect.log('Service: removeCategoryByName', { name })),
+            Effect.catchAll((error) => Effect.fail(ServiceException.from(error)))
+        );
     }
 }
 
