@@ -11,7 +11,7 @@ import { Badge } from '../ui/badge';
 import { ScrollArea } from '../ui/scroll-area';
 
 type FilterableListItem = {
-    id: string;
+    id: number;
     name: string;
     count?: number;
 };
