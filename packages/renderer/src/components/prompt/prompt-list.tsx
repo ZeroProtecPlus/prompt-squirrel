@@ -4,6 +4,7 @@ import TagFilterBox from '../tag/tag-filter-box';
 import { Input } from '../ui/input';
 import PromptListItemEmpty from './prompt-list-empty';
 import PromptListItem from './prompt-list-item';
+import { ScrollArea } from '../ui/scroll-area';
 
 export default function PromptList() {
     const prompts = usePromptStore((state) => state.prompts);
@@ -34,13 +35,15 @@ export default function PromptList() {
                     <TagFilterBox />
                 </div>
             </div>
-            <div className="flex-1 overflow-y-auto flex flex-col gap-1">
-                {prompts.length === 0 ? (
-                    <PromptListItemEmpty />
-                ) : (
-                    prompts.map((prompt) => <PromptListItem key={prompt.id} prompt={prompt} />)
-                )}
-            </div>
+            <ScrollArea className="overflow-y-auto">
+                <div className="flex flex-col gap-1">
+                    {prompts.length === 0 ? (
+                        <PromptListItemEmpty />
+                    ) : (
+                        prompts.map((prompt) => <PromptListItem key={prompt.id} prompt={prompt} />)
+                    )}
+                </div>
+            </ScrollArea>
         </div>
     );
 }
