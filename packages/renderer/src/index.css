@@ -1,6 +1,15 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+@font-face {
+  font-family: "Pretendard";
+  src: url('./assets/fonts/PretendardJP-Regular.woff2') format('woff2');
+}
+
+@theme {
+  --font-primary: "Pretendard", sans-serif;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -112,7 +121,7 @@
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border outline-ring/50 font-primary;
   }
   body {
     @apply bg-background text-foreground;
