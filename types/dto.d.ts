@@ -12,7 +12,22 @@ type IPCError = {
 
 type IPCResponse<T> = IPCSuccess<T> | IPCError;
 
+type PromptDto = {
+    id: number;
+    name: string;
+    prompt: string;
+    categoryId: number;
+    tagIds: number[];
+    createdAt: Date;
+}
+
 type CategoryDto = {
+    id: number;
+    name: string;
+    createdAt: Date;
+}
+
+type TagDto = {
     id: number;
     name: string;
     createdAt: Date;

@@ -10,7 +10,6 @@ type Prompt = {
 type Tag = {
     id: number;
     name: string;
-    count: number;
 };
 
 type Category = {

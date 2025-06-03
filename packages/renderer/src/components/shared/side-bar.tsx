@@ -3,6 +3,8 @@ import FilterableList from './filterable-list';
 
 export default function Sidebar() {
     const tags = useTagStore((state) => state.tags);
+    const addTag = useTagStore((state) => state.addTag);
+    const removeTag = useTagStore((state) => state.removeTag);
 
     const categories = useCategoryStore((state) => state.categories);
     const addCategory = useCategoryStore((state) => state.addCategory);
@@ -11,6 +13,22 @@ export default function Sidebar() {
     const setSearchFilter = usePromptStore((state) => state.setSearchFilter);
     const search = usePromptStore((state) => state.search);
 
+    // Tag
+    function onTagClick(tag: Tag) {
+        console.log('Selected tag:', tag);
+        setSearchFilter('tags', tag.name);
+        search();
+    }
+
+    async function createNewTag(value: string) {
+        await addTag(value);
+    }
+
+    async function deleteTag(tag: Tag) {
+        await removeTag(tag.name);
+    }
+
+    // Category
     function onCategoryClick(category: Category) {
         console.log('Selected category:', category);
         setSearchFilter('category', category);
@@ -31,7 +49,9 @@ export default function Sidebar() {
                 <FilterableList
                     placeholder="태그 검색..."
                     items={tags}
-                    onItemClick={(item) => console.log('Selected item:', item)}
+                    onItemClick={(item) => onTagClick(item)}
+                    onEmptyButtonClick={createNewTag}
+                    onDeleteItem={deleteTag}
                 />
             </div>
 

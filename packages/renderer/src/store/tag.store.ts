@@ -1,43 +1,51 @@
 import { create } from 'zustand';
 import { MOCK_TAG } from './mock';
+import { tagApi } from '@app/preload';
 
 type TagState = {
     tags: Tag[];
 };
 
 type TagAction = {
-    addTag: (tag: string) => void;
-    removeTag: (tag: string) => void;
+    addTag: (tag: string) => Promise<void>;
+    removeTag: (tag: string) => Promise<void>;
     loadTags: () => Promise<void>;
 };
 
 export const useTagStore = create<TagState & TagAction>((set) => ({
     tags: [],
 
-    addTag: (tag: string) => {
-        set((state) => {
-            if (state.tags.some((t) => t.name === tag)) {
-                return state;
-            }
-            const newTag: Tag = {
-                id: state.tags.length + 1,
-                name: tag,
-                count: 0,
-            };
-            return { tags: [...state.tags, newTag] };
-        });
+    addTag: async (tag: string) => {
+        const response = await tagApi.addTag(tag);
+        if (!response.success) return Promise.reject(response.error);
+    
+        console.log('Tag added:', tag);
+
+        const newTag: TagDto = response.data;
+
+        set((state) => ({
+            tags: [...state.tags, newTag],
+        }));
     },
 
-    removeTag: (tag: string) => {
+    removeTag: async (tag: string) => {
+        const response = await tagApi.removeTagByName(tag);
+        if (!response.success) return Promise.reject(response.error);
+
         set((state) => ({
             tags: state.tags.filter((t) => t.name !== tag),
         }));
+        console.log('Tag removed:', tag);
     },
 
     loadTags: async () => {
         console.log('Loading tags...');
-        set({ tags: MOCK_TAG });
+        const response = await tagApi.getAllTags();
+        if (!response.success) return Promise.reject(response.error);
+
+        const tags: Tag[] = [...response.data];
+
+        set({ tags });
         console.log('Tags loaded:', MOCK_TAG.length);
-        return Promise.resolve();
     },
 }));

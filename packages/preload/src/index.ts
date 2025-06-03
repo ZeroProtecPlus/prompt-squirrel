@@ -11,4 +11,12 @@ const categoryApi = {
         categorySender.send('category:removeCategoryByName', name),
 };
 
-export { sha256sum, versions, categoryApi };
+const tagSender = createSender<ITagController, TagChannel>();
+const tagApi = {
+    getAllTags: () => tagSender.send('tag:getAllTags'),
+    addTag: (name: string) => tagSender.send('tag:addTag', name),
+    removeTagByName: (name: string) =>
+        tagSender.send('tag:removeTagByName', name),
+};
+
+export { sha256sum, versions, categoryApi, tagApi };

@@ -55,6 +55,12 @@ export default function FilterableList({
                         placeholder={placeholder || '검색...'}
                         value={value}
                         onValueChange={onValueChange}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter' && value.trim() && onEmptyButtonClick) {
+                                e.preventDefault();
+                                onEmptyButtonClick(value.trim());
+                            }
+                        }}
                     />
                     <CommandList className="h-full">
                         <CommandEmpty asChild>
