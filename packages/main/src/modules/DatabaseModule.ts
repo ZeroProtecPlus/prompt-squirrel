@@ -12,14 +12,48 @@ class DatabaseModule implements AppModule {
     }
 
     async table(): Promise<void> {
+        // Category
         await db.schema
             .createTable('category')
             .ifNotExists()
             .addColumn('id', 'integer', (col) => col.primaryKey().autoIncrement())
-            .addColumn('name', 'varchar(255)', (col) => col.unique().notNull())
-            .addColumn('created_at', 'datetime', (col) =>
-                col.defaultTo(sql`CURRENT_TIMESTAMP`).notNull(),
+            .addColumn('name', 'varchar(255)', (col) => col.notNull().unique())
+            .addColumn('created_at', 'datetime', (col) => col.defaultTo(sql`CURRENT_TIMESTAMP`).notNull())
+            .execute();
+
+        // Tag
+        await db.schema
+            .createTable('tag')
+            .ifNotExists()
+            .addColumn('id', 'integer', (col) => col.primaryKey().autoIncrement())
+            .addColumn('name', 'varchar(255)', (col) => col.notNull().unique())
+            .addColumn('created_at', 'datetime', (col) => col.defaultTo(sql`CURRENT_TIMESTAMP`).notNull())
+            .execute();
+
+        // Prompt
+        await db.schema
+            .createTable('prompt')
+            .ifNotExists()
+            .addColumn('id', 'integer', (col) => col.primaryKey().autoIncrement())
+            .addColumn('name', 'varchar(255)', (col) => col.notNull())
+            .addColumn('prompt', 'text', (col) => col.notNull())
+            .addColumn('category_id', 'integer', (col) =>
+            col.notNull().references('category.id').onDelete('cascade')
             )
+            .addColumn('created_at', 'datetime', (col) => col.defaultTo(sql`CURRENT_TIMESTAMP`).notNull())
+            .execute();
+
+        // PromptTag
+        await db.schema
+            .createTable('prompt_tag')
+            .ifNotExists()
+            .addColumn('prompt_id', 'integer', (col) =>
+            col.notNull().references('prompt.id').onDelete('cascade')
+            )
+            .addColumn('tag_id', 'integer', (col) =>
+            col.notNull().references('tag.id').onDelete('cascade')
+            )
+            .addPrimaryKeyConstraint('pk_prompt_tag', ['prompt_id', 'tag_id'])
             .execute();
     }
 
