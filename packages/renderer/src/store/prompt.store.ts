@@ -22,7 +22,7 @@ type PromptSearchAction = {
 
 type PromptAction = {
     addPrompt: (prompt: Prompt) => void;
-    removePrompt: (promptId: string) => Promise<void>;
+    removePrompt: (promptId: number) => Promise<void>;
     loadPrompts: () => Promise<void>;
 };
 
@@ -141,7 +141,7 @@ export const usePromptStore = create<
             });
         },
 
-        removePrompt: async (promptId: string) => {
+        removePrompt: async (promptId: number) => {
             set((state) => {
                 const updatedPrompts = state.prompts.filter((p) => p.id !== promptId);
                 minisearch.discard(promptId);

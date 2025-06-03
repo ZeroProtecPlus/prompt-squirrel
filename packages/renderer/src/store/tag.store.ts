@@ -20,7 +20,7 @@ export const useTagStore = create<TagState & TagAction>((set) => ({
                 return state;
             }
             const newTag: Tag = {
-                id: String(state.tags.length + 1),
+                id: state.tags.length + 1,
                 name: tag,
                 count: 0,
             };

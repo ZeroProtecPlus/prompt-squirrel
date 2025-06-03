@@ -1,4 +1,3 @@
-import { ipcRenderer } from 'electron';
 import { sha256sum } from './nodeCrypto.js';
 import { createSender } from './send.js';
 import { versions } from './versions.js';

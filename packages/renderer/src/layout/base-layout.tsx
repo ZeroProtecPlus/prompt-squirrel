@@ -14,9 +14,7 @@ export default function BaseLayout({ children }: BaseLayoutProps) {
             </div>
             <div className="flex flex-1 overflow-hidden">
                 <Sidebar />
-                <MainContent>
-                {children}
-                </MainContent>
+                <MainContent>{children}</MainContent>
             </div>
         </div>
     );

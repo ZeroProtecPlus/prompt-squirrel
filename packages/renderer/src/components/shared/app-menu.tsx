@@ -1,8 +1,15 @@
-import { Menubar, MenubarContent, MenubarItem, MenubarMenu, MenubarSeparator, MenubarTrigger } from '@/components/ui/menubar';
+import {
+    Menubar,
+    MenubarContent,
+    MenubarItem,
+    MenubarMenu,
+    MenubarSeparator,
+    MenubarTrigger,
+} from '@/components/ui/menubar';
 
 export default function AppMenu() {
     return (
-        <Menubar className='rounded-none'>
+        <Menubar className="rounded-none">
             <MenubarMenu>
                 <MenubarTrigger>파일</MenubarTrigger>
                 <MenubarContent>

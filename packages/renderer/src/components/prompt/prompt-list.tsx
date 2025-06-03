@@ -2,9 +2,9 @@ import { usePromptStore } from '@/store';
 import { CategoryFilterComboBox } from '../category/category-filter';
 import TagFilterBox from '../tag/tag-filter-box';
 import { Input } from '../ui/input';
+import { ScrollArea } from '../ui/scroll-area';
 import PromptListItemEmpty from './prompt-list-empty';
 import PromptListItem from './prompt-list-item';
-import { ScrollArea } from '../ui/scroll-area';
 
 export default function PromptList() {
     const prompts = usePromptStore((state) => state.prompts);

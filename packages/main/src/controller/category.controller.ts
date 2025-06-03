@@ -1,7 +1,7 @@
-import { Console, Effect, Layer, Logger, LogLevel, pipe } from 'effect';
+import { Console, Effect, Layer, LogLevel, Logger, pipe } from 'effect';
 import { Err, Ok } from '../common/ipc.response.js';
-import { categoryService } from '../services/category.service.js';
 import { runWithLogger } from '../common/utils.js';
+import { categoryService } from '../services/category.service.js';
 
 class CategoryController implements ICategoryController {
     private readonly PREFIX = '[Category]';
@@ -13,7 +13,7 @@ class CategoryController implements ICategoryController {
                 Effect.map((categories) => Ok(categories)),
                 Effect.catchAll((error) => Effect.succeed(Err(error))),
             ),
-            this.PREFIX
+            this.PREFIX,
         );
     }
 
@@ -23,8 +23,8 @@ class CategoryController implements ICategoryController {
                 Effect.tap(() => Effect.log('addCategory', { name })),
                 Effect.map((category) => Ok(category)),
                 Effect.catchAll((error) => Effect.succeed(Err(error))),
-            ), 
-            this.PREFIX
+            ),
+            this.PREFIX,
         );
     }
 
@@ -34,7 +34,7 @@ class CategoryController implements ICategoryController {
                 Effect.map(() => Ok()),
                 Effect.catchAll((error) => Effect.succeed(Err(error))),
             ),
-            this.PREFIX
+            this.PREFIX,
         );
     }
 }

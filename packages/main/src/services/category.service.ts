@@ -1,8 +1,8 @@
+import { SqliteError } from 'better-sqlite3';
 import { Effect } from 'effect';
 import { ServiceException } from '../common/exceptions/service.exception.js';
 import { toCategoryDto } from '../mapper/category.mapper.js';
 import { CategoryRepository } from '../repository/category.repository.js';
-import { SqliteError } from 'better-sqlite3';
 
 class CategoryService {
     private categoryRepository: CategoryRepository;
@@ -25,9 +25,9 @@ class CategoryService {
             Effect.tap(() => Effect.log('Service: addCategory', { name })),
             Effect.map(toCategoryDto),
             Effect.catchAll((error: SqliteError) => {
-                if (error instanceof SqliteError && error.code === 'SQLITE_CONSTRAINT') 
+                if (error instanceof SqliteError && error.code === 'SQLITE_CONSTRAINT')
                     return Effect.fail(new ServiceException('Category already exists', error));
-                return Effect.fail(ServiceException.from(error))
+                return Effect.fail(ServiceException.from(error));
             }),
         );
     }
@@ -35,7 +35,7 @@ class CategoryService {
     removeCategoryByName(name: string): Effect.Effect<void, ServiceException> {
         return this.categoryRepository.removeCategoryByName(name).pipe(
             Effect.tap(() => Effect.log('Service: removeCategoryByName', { name })),
-            Effect.catchAll((error) => Effect.fail(ServiceException.from(error)))
+            Effect.catchAll((error) => Effect.fail(ServiceException.from(error))),
         );
     }
 }

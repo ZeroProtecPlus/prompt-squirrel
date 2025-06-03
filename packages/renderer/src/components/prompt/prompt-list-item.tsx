@@ -1,10 +1,10 @@
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { josa } from 'es-hangul';
+import { Check, Copy } from 'lucide-react';
+import { useState } from 'react';
+import { toast } from 'sonner';
 import CategoryBadge from '../category/category-badge';
 import TagBadgeList from '../tag/tag-badge-list';
-import { Check, Copy } from 'lucide-react';
-import { toast } from 'sonner';
-import { josa } from 'es-hangul';
-import { useState } from 'react';
 import { Separator } from '../ui/separator';
 
 interface PromptListItemProps {
@@ -22,8 +22,7 @@ export default function PromptListItem({ prompt }: PromptListItemProps) {
         setIsCopied(true);
         setTimeout(() => {
             setIsCopied(false);
-        }
-        , 2000);
+        }, 2000);
     }
 
     return (
@@ -37,12 +36,16 @@ export default function PromptListItem({ prompt }: PromptListItemProps) {
                 </p>
                 <Copy
                     className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-300 text-accent-foreground ${
-                    isCopied ? "opacity-0 scale-75 rotate-90" : "opacity-0 group-hover:opacity-100 scale-100 rotate-0"
+                        isCopied
+                            ? 'opacity-0 scale-75 rotate-90'
+                            : 'opacity-0 group-hover:opacity-100 scale-100 rotate-0'
                     }`}
                 />
                 <Check
                     className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-300 text-green-500 ${
-                    isCopied ? "opacity-0 group-hover:opacity-100 scale-100 rotate-0" : "opacity-0 scale-75 -rotate-90"
+                        isCopied
+                            ? 'opacity-0 group-hover:opacity-100 scale-100 rotate-0'
+                            : 'opacity-0 scale-75 -rotate-90'
                     }`}
                 />
             </CardContent>
