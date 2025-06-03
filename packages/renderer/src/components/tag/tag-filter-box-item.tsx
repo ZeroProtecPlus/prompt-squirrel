@@ -9,7 +9,7 @@ export default function TagFilterBoxItem({ tag, onBadgeClick }: TagFilterBoxItem
     return (
         <Badge
             variant={'outline'}
-            className="h-5 bg-background text-foreground text-xs cursor-pointer select-none"
+            className="h-5 bg-background text-foreground text-xs cursor-pointer select-none hover:bg-accent"
             onClick={() => onBadgeClick?.(tag)}
         >
             {tag}

@@ -12,7 +12,7 @@ export default function TagFilterBox() {
     }
 
     return (
-        <div className="flex flex-wrap h-full overflow-y-scroll bg-accent p-1 gap-1">
+        <div className="flex flex-wrap h-full overflow-y-auto bg-accent p-1 gap-1 rounded-md">
             {searchFilter.tags.map((tag) => (
                 <TagFilterBoxItem key={tag} tag={tag} onBadgeClick={onBadgeClick} />
             ))}
