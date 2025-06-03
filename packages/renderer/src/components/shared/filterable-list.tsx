@@ -71,7 +71,7 @@ export default function FilterableList({ placeholder, items, onItemClick, onEmpt
                                                 className={`
                                                 group
                                                 transition-all duration-300 flex items-center justify-center cursor-pointer
-                                                ${editMode ? 'opacity-100 size-4 mr-2' : 'opacity-0 size-0'}
+                                                ${editMode ? 'opacity-100 size-4 mr-1.5' : 'opacity-0 size-0'}
                                                 `}
                                                 variant={'ghost'}
                                                 size={'icon'}
