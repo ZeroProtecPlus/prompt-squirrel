@@ -1,5 +1,6 @@
 import { usePromptStore } from '@/store';
 import TagFilterBoxItem from './tag-filter-box-item';
+import { ScrollArea } from '../ui/scroll-area';
 
 export default function TagFilterBox() {
     const searchFilter = usePromptStore((state) => state.searchFilter);
@@ -12,10 +13,12 @@ export default function TagFilterBox() {
     }
 
     return (
-        <div className="flex flex-wrap h-full overflow-y-auto bg-accent p-1 gap-1 rounded-md">
-            {searchFilter.tags.map((tag) => (
-                <TagFilterBoxItem key={tag} tag={tag} onBadgeClick={onBadgeClick} />
-            ))}
-        </div>
+        <ScrollArea className='h-full'>
+            <div className="flex flex-wrap bg-accent p-1 gap-1 rounded-md">
+                {searchFilter.tags.map((tag) => (
+                    <TagFilterBoxItem key={tag} tag={tag} onBadgeClick={onBadgeClick} />
+                ))}
+            </div>
+        </ScrollArea>
     );
 }
