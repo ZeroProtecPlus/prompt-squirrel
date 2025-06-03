@@ -49,6 +49,8 @@ class WindowManager implements AppModule {
             icon: appIcon,
         });
 
+        browserWindow.setMenu(null);
+
         if (this.#renderer instanceof URL) {
             await browserWindow.loadURL(this.#renderer.href);
         } else {

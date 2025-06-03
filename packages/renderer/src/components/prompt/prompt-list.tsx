@@ -18,7 +18,7 @@ export default function PromptList() {
     }
 
     return (
-        <div className="flex flex-col h-full w-full p-4 space-y-2">
+        <div className="flex flex-col h-full w-full p-2 space-y-2">
             <div className="flex items-center bg-muted/30">
                 <Input
                     type="text"
