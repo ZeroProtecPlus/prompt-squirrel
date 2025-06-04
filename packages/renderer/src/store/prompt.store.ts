@@ -1,8 +1,11 @@
-import { ALL_CATEGORY_ID, NONE_CATEGORY_ID } from '@/components/category/constants';
+import { ALL_CATEGORY_ID, NONE_CATEGORY, NONE_CATEGORY_ID } from '@/components/category/constants';
 import { searchResultToPrompt } from '@/lib/search-utils';
 import MiniSearch, { type SearchResult } from 'minisearch';
 import { create } from 'zustand';
-import { MOCK_PROMPTS } from './mock';
+import { promptApi } from '@app/preload';
+import { useCategoryStore } from './category.store';
+import { useTagStore } from './tag.store';
+import { toPrompt } from '@/lib/mapper';
 
 type PromptState = {
     prompts: Prompt[];
@@ -21,7 +24,7 @@ type PromptSearchAction = {
 };
 
 type PromptAction = {
-    addPrompt: (prompt: Prompt) => void;
+    addPrompt: (prompt: CreatePromptDto) => Promise<void>;
     removePrompt: (promptId: number) => Promise<void>;
     loadPrompts: () => Promise<void>;
 };
@@ -133,10 +136,29 @@ export const usePromptStore = create<
             });
         },
 
-        addPrompt: (prompt: Prompt) => {
+        addPrompt: async (prompt: CreatePromptDto) => {
+            const response = await promptApi.addPrompt(prompt);
+            if (!response.success) return Promise.reject(response.error);
+
+            const promptDto = response.data;
+
+            const category = prompt.categoryId === null
+                ? NONE_CATEGORY
+                : useCategoryStore.getState().categories.find((c) => c.id === prompt.categoryId) ?? NONE_CATEGORY;
+
+            const matchedTags = prompt.tags
+                .map((tag) => useTagStore.getState().tags.find((t) => t.id === tag.id))
+                .filter((tag) => tag !== undefined);
+
+            const newPrompt: Prompt = {
+                ...promptDto,
+                category,
+                tags: matchedTags,
+            };
+
             set((state) => {
-                const updatedPrompts = [...state.prompts, prompt];
-                minisearch.add(prompt);
+                const updatedPrompts = [...state.prompts, newPrompt];
+                minisearch.add(newPrompt);
                 return { prompts: updatedPrompts };
             });
         },
@@ -153,11 +175,15 @@ export const usePromptStore = create<
 
         loadPrompts: async () => {
             console.log('Loading prompts...');
+            const response = await promptApi.getAllPrompts();
+            if (!response.success) return Promise.reject(response.error);
 
-            set({ prompts: MOCK_PROMPTS });
-            minisearch.addAll(MOCK_PROMPTS);
-            console.log('Prompts loaded:', MOCK_PROMPTS.length);
-            return Promise.resolve();
+            const promptDtos = response.data;
+
+            const prompts: Prompt[] = promptDtos.map(toPrompt);
+
+            minisearch.addAll(prompts);
+            set({ prompts });
         },
     };
 });

@@ -2,11 +2,13 @@ import { ipcMain } from 'electron';
 import { AppModule } from '../AppModule.js';
 import { categoryController } from '../controller/category.controller.js';
 import { tagController } from '../controller/tag.controller.js';
+import { promptController } from '../controller/prompt.controller.js';
 
 class IPCModule implements AppModule {
     enable(): Promise<void> | void {
         registerIpc('category', categoryController);
         registerIpc('tag', tagController);
+        registerIpc('prompt', promptController);
     }
 }
 

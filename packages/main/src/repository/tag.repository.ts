@@ -12,6 +12,16 @@ export class TagRepository {
         );
     }
 
+    getTagsByPromptId(promptId: number): Effect.Effect<SelectTag[], SqliteError> {
+        return Effect.promise(() =>
+            db.selectFrom('tag')
+                .innerJoin('prompt_tag', 'tag.id', 'prompt_tag.tag_id')
+                .where('prompt_tag.prompt_id', '=', promptId)
+                .selectAll()
+                .execute(),
+        ).pipe(Effect.tap((tags) => Effect.log(`Repository getTagsByPromptId Length : ${tags.length}`)));
+    }
+
     addTag(insert: { name: string }): Effect.Effect<SelectTag, SqliteError> {
         return Effect.promise(() =>
             db.insertInto('tag').values(insert).returningAll().executeTakeFirstOrThrow(),

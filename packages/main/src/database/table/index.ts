@@ -27,6 +27,6 @@ export type {
 export type DB = {
     prompt: PromptTable;
     tag: TagTable;
-    promt_tag: PromptTagTable;
+    prompt_tag: PromptTagTable;
     category: CategoryTable;
 };

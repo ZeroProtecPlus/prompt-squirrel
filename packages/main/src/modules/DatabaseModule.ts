@@ -38,7 +38,7 @@ class DatabaseModule implements AppModule {
             .addColumn('name', 'varchar(255)', (col) => col.notNull())
             .addColumn('prompt', 'text', (col) => col.notNull())
             .addColumn('category_id', 'integer', (col) =>
-            col.notNull().references('category.id').onDelete('cascade')
+            col.references('category.id').onDelete('cascade')
             )
             .addColumn('created_at', 'datetime', (col) => col.defaultTo(sql`CURRENT_TIMESTAMP`).notNull())
             .execute();
@@ -70,6 +70,40 @@ class DatabaseModule implements AppModule {
                 { name: '구도' },
                 { name: '스타일' },
                 { name: '장면' },
+            ])
+            .execute();
+
+        await db
+            .insertInto('tag')
+            .values([
+                { name: '태그1' },
+                { name: '태그2' },
+                { name: '태그3' },
+            ])
+            .execute();
+
+        await db
+            .insertInto('prompt')
+            .values([
+                { 
+                    name: '예시 프롬프트 1',
+                    prompt: '귀여운 캐릭터, 아름다운 의상, 헤어스타일, 장소, 자세, 표정, 구도, 스타일, 장면',
+                    category_id: 1,
+                },
+                { 
+                    name: '예시 프롬프트 2',
+                    prompt: '아름다운 의상',
+                    category_id: 2,
+                },
+            ])
+            .execute();
+
+        await db
+            .insertInto('prompt_tag')
+            .values([
+                { prompt_id: 1, tag_id: 1 },
+                { prompt_id: 1, tag_id: 2 },
+                { prompt_id: 2, tag_id: 3 },
             ])
             .execute();
     }

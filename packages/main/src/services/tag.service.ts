@@ -19,6 +19,15 @@ class TagService {
         );
     }
 
+    getTagIdsByPromptId(promptId: number): Effect.Effect<TagDto[], ServiceException> {
+        return this.tagRepository.getTagsByPromptId(promptId).pipe(
+            Effect.tap(() => Effect.log("Service: getTagsByPromptId", { promptId })),
+            Effect.map((tags) => tags.map(toTagDto)),
+            Effect.map((tags) => tags.toSorted((a, b) => a.name.localeCompare(b.name))),
+            Effect.catchAll((error) => Effect.fail(ServiceException.from(error))),
+        );
+    }
+
     addTag(name: string): Effect.Effect<TagDto, ServiceException> {
         return this.tagRepository.addTag({ name }).pipe(
             Effect.tap(() => Effect.log("Service: addTag", { name })),

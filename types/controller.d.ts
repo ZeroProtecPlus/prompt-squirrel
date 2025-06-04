@@ -9,3 +9,9 @@ interface ITagController {
     addTag(name: string): Promise<IPCResponse<TagDto>>;
     removeTagByName(name: string): Promise<IPCResponse<void>>;
 }
+
+interface IPromptController {
+    getAllPrompts(): Promise<IPCResponse<PromptDto[]>>;
+    addPrompt(createPromptDto: CreatePromptDto): Promise<IPCResponse<PromptDto>>;
+    removePromptById(id: number): Promise<IPCResponse<void>>;
+}

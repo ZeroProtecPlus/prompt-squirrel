@@ -4,7 +4,7 @@ export type PromptTable = {
     id: Generated<number>;
     name: string;
     prompt: string;
-    category_id: number;
+    category_id: number | null;
     created_at: ColumnType<Date, string | undefined, never>;
 }
 
