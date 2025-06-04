@@ -15,6 +15,7 @@ import { Check, Edit, X } from 'lucide-react';
 import { useState } from 'react';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '../ui/alert-dialog';
 import { josa } from 'es-hangul';
+import { toast } from 'sonner';
 
 type FilterableListItem = {
     id: number;
@@ -57,10 +58,11 @@ export default function FilterableList({
                         placeholder={placeholder || '검색...'}
                         value={value}
                         onValueChange={onValueChange}
-                        onKeyDown={(e) => {
-                            if (e.key === 'Enter' && value.trim() && onEmptyButtonClick) {
-                                e.preventDefault();
+                        onPressEnterKey={() => {
+                            if (onEmptyButtonClick) {
                                 onEmptyButtonClick(value.trim());
+                                setValue('');
+                                toast.success(`${josa(`"${value.trim()}"`, '이/가')} 생성되었습니다.`);
                             }
                         }}
                     />

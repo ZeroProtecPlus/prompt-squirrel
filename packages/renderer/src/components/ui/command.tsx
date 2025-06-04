@@ -1,4 +1,4 @@
-import { Command as CommandPrimitive } from 'cmdk';
+import { Command as CommandPrimitive, useCommandState } from 'cmdk';
 import { SearchIcon } from 'lucide-react';
 import * as React from 'react';
 
@@ -58,7 +58,10 @@ function CommandDialog({
 function CommandInput({
     className,
     ...props
-}: React.ComponentProps<typeof CommandPrimitive.Input>) {
+}: React.ComponentProps<typeof CommandPrimitive.Input> & { onPressEnterKey?: (e: React.KeyboardEvent) => void }) {
+    const isEmpty = useCommandState((state) => state.filtered.count === 0);
+    const search = useCommandState((state) => state.search);
+
     return (
         <div
             data-slot="command-input-wrapper"
@@ -72,6 +75,12 @@ function CommandInput({
                     className,
                 )}
                 {...props}
+                onKeyDown={(e) => {
+                    if (isEmpty && e.key === 'Enter' && search.trim()) {
+                        e.preventDefault();
+                        props.onPressEnterKey?.(e);
+                    }
+                }}
             />
         </div>
     );
