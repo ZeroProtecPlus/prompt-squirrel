@@ -36,7 +36,7 @@ export default function TagSelector({ onChange }: TagSelectorProps) {
                     onBadgeClick={handleBadgeClick}
                 />
             </PopoverTrigger>
-            <PopoverContent>
+            <PopoverContent className='p-0'>
                 <TagFilterableList 
                     onTagClick={handleTagClick}
                 />
