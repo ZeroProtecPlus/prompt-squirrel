@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { MOCK_TAG } from './mock';
 import { tagApi } from '@app/preload';
+import { usePromptStore } from './prompt.store';
 
 type TagState = {
     tags: Tag[];
@@ -36,6 +37,7 @@ export const useTagStore = create<TagState & TagAction>((set) => ({
             tags: state.tags.filter((t) => t.name !== tag),
         }));
         console.log('Tag removed:', tag);
+        usePromptStore.getState().loadPrompts();
     },
 
     loadTags: async () => {

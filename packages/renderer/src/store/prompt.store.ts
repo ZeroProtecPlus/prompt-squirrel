@@ -176,6 +176,7 @@ export const usePromptStore = create<
 
             const prompts: Prompt[] = promptDtos.map(toPrompt);
 
+            minisearch.removeAll();
             minisearch.addAll(prompts);
             set({ prompts });
         },

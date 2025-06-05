@@ -1,6 +1,7 @@
 import { STATIC_CATEGORIES } from '@/components/category/constants';
 import { categoryApi } from '@app/preload';
 import { create } from 'zustand';
+import { usePromptStore } from './prompt.store';
 
 type CategoryState = {
     categories: CategoryDto[];
@@ -35,6 +36,8 @@ export const useCategoryStore = create<CategoryState & CategoryAction>((set) => 
         set((state) => ({
             categories: state.categories.filter((c) => c.name !== name),
         }));
+        console.log('Category removed:', name);
+        usePromptStore.getState().loadPrompts();
     },
 
     loadCategories: async () => {
