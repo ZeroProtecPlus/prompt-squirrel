@@ -39,6 +39,7 @@ export default function PromptList() {
                 <div className="flex-0">
                     <CategoryFilterComboBox 
                         onSelect={handleCategoryChange}
+                        value={searchFilter.category}
                     />
                 </div>
                 <div className="flex-1">

@@ -1,7 +1,6 @@
 'use client';
 
 import { Check, ChevronsUpDown } from 'lucide-react';
-import * as React from 'react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -15,29 +14,33 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
 import { useCategoryStore } from '@/store';
+import { useState } from 'react';
 
 interface CategoryFilterComboBoxProps {
     onSelect?: (category: Category | null) => void;
+    value?: Category | null;
 }
 
-export function CategoryFilterComboBox({ onSelect }: CategoryFilterComboBoxProps) {
+export function CategoryFilterComboBox({ onSelect, value }: CategoryFilterComboBoxProps) {
     const categories = useCategoryStore((state) => state.categories);
 
-    const [open, setOpen] = React.useState(false);
-    const [value, setValue] = React.useState<Category | null>(null);
+    const [open, setOpen] = useState<boolean>(false);
+    const [internalValue, setInternalValue] = useState<Category | null>(value || null);
+
+    const isControlled = value !== undefined;
+    const selected = isControlled ? value : internalValue;
 
     function onCategoryChange(currentCategory: Category) {
-        console.log('Category filter combo box selected:', currentCategory);
         setOpen(false);
 
-        if (value?.id === currentCategory.id) {
-            setValue(null);
-            onSelect?.(null);
-            return;
+        const isSame = selected?.id === currentCategory.id;
+        const newCategory = isSame ? null : currentCategory;
+
+        if (!isControlled) {
+            setInternalValue(newCategory);
         }
 
-        setValue(currentCategory);
-        onSelect?.(currentCategory);
+        onSelect?.(newCategory);
     }
 
     return (
@@ -49,7 +52,7 @@ export function CategoryFilterComboBox({ onSelect }: CategoryFilterComboBoxProps
                     aria-expanded={open}
                     className="min-w-48 justify-between"
                 >
-                    {value ? value.name : '카테고리 선택...'}
+                    {selected ? selected.name : '카테고리 선택...'}
                     <ChevronsUpDown className="opacity-50" />
                 </Button>
             </PopoverTrigger>

@@ -72,7 +72,6 @@ export const usePromptStore = create<
             let results: SearchResult[];
 
             if (searchFilter.category?.id === ALL_CATEGORY_ID) {
-                console.log('Searching in all categories');
                 results = minisearch.search(query, {
                     filter: (doc) => {
                         if (tagFilter(doc)) return false;
@@ -80,7 +79,6 @@ export const usePromptStore = create<
                     },
                 });
             } else if (searchFilter.category?.id === NONE_CATEGORY_ID) {
-                console.log('Searching in uncategorized prompts');
                 results = minisearch.search(query, {
                     filter: (doc) => {
                         if (doc.category.id !== NONE_CATEGORY_ID) return false;
@@ -89,7 +87,6 @@ export const usePromptStore = create<
                     },
                 });
             } else {
-                console.log(`Searching in category: ${searchFilter.category?.name}`);
                 results = minisearch.search(query, {
                     filter: (doc) => {
                         if (categoryFilter(doc)) return false;
@@ -98,8 +95,6 @@ export const usePromptStore = create<
                     },
                 });
             }
-
-            console.log(`Search results for "${String(query)}":`, results);
 
             const prompts = results.map(searchResultToPrompt);
 
@@ -117,23 +112,22 @@ export const usePromptStore = create<
         },
 
         setSearchFilter(by: Filterable<Prompt>, value: string | Category | null) {
+            console.log('Setting search filter:', by, value);
             set((state) => {
                 const newSearchFilter = { ...state.searchFilter };
 
                 if (by === 'category' && typeof value !== 'string') {
-                    console.log(`Setting category filter to: ${value?.name}`);
                     newSearchFilter.category = value;
                 } else if (by === 'tags' && typeof value === 'string') {
-                    console.log(`Toggling tag filter: ${value}`);
                     if (newSearchFilter.tags.includes(value)) {
                         newSearchFilter.tags = newSearchFilter.tags.filter((tag) => tag !== value);
                     } else {
                         newSearchFilter.tags.push(value);
                     }
                 }
-                console.log('Filter options updated:', newSearchFilter);
                 return { searchFilter: newSearchFilter };
             });
+            console.log('Updated search filter:', get().searchFilter);
         },
 
         addPrompt: async (prompt: CreatePromptDto) => {

@@ -6,12 +6,16 @@ import { toast } from 'sonner';
 import CategoryBadge from '../category/category-badge';
 import TagBadgeList from '../tag/tag-badge-list';
 import { Separator } from '../ui/separator';
+import { usePromptStore } from '@/store';
 
 interface PromptListItemProps {
     prompt: Prompt;
 }
 
 export default function PromptListItem({ prompt }: PromptListItemProps) {
+    const setSearchFilter = usePromptStore((state) => state.setSearchFilter);
+    const search = usePromptStore((state) => state.search);
+
     const [isCopied, setIsCopied] = useState(false);
 
     async function handleContentClick(e: React.MouseEvent) {
@@ -23,6 +27,17 @@ export default function PromptListItem({ prompt }: PromptListItemProps) {
         setTimeout(() => {
             setIsCopied(false);
         }, 2000);
+    }
+
+    function onTagBadgeClick(tag: Tag) {
+        setSearchFilter('tags', tag.name);
+        search();
+    }
+
+    function onCategoryBadgeClick(category: Category) {
+        setSearchFilter('category', category);
+        search();
+        console.log('Category badge clicked:', category);
     }
 
     return (
@@ -51,8 +66,8 @@ export default function PromptListItem({ prompt }: PromptListItemProps) {
             </CardContent>
             <Separator />
             <CardFooter className="p-0 flex gap-1">
-                <CategoryBadge category={prompt.category} />
-                <TagBadgeList tags={prompt.tags} />
+                <CategoryBadge category={prompt.category} onBadgeClick={onCategoryBadgeClick}/>
+                <TagBadgeList tags={prompt.tags} onBadgeClick={onTagBadgeClick} />
             </CardFooter>
         </Card>
     );
