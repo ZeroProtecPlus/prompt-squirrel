@@ -2,7 +2,7 @@ import { Effect } from "effect";
 import { ServiceException } from "../common/exceptions/service.exception.js";
 import { promptRepository } from "../repository/prompt.repository.js";
 import { tagService } from "./tag.service.js";
-import { toPromptDto } from "../mapper/prompt.mapper.js";
+import { toInsertPrompt, toPromptDto } from "../mapper/prompt.mapper.js";
 
 class PromptService {
     getAllPrompts(): Effect.Effect<PromptDto[], ServiceException> {
@@ -25,13 +25,12 @@ class PromptService {
 
     addPrompt(createPromptDto: CreatePromptDto): Effect.Effect<PromptDto, ServiceException> {
         return Effect.gen(function* () {
-            const prompt = yield* promptRepository.addPrompt({
-                name: createPromptDto.name,
-                prompt: createPromptDto.prompt,
-                category_id: createPromptDto.categoryId,
-            });
             yield* Effect.log("Service: addPrompt", { createPromptDto });
-            yield* promptRepository.addTagsToPrompt(prompt.id, createPromptDto.tags.map((tag) => tag.id));
+            const insert = toInsertPrompt(createPromptDto);
+            yield* Effect.log("Service: addPrompt - Insert", { insert });
+            const prompt = yield* promptRepository.addPrompt(insert);
+            if (createPromptDto.tags.length !== 0)
+                yield* promptRepository.addTagsToPrompt(prompt.id, createPromptDto.tags.map((tag) => tag.id));
 
             const tagIds = yield* tagService.getTagIdsByPromptId(prompt.id);
             return toPromptDto(prompt, tagIds.map((tag) => tag.id));

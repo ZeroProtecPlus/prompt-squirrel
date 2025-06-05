@@ -14,26 +14,34 @@ import {
 } from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
-import { useCategoryStore, usePromptStore } from '@/store';
+import { useCategoryStore } from '@/store';
 
-export function CategoryFilterComboBox() {
+interface CategoryFilterComboBoxProps {
+    onSelect?: (category: Category | null) => void;
+}
+
+export function CategoryFilterComboBox({ onSelect }: CategoryFilterComboBoxProps) {
     const categories = useCategoryStore((state) => state.categories);
-    const searchFilter = usePromptStore((state) => state.searchFilter);
-    const setSearchFilter = usePromptStore((state) => state.setSearchFilter);
-    const search = usePromptStore((state) => state.search);
 
     const [open, setOpen] = React.useState(false);
+    const [value, setValue] = React.useState<Category | null>(null);
 
     function onCategoryChange(currentCategory: Category) {
-        console.log('Selected category From CategoryFilter:', currentCategory);
-        const newValue = currentCategory.id === searchFilter.category?.id ? null : currentCategory;
+        console.log('Category filter combo box selected:', currentCategory);
         setOpen(false);
-        setSearchFilter('category', newValue);
-        search();
+
+        if (value?.id === currentCategory.id) {
+            setValue(null);
+            onSelect?.(null);
+            return;
+        }
+
+        setValue(currentCategory);
+        onSelect?.(currentCategory);
     }
 
     return (
-        <Popover open={open} onOpenChange={setOpen}>
+        <Popover open={open} onOpenChange={setOpen} modal={true}>
             <PopoverTrigger asChild>
                 <Button
                     variant="outline"
@@ -41,11 +49,11 @@ export function CategoryFilterComboBox() {
                     aria-expanded={open}
                     className="min-w-48 justify-between"
                 >
-                    {searchFilter.category ? searchFilter.category.name : '카테고리 선택...'}
+                    {value ? value.name : '카테고리 선택...'}
                     <ChevronsUpDown className="opacity-50" />
                 </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-[200px] p-0">
+            <PopoverContent className="w-full p-0">
                 <Command>
                     <CommandInput placeholder="카테고리 검색..." className="h-9" />
                     <CommandList>
@@ -61,7 +69,7 @@ export function CategoryFilterComboBox() {
                                     <Check
                                         className={cn(
                                             'ml-auto',
-                                            searchFilter.category?.id === category.id
+                                            value?.id === category.id
                                                 ? 'opacity-100'
                                                 : 'opacity-0',
                                         )}

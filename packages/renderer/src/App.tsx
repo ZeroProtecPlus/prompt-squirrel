@@ -4,6 +4,7 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import BaseLayout from '@/layout/base-layout';
 import { useCategoryStore, usePromptStore, useTagStore } from '@/store';
 import { useEffect } from 'react';
+import PromptCreateDialog from './components/prompt/prompt-create-dialog';
 
 function App() {
     const loadCategories = useCategoryStore((state) => state.loadCategories);
@@ -24,8 +25,9 @@ function App() {
         <>
             <TooltipProvider>
                 <Toaster expand={false} position="top-center" richColors />
-                <BaseLayout>
+                <BaseLayout className='relative'>
                     <PromptList />
+                    <PromptCreateDialog className='absolute right-10 bottom-10'/>
                 </BaseLayout>
             </TooltipProvider>
         </>

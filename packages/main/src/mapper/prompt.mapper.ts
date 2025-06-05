@@ -1,4 +1,4 @@
-import { PromptTable, SelectPrompt } from "../database/table/prompt.js";
+import { InsertPrompt, PromptTable, SelectPrompt } from "../database/table/prompt.js";
 
 export function toPromptDto(promptTable: SelectPrompt, tagIds: number[]): PromptDto {
     return {
@@ -8,5 +8,13 @@ export function toPromptDto(promptTable: SelectPrompt, tagIds: number[]): Prompt
         createdAt: promptTable.created_at,
         categoryId: promptTable.category_id,
         tagIds: tagIds || [],
+    };
+}
+
+export function toInsertPrompt(prompt: CreatePromptDto): InsertPrompt {
+    return {
+        name: prompt.name,
+        prompt: prompt.prompt,
+        category_id: prompt.categoryId === null ? undefined : prompt.categoryId,
     };
 }

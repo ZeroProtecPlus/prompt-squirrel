@@ -1,6 +1,20 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+@layer utilities {
+  @keyframes scale-pulse {
+    0%, 100% {
+      transform: scale(0.9);
+    }
+    50% {
+      transform: scale(1.1);
+    }
+  }
+  :hover.animate-scale-pulse {
+    animation: scale-pulse 3s ease-in-out infinite;
+  }
+}
+
 @font-face {
   font-family: "Pretendard";
   src: url('./assets/fonts/PretendardJP-Regular.woff2') format('woff2');

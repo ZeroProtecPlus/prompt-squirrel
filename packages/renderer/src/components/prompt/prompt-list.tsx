@@ -10,10 +10,18 @@ export default function PromptList() {
     const prompts = usePromptStore((state) => state.prompts);
     const search = usePromptStore((state) => state.search);
     const setSearchString = usePromptStore((state) => state.setSearchString);
+    const searchFilter = usePromptStore((state) => state.searchFilter);
+    const setSearchFilter = usePromptStore((state) => state.setSearchFilter);
 
     function handleSearch(event: React.ChangeEvent<HTMLInputElement>) {
         const searchString = event.target.value;
         setSearchString(searchString);
+        search();
+    }
+
+    function handleCategoryChange(category: Category | null) {
+        const newValue = category?.id === searchFilter.category?.id ? null : category;
+        setSearchFilter('category', newValue);
         search();
     }
 
@@ -29,7 +37,9 @@ export default function PromptList() {
             </div>
             <div className="h-9 flex gap-1">
                 <div className="flex-0">
-                    <CategoryFilterComboBox />
+                    <CategoryFilterComboBox 
+                        onSelect={handleCategoryChange}
+                    />
                 </div>
                 <div className="flex-1">
                     <TagFilterBox />
