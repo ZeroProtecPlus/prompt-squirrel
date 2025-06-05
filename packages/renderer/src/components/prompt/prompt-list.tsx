@@ -8,6 +8,7 @@ import PromptListItem from './prompt-list-item';
 
 export default function PromptList() {
     const prompts = usePromptStore((state) => state.prompts);
+
     const search = usePromptStore((state) => state.search);
     const setSearchString = usePromptStore((state) => state.setSearchString);
     const searchFilter = usePromptStore((state) => state.searchFilter);
@@ -22,6 +23,11 @@ export default function PromptList() {
     function handleCategoryChange(category: Category | null) {
         const newValue = category?.id === searchFilter.category?.id ? null : category;
         setSearchFilter('category', newValue);
+        search();
+    }
+
+    function handleTagFilterBadgeClick(tag: string) {
+        setSearchFilter('tags', tag);
         search();
     }
 
@@ -43,7 +49,10 @@ export default function PromptList() {
                     />
                 </div>
                 <div className="flex-1">
-                    <TagFilterBox />
+                    <TagFilterBox
+                        value={searchFilter.tags}
+                        onBadgeClick={handleTagFilterBadgeClick}
+                    />
                 </div>
             </div>
             <ScrollArea className="overflow-y-auto">

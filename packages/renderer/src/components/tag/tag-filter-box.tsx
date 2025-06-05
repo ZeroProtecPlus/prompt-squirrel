@@ -1,22 +1,30 @@
-import { usePromptStore } from '@/store';
 import { ScrollArea } from '../ui/scroll-area';
 import TagFilterBoxItem from './tag-filter-box-item';
+import { useState } from 'react';
 
-export default function TagFilterBox() {
-    const searchFilter = usePromptStore((state) => state.searchFilter);
-    const setSearchFilter = usePromptStore((state) => state.setSearchFilter);
-    const search = usePromptStore((state) => state.search);
+interface TagFilterBoxProps {
+    onBadgeClick?: (tag: string) => void;
+    value?: string[];
+}
 
-    function onBadgeClick(tag: string) {
-        setSearchFilter('tags', tag);
-        search();
+export default function TagFilterBox({ onBadgeClick, value }: TagFilterBoxProps) {
+    const [internalValue, setInternalValue] = useState<string[]>([]);
+
+    const isControlled = value !== undefined;
+    const selected = isControlled ? value : internalValue;
+
+    function handleBadgeClick(tag: string) {
+        if (!isControlled) {
+            setInternalValue((prev) => prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]);
+        }
+        onBadgeClick?.(tag);
     }
 
     return (
         <div className="flex flex-wrap h-full bg-accent p-1 gap-1 rounded-md">
             <ScrollArea className="h-full">
-                {searchFilter.tags.map((tag) => (
-                    <TagFilterBoxItem key={tag} tag={tag} onBadgeClick={onBadgeClick} />
+                {selected.map((tag) => (
+                    <TagFilterBoxItem key={tag} tag={tag} onBadgeClick={handleBadgeClick} />
                 ))}
             </ScrollArea>
         </div>

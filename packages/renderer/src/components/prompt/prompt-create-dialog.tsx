@@ -12,6 +12,8 @@ import { useState } from "react";
 import { ALL_CATEGORY_ID, NONE_CATEGORY_ID } from "@/components/category/constants";
 import { Textarea } from "@/components/ui/textarea";
 import { usePromptStore } from "@/store";
+import TagSelector from "../tag/tag-seletor";
+import { Separator } from "../ui/separator";
 
 const formSchema = z.object({
     name: z.string().min(1, '1자 이상 입력해주세요'),
@@ -67,68 +69,87 @@ export default function PromptCreateDialog({ className }: PromptCreateDialogProp
                 </Button>
             </AlertDialogTrigger>
 
-            <AlertDialogContent>
+            <AlertDialogContent className="h-[90vh] max-h-[600px] flex flex-col">
                 <AlertDialogHeader>
                     <AlertDialogTitle>프롬프트 생성</AlertDialogTitle>
                     <AlertDialogDescription>새로운 프롬프트를 생성합니다.</AlertDialogDescription>
                 </AlertDialogHeader>
 
-                <Form {...form}>
-                    <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
-                        <FormField 
-                            control={form.control}
-                            name="name"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>프롬프트 이름</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder='프롬프트 이름...' {...field}/>
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
+                <div className="flex-1 overflow-hidden">
+                    <Form {...form}>
+                        <form onSubmit={form.handleSubmit(handleSubmit)} className="h-full flex flex-col space-y-1">
+                            <FormField 
+                                control={form.control}
+                                name="name"
+                                render={({ field }) => (
+                                    <FormItem className="flex-shrink-0">
+                                        <FormLabel>프롬프트 이름</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder='프롬프트 이름...' {...field}/>
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
 
-                        <FormField 
-                            control={form.control}
-                            name="prompt"
-                            render={({ field }) => (
-                                <FormItem className="h-96 flex flex-col">
-                                    <FormLabel>프롬프트 내용</FormLabel>
-                                    <FormControl>
-                                        <Textarea 
-                                            placeholder='프롬프트 내용...' 
-                                            className="overflow-y-auto h-full resize-none"
-                                            {...field} 
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
+                            <FormField 
+                                control={form.control}
+                                name="prompt"
+                                render={({ field }) => (
+                                    <FormItem className="flex-1 flex flex-col">
+                                        <FormLabel>프롬프트 내용</FormLabel>
+                                        <FormControl>
+                                            <Textarea 
+                                                placeholder='프롬프트 내용...' 
+                                                className="overflow-y-auto h-full resize-none"
+                                                {...field} 
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
 
-                        <FormField 
-                            control={form.control}
-                            name="categoryId"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>카테고리</FormLabel>
-                                    <FormControl>
-                                        <CategoryFilterComboBox 
-                                            onSelect={(category) => field.onChange(category?.id ?? null)}
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
+                            <FormField 
+                                control={form.control}
+                                name="categoryId"
+                                render={({ field }) => (
+                                    <FormItem className="flex-shrink-0">
+                                        <FormLabel>카테고리</FormLabel>
+                                        <FormControl>
+                                            <CategoryFilterComboBox 
+                                                onSelect={(category) => field.onChange(category?.id ?? null)}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
 
-                        <AlertDialogFooter>
-                            <AlertDialogCancel>취소</AlertDialogCancel>
-                            <Button type="submit">프롬프트 생성</Button>
-                        </AlertDialogFooter>
-                    </form>
-                </Form>
+                            <FormField
+                                control={form.control}
+                                name="tags"
+                                render={({ field }) => (
+                                    <FormItem className="flex-shrink-0">
+                                        <FormLabel>태그</FormLabel>
+                                        <FormControl>
+                                            <TagSelector
+                                                onChange={(tags) => field.onChange(tags)}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            <Separator className="my-2"/>
+                            <AlertDialogFooter>
+                                <AlertDialogCancel onClick={() => form.reset()}>취소</AlertDialogCancel>
+                                <Button type="submit">프롬프트 생성</Button>
+                            </AlertDialogFooter>
+                        </form>
+                    </Form>
+                </div>
             </AlertDialogContent>
         </AlertDialog>
     );
