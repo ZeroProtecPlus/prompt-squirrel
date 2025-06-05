@@ -65,11 +65,11 @@ export default function PromptCreateDialog({ className }: PromptCreateDialogProp
         <AlertDialog open={open} onOpenChange={setOpen}>
             <AlertDialogTrigger asChild>
                 <Button className={cn("size-12 rounded-4xl animate-scale-pulse", className)}>
-                    <Plus />
+                    <Plus className="size-8"/>
                 </Button>
             </AlertDialogTrigger>
 
-            <AlertDialogContent className="h-[90vh] max-h-[600px] flex flex-col">
+            <AlertDialogContent className="h-[95vh] max-h-[700px] flex flex-col">
                 <AlertDialogHeader>
                     <AlertDialogTitle>프롬프트 생성</AlertDialogTitle>
                     <AlertDialogDescription>새로운 프롬프트를 생성합니다.</AlertDialogDescription>
@@ -77,7 +77,7 @@ export default function PromptCreateDialog({ className }: PromptCreateDialogProp
 
                 <div className="flex-1 overflow-hidden">
                     <Form {...form}>
-                        <form onSubmit={form.handleSubmit(handleSubmit)} className="h-full flex flex-col space-y-1">
+                        <form onSubmit={form.handleSubmit(handleSubmit)} className="h-full flex flex-col space-y-4">
                             <FormField 
                                 control={form.control}
                                 name="name"
@@ -142,7 +142,7 @@ export default function PromptCreateDialog({ className }: PromptCreateDialogProp
                                 )}
                             />
 
-                            <Separator className="my-2"/>
+                            <Separator />
                             <AlertDialogFooter>
                                 <AlertDialogCancel onClick={() => form.reset()}>취소</AlertDialogCancel>
                                 <Button type="submit">프롬프트 생성</Button>

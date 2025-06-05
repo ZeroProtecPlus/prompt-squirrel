@@ -10,7 +10,7 @@
       transform: scale(1.1);
     }
   }
-  :hover.animate-scale-pulse {
+  .animate-scale-pulse {
     animation: scale-pulse 3s ease-in-out infinite;
   }
 }
