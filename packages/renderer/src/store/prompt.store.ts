@@ -6,6 +6,8 @@ import { promptApi } from '@app/preload';
 import { useCategoryStore } from './category.store';
 import { useTagStore } from './tag.store';
 import { toPrompt } from '@/lib/mapper';
+import { toast } from 'sonner';
+import { createSuccessMessage, deleteSuccessMessage } from '@/lib/message';
 
 type PromptState = {
     prompts: Prompt[];
@@ -25,7 +27,7 @@ type PromptSearchAction = {
 
 type PromptAction = {
     addPrompt: (prompt: CreatePromptDto) => Promise<void>;
-    removePrompt: (promptId: number) => Promise<void>;
+    removePrompt: (prompt: Prompt) => Promise<void>;
     loadPrompts: () => Promise<void>;
 };
 
@@ -150,21 +152,23 @@ export const usePromptStore = create<
                 tags: matchedTags,
             };
 
-            set((state) => {
-                const updatedPrompts = [...state.prompts, newPrompt];
-                minisearch.add(newPrompt);
-                return { prompts: updatedPrompts };
-            });
+            minisearch.add(newPrompt);
+            set((state) => ({
+                prompts: [...state.prompts, newPrompt],
+            }));
+            toast.success(createSuccessMessage(prompt.name));
         },
 
-        removePrompt: async (promptId: number) => {
-            set((state) => {
-                const updatedPrompts = state.prompts.filter((p) => p.id !== promptId);
-                minisearch.discard(promptId);
-                return { prompts: updatedPrompts };
-            });
+        removePrompt: async (prompt: Prompt) => {
+            const response = await promptApi.removePromptById(prompt.id);
+            if (!response.success) return Promise.reject(response.error);
 
-            await minisearch.vacuum();
+            minisearch.remove(prompt.id);
+            set((state) => ({
+                prompts: state.prompts.filter((p) => p.id !== prompt.id),
+            }));
+
+            toast.success(deleteSuccessMessage(prompt.name));
         },
 
         loadPrompts: async () => {

@@ -1,7 +1,8 @@
 import { create } from 'zustand';
-import { MOCK_TAG } from './mock';
 import { tagApi } from '@app/preload';
 import { usePromptStore } from './prompt.store';
+import { toast } from 'sonner';
+import { createSuccessMessage, deleteSuccessMessage } from '@/lib/message';
 
 type TagState = {
     tags: Tag[];
@@ -27,6 +28,7 @@ export const useTagStore = create<TagState & TagAction>((set) => ({
         set((state) => ({
             tags: [...state.tags, newTag],
         }));
+        toast.success(createSuccessMessage(tag));
     },
 
     removeTag: async (tag: string) => {
@@ -36,7 +38,7 @@ export const useTagStore = create<TagState & TagAction>((set) => ({
         set((state) => ({
             tags: state.tags.filter((t) => t.name !== tag),
         }));
-        console.log('Tag removed:', tag);
+        toast.success(deleteSuccessMessage(tag));
         usePromptStore.getState().loadPrompts();
     },
 
@@ -48,6 +50,5 @@ export const useTagStore = create<TagState & TagAction>((set) => ({
         const tags: Tag[] = [...response.data];
 
         set({ tags });
-        console.log('Tags loaded:', MOCK_TAG.length);
     },
 }));
