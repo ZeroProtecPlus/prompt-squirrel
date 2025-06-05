@@ -5,25 +5,36 @@ import BaseLayout from '@/layout/base-layout';
 import { useCategoryStore, usePromptStore, useTagStore } from '@/store';
 import { useEffect } from 'react';
 import PromptCreateDialog from './components/prompt/prompt-create-dialog';
+import Loading from './components/shared/loading';
+import { useLoading } from './hooks/use-loading';
+import { delay } from 'es-toolkit';
 
 function App() {
+    const { loading, stopLoading } = useLoading();
+
     const loadCategories = useCategoryStore((state) => state.loadCategories);
     const loadTags = useTagStore((state) => state.loadTags);
     const loadPrompts = usePromptStore((state) => state.loadPrompts);
 
     useEffect(() => {
         async function load() {
+            loading('카테고리 로딩중...');
             await loadCategories();
+            loading('태그 로딩중...');
             await loadTags();
-            await loadPrompts();
+            loading('프롬프트 로딩중...');
+            await loadPrompts()
+            await delay(3000); // @TODO 로딩 애니메이션을 위해 임시로 추가
+            stopLoading();
         }
 
         load();
-    }, [loadCategories, loadTags, loadPrompts]);
+    }, [loadCategories, loadTags, loadPrompts, loading, stopLoading]);
 
     return (
         <>
             <TooltipProvider>
+                <Loading />
                 <Toaster expand={false} position="top-center" richColors />
                 <BaseLayout className='relative'>
                     <PromptList />
