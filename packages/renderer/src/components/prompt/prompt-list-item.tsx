@@ -1,33 +1,18 @@
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { josa } from 'es-hangul';
-import { Check, Copy } from 'lucide-react';
-import { useState } from 'react';
-import { toast } from 'sonner';
 import CategoryBadge from '../category/category-badge';
 import TagBadgeList from '../tag/tag-badge-list';
 import { Separator } from '../ui/separator';
 import { usePromptStore } from '@/store';
+import CopyButton from '../shared/copy-button';
 
 interface PromptListItemProps {
     prompt: Prompt;
+    onClick?: (prompt: Prompt) => void;
 }
 
-export default function PromptListItem({ prompt }: PromptListItemProps) {
+export default function PromptListItem({ prompt, onClick }: PromptListItemProps) {
     const setSearchFilter = usePromptStore((state) => state.setSearchFilter);
     const search = usePromptStore((state) => state.search);
-
-    const [isCopied, setIsCopied] = useState(false);
-
-    async function handleContentClick(e: React.MouseEvent) {
-        e.stopPropagation();
-        await navigator.clipboard.writeText(prompt.prompt);
-        toast.success(`${josa(`"${prompt.name}"`, '이/가')} 클립보드에 복사되었습니다.`);
-
-        setIsCopied(true);
-        setTimeout(() => {
-            setIsCopied(false);
-        }, 2000);
-    }
 
     function onTagBadgeClick(tag: Tag) {
         setSearchFilter('tags', tag.name);
@@ -40,28 +25,22 @@ export default function PromptListItem({ prompt }: PromptListItemProps) {
         console.log('Category badge clicked:', category);
     }
 
+    function onPromptCardClick() {
+        onClick?.(prompt);
+    }
+
     return (
-        <Card className="p-2 gap-2 hover:bg-muted/40 select-none">
+        <Card className="p-2 gap-2 hover:bg-muted/40 select-none cursor-pointer" onClick={onPromptCardClick}>
             <CardHeader className="p-0">
                 <CardTitle className="text-sm font-semibold">{prompt.name}</CardTitle>
             </CardHeader>
-            <CardContent className="p-0 h-full relative group" onClick={handleContentClick}>
+            <CardContent className="p-0 h-full relative group">
                 <p className="text-sm text-muted-foreground text-ellipsis line-clamp-1 max-w-max">
                     {prompt.prompt}
                 </p>
-                <Copy
-                    className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-300 text-accent-foreground ${
-                        isCopied
-                            ? 'opacity-0 scale-75 rotate-90'
-                            : 'opacity-0 group-hover:opacity-100 scale-100 rotate-0'
-                    }`}
-                />
-                <Check
-                    className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-300 text-green-500 ${
-                        isCopied
-                            ? 'opacity-0 group-hover:opacity-100 scale-100 rotate-0'
-                            : 'opacity-0 scale-75 -rotate-90'
-                    }`}
+                <CopyButton 
+                    text={prompt.prompt}
+                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity"
                 />
             </CardContent>
             <Separator />

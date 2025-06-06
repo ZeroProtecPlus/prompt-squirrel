@@ -2,16 +2,29 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import TagFilterBox from "./tag-filter-box";
 import TagFilterableList from "./tag-filterable-list";
 import { useState } from "react";
+import { cn } from "@/lib/utils";
 
 interface TagSelectorProps {
+    className?: string;
+    initialValue?: Tag[];
     onChange?: (tags: Tag[]) => void;
+    onAddTag?: (tag: Tag) => void;
+    onRemoveTag?: (tag: Tag) => void;
 }
 
-export default function TagSelector({ onChange }: TagSelectorProps) {
-    const [value, setValue] = useState<Tag[]>([]);
+export default function TagSelector({ onChange, className, initialValue, onAddTag, onRemoveTag }: TagSelectorProps) {
+    const [value, setValue] = useState<Tag[]>(initialValue || []);
 
     function toggleTag(tag: Tag) {
-        const newValue = value.includes(tag) ? value.filter(t => t !== tag) : [...value, tag];
+        let newValue: Tag[];
+        if (value.includes(tag)) {
+            newValue = value.filter(t => t !== tag);
+            onRemoveTag?.(tag);
+        }
+        else {
+            newValue = [...value, tag];
+            onAddTag?.(tag);
+        }
         setValue(newValue);
         onChange?.(newValue);
     }
@@ -23,14 +36,12 @@ export default function TagSelector({ onChange }: TagSelectorProps) {
 
     function handleBadgeClick(tagName: string) {
         const tag = value.find(t => t.name === tagName);
-        if (tag) {
-            toggleTag(tag);
-        }
+        if (tag) toggleTag(tag);
     }
 
     return (
         <Popover modal={true}>
-            <PopoverTrigger className="h-9">
+            <PopoverTrigger className={cn('h-9', className)}>
                 <TagFilterBox
                     value={value.map(tag => tag.name)}
                     onBadgeClick={handleBadgeClick}

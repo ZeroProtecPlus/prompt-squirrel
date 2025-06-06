@@ -5,6 +5,8 @@ import { Input } from '../ui/input';
 import { ScrollArea } from '../ui/scroll-area';
 import PromptListItemEmpty from './prompt-list-empty';
 import PromptListItem from './prompt-list-item';
+import PromptDetail from './prompt-detail';
+import { useState } from 'react';
 
 export default function PromptList() {
     const prompts = usePromptStore((state) => state.prompts);
@@ -13,6 +15,8 @@ export default function PromptList() {
     const setSearchString = usePromptStore((state) => state.setSearchString);
     const searchFilter = usePromptStore((state) => state.searchFilter);
     const setSearchFilter = usePromptStore((state) => state.setSearchFilter);
+
+    const [selectedPrompt, setSelectedPrompt] = useState<Prompt | null>(null);
 
     function handleSearch(event: React.ChangeEvent<HTMLInputElement>) {
         const searchString = event.target.value;
@@ -29,6 +33,10 @@ export default function PromptList() {
     function handleTagFilterBadgeClick(tag: string) {
         setSearchFilter('tags', tag);
         search();
+    }
+
+    function handlePromptClick(prompt: Prompt) {
+        setSelectedPrompt(prompt);
     }
 
     return (
@@ -60,10 +68,15 @@ export default function PromptList() {
                     {prompts.length === 0 ? (
                         <PromptListItemEmpty />
                     ) : (
-                        prompts.map((prompt) => <PromptListItem key={prompt.id} prompt={prompt} />)
+                        prompts.map((prompt) => <PromptListItem key={prompt.id} prompt={prompt} onClick={handlePromptClick} />)
                     )}
                 </div>
             </ScrollArea>
+
+            <PromptDetail 
+                prompt={selectedPrompt}
+                onClose={() => setSelectedPrompt(null)}
+            />
         </div>
     );
 }
