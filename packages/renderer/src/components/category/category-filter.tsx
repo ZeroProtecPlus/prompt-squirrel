@@ -14,15 +14,23 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
 import { useCategoryStore } from '@/store';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
+import { isStaticCategory } from '@/lib/category-utils';
 
 interface CategoryFilterComboBoxProps {
     onSelect?: (category: Category | null) => void;
     value?: Category | null;
+    useStaticCategory?: boolean;
 }
 
-export function CategoryFilterComboBox({ onSelect, value }: CategoryFilterComboBoxProps) {
+export function CategoryFilterComboBox({ onSelect, value, useStaticCategory }: CategoryFilterComboBoxProps) {
     const categories = useCategoryStore((state) => state.categories);
+    const filteredCategories = useCallback(() => {
+        console.log('Filtering categories with useStaticCategory:', useStaticCategory);
+        return useStaticCategory
+        ? categories
+        : categories.filter((category) => !isStaticCategory(category.id));
+    }, [categories, useStaticCategory]);
 
     const [open, setOpen] = useState<boolean>(false);
     const [internalValue, setInternalValue] = useState<Category | null>(value || null);
@@ -62,7 +70,7 @@ export function CategoryFilterComboBox({ onSelect, value }: CategoryFilterComboB
                     <CommandList>
                         <CommandEmpty>카테고리가 존재하지 않습니다.</CommandEmpty>
                         <CommandGroup>
-                            {categories.map((category) => (
+                            {filteredCategories().map((category) => (
                                 <CommandItem
                                     key={category.id}
                                     value={category.name}

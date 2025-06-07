@@ -1,5 +1,4 @@
 import { CategoryFilterComboBox } from '@/components/category/category-filter';
-import { ALL_CATEGORY_ID, NONE_CATEGORY_ID } from '@/components/category/constants';
 import {
     AlertDialog,
     AlertDialogCancel,
@@ -20,7 +19,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { cn } from '@/lib/utils';
+import { cn, isServiceException } from '@/lib/utils';
 import { usePromptStore } from '@/store';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Plus } from 'lucide-react';
@@ -30,6 +29,7 @@ import { z } from 'zod';
 import TagSelector from '../tag/tag-seletor';
 import { Button } from '../ui/button';
 import { Separator } from '../ui/separator';
+import { isStaticCategory } from '@/lib/category-utils';
 
 const formSchema = z.object({
     name: z.string().min(1, '1자 이상 입력해주세요'),
@@ -65,19 +65,24 @@ export default function PromptCreateDialog({ className }: PromptCreateDialogProp
     });
 
     async function handleSubmit(data: PromptForm) {
-        const isStaticCategory =
-            data.categoryId === NONE_CATEGORY_ID ||
-            data.categoryId === ALL_CATEGORY_ID ||
-            data.categoryId === null;
+        try {
+            data.categoryId = isStaticCategory(data.categoryId) ? null : data.categoryId;
 
-        data.categoryId = isStaticCategory ? null : data.categoryId;
+            console.log('Form submitted:', data);
 
-        console.log('Form submitted:', data);
+            await addPrompt(data);
 
-        await addPrompt(data);
-
-        setOpen(false);
-        form.reset();
+            setOpen(false);
+            form.reset();
+        } catch (error) {
+            if (isServiceException(error)) {
+                if (error.code === 'CONFLICT')
+                    form.setError('name', {
+                        type: 'validate',
+                        message: '이미 존재하는 프롬프트 이름입니다.',
+                    });
+            }
+        }
     }
 
     return (
@@ -140,6 +145,7 @@ export default function PromptCreateDialog({ className }: PromptCreateDialogProp
                                         <FormLabel>카테고리</FormLabel>
                                         <FormControl>
                                             <CategoryFilterComboBox
+                                                useStaticCategory={false}
                                                 onSelect={(category) =>
                                                     field.onChange(category?.id ?? null)
                                                 }

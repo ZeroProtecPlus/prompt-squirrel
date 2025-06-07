@@ -139,6 +139,7 @@ export const usePromptStore = create<
 
         addPrompt: async (prompt: CreatePromptDto) => {
             const response = await promptApi.addPrompt(prompt);
+            
             if (!response.success) return Promise.reject(response.error);
 
             const promptDto = response.data;
@@ -149,6 +150,7 @@ export const usePromptStore = create<
             set((state) => ({
                 prompts: [...state.prompts, newPrompt],
             }));
+
             toast.success(createSuccessMessage(prompt.name));
         },
 

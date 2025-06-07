@@ -1,8 +1,15 @@
 import { ALL_CATEGORY_ID, NONE_CATEGORY, NONE_CATEGORY_ID } from '@/components/category/constants';
 import { useCategoryStore } from '@/store';
 
-export function isStaticCategory(category: Category | null): boolean {
+export function isStaticCategory(category: Category | null): boolean;
+export function isStaticCategory(categoryId: number | null): boolean;
+export function isStaticCategory(category: Category | null | number): boolean {
     if (!category) return false;
+
+    if (typeof category === 'number') {
+        return category === ALL_CATEGORY_ID || category === NONE_CATEGORY_ID;
+    }
+    
     return category.id === ALL_CATEGORY_ID || category.id === NONE_CATEGORY_ID;
 }
 

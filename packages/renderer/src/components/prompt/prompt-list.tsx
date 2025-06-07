@@ -52,6 +52,7 @@ export default function PromptList() {
             <div className="h-9 flex gap-1">
                 <div className="flex-0">
                     <CategoryFilterComboBox
+                        useStaticCategory={true}
                         onSelect={handleCategoryChange}
                         value={searchFilter.category}
                     />

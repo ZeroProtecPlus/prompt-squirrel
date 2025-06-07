@@ -3,11 +3,12 @@ import { isDevMode } from '../utils/env.js';
 import { logger } from './logger.js';
 import { Err } from './ipc.response.js';
 import { UnexpectedException } from './exceptions/unexpected.exception.js';
+import { ServiceException } from './exceptions/base/service.exception.js';
 
 const combined = Logger.zip(Logger.prettyLoggerDefault, logger);
 const logLayer = Logger.replace(Logger.defaultLogger, combined);
 
-export function runWithLogger<T>(effect: Effect.Effect<T, unknown>, label?: string): Promise<T> {
+export function runWithLogger<T>(effect: Effect.Effect<T, unknown>, label?: string): Promise<T | IPCError> {
     return Effect.runPromise(
         effect.pipe(
             Effect.catchAll((error) => {
@@ -20,7 +21,16 @@ export function runWithLogger<T>(effect: Effect.Effect<T, unknown>, label?: stri
                             cause: error.cause,
                         });
                     }
-                    return yield* Effect.fail(Err(error));
+
+                    if (error instanceof ServiceException) {
+                        return yield* Effect.succeed(Err({
+                            name: error.name,
+                            code: error.code,
+                            message: error.message,
+                        }));
+                    }
+
+                    return yield* Effect.succeed(Err(error));
                 });
             }),
             Console.withGroup({ label: label ?? '[Logger]' }),
