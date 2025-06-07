@@ -1,7 +1,6 @@
-import { SqliteError } from 'better-sqlite3';
 import { Effect } from 'effect';
-import { categoryDatabaseExceptionHandler } from '../common/exceptions/handlers/category-database-exception.handler.js';
-import { ServiceException } from '../common/exceptions/service.exception.js';
+import { ServiceException } from '../common/exceptions/base/service.exception.js';
+import { categoryExceptionHandler } from '../common/exceptions/handlers/category-exception.handler.js';
 import { toCategoryDto } from '../mapper/category.mapper.js';
 import { categoryRepository } from '../repository/category.repository.js';
 
@@ -11,9 +10,9 @@ interface ICategoryService {
     removeCategoryByName(name: string): Effect.Effect<void, ServiceException>;
 }
 
-class CategoryService {
-    getAllCategories(): Effect.Effect<CategoryDto[], ServiceException> {
-        return categoryDatabaseExceptionHandler(
+class CategoryService implements ICategoryService {
+    getAllCategories() {
+        return categoryExceptionHandler(
             Effect.gen(function* () {
                 yield* Effect.logDebug('Service: getAllCategories - start');
                 const categories = yield* categoryRepository.getAllCategories();
@@ -24,7 +23,7 @@ class CategoryService {
     }
 
     addCategory(name: string): Effect.Effect<CategoryDto, ServiceException> {
-        return categoryDatabaseExceptionHandler(
+        return categoryExceptionHandler(
             Effect.gen(function* () {
                 yield* Effect.logDebug('Service: addCategory - start', { name });
                 const category = yield* categoryRepository.addCategory({ name });
@@ -35,7 +34,7 @@ class CategoryService {
     }
 
     removeCategoryByName(name: string): Effect.Effect<void, ServiceException> {
-        return categoryDatabaseExceptionHandler(
+        return categoryExceptionHandler(
             Effect.gen(function* () {
                 yield* Effect.logDebug('Service: removeCategoryByName - start', { name });
                 yield* categoryRepository.removeCategoryByName(name);

@@ -1,8 +1,7 @@
 import { Effect } from 'effect';
 import { DatabaseException } from '../common/exceptions/database.exception.js';
-import { handleSqliteError } from '../common/exceptions/sqlite-error.handler.js';
 import { db } from '../database/db.js';
-import { SelectTag } from '../database/table/tag.js';
+import { InsertTag, SelectTag } from '../database/table/tag.js';
 
 interface ITagRepository {
     getAllTags(): Effect.Effect<SelectTag[], DatabaseException>;
@@ -13,59 +12,61 @@ interface ITagRepository {
 
 class TagRepository implements ITagRepository {
     getAllTags() {
-        return handleSqliteError(
-            Effect.gen(function* () {
-                yield* Effect.logDebug('Repository getAllTags - before');
-                const tags = yield* Effect.promise(() =>
-                    db.selectFrom('tag').selectAll().execute(),
-                );
-                yield* Effect.logDebug('Repository getAllTags - after');
-                return tags;
-            }),
-        );
+        return Effect.gen(function* () {
+            yield* Effect.logDebug('Repository getAllTags - before');
+            const tags = yield* Effect.tryPromise({
+                try: () => db.selectFrom('tag').selectAll().orderBy('name', 'asc').execute(),
+                catch: (error) => DatabaseException.from(error),
+            });
+            yield* Effect.logDebug('Repository getAllTags - after');
+            return tags;
+        });
     }
 
     getTagsByPromptId(promptId: number) {
-        return handleSqliteError(
-            Effect.gen(function* () {
-                yield* Effect.logDebug('Repository getTagsByPromptId - before');
-                const tags = yield* Effect.promise(() =>
+        return Effect.gen(function* () {
+            yield* Effect.logDebug('Repository getTagsByPromptId - before');
+            const tags = yield* Effect.tryPromise({
+                try: () =>
                     db
                         .selectFrom('tag')
                         .innerJoin('prompt_tag', 'tag.id', 'prompt_tag.tag_id')
                         .where('prompt_tag.prompt_id', '=', promptId)
                         .selectAll()
                         .execute(),
-                );
-                yield* Effect.logDebug('Repository getTagsByPromptId - after');
-                return tags;
-            }),
-        );
+                catch: (error) => DatabaseException.from(error),
+            });
+            yield* Effect.logDebug('Repository getTagsByPromptId - after');
+            return tags;
+        });
     }
 
-    addTag(insert: { name: string }) {
-        return handleSqliteError(
-            Effect.gen(function* () {
-                yield* Effect.logDebug('Repository addTag - before');
-                const tag = yield* Effect.promise(() =>
-                    db.insertInto('tag').values(insert).returningAll().executeTakeFirstOrThrow(),
-                );
-                yield* Effect.logDebug('Repository addTag - after');
-                return tag;
-            }),
-        );
+    addTag(insert: InsertTag) {
+        return Effect.gen(function* () {
+            yield* Effect.logDebug('Repository addTag - before');
+            const tag = yield* Effect.tryPromise({
+                try: () =>
+                    db
+                        .insertInto('tag')
+                        .values({ name: insert.name })
+                        .returningAll()
+                        .executeTakeFirstOrThrow(),
+                catch: (error) => DatabaseException.from(error),
+            });
+            yield* Effect.logDebug('Repository addTag - after');
+            return tag;
+        });
     }
 
     removeTagByName(name: string) {
-        return handleSqliteError(
-            Effect.gen(function* () {
-                yield* Effect.logDebug('Repository removeTagByName - before');
-                yield* Effect.promise(() =>
-                    db.deleteFrom('tag').where('name', '=', name).execute(),
-                );
-                yield* Effect.logDebug('Repository removeTagByName - after');
-            }),
-        );
+        return Effect.gen(function* () {
+            yield* Effect.logDebug('Repository removeTagByName - before');
+            yield* Effect.tryPromise({
+                try: () => db.deleteFrom('tag').where('name', '=', name).execute(),
+                catch: (error) => DatabaseException.from(error),
+            });
+            yield* Effect.logDebug('Repository removeTagByName - after');
+        });
     }
 }
 

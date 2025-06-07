@@ -1,6 +1,8 @@
 import { Effect } from 'effect';
+import { ServiceException } from '../base/service.exception.js';
 import { DATABASE_EXCEPTION_TAG, DatabaseException } from '../database.exception.js';
-import { ServiceException, UnexpectedException } from '../service.exception.js';
+import { PromptConflictException } from '../prompt/prompt-confilct.exception.js';
+import { UnexpectedException } from '../unexpected.exception.js';
 
 export function promptExceptionHandler<T>(
     effect: Effect.Effect<T, DatabaseException | ServiceException>,
@@ -8,22 +10,12 @@ export function promptExceptionHandler<T>(
     return effect.pipe(
         Effect.catchTag(DATABASE_EXCEPTION_TAG, (error: DatabaseException) =>
             Effect.gen(function* () {
-                yield* Effect.logError('Database Error', {
-                    name: error.name,
-                    code: error.code,
-                    message: error.message,
-                });
 
-                if (error.code === 'SQLITE_CONSTRAINT')
-                    return yield* Effect.fail(
-                        new ServiceException('Prompt already exists', { cause: error }),
-                    );
+                if (error.code === 'SQLITE_CONSTRAINT_UNIQUE')
+                    return yield* Effect.fail(PromptConflictException.from(error));
 
-                return yield* Effect.fail(
-                    new ServiceException('Database error occurred', { cause: error }),
-                );
+                return yield* Effect.fail(UnexpectedException.from(error));
             }),
         ),
-        Effect.catchAll((error: Error) => Effect.fail(new UnexpectedException(error))),
     );
 }

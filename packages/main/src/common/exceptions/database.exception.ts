@@ -7,9 +7,9 @@ export class DatabaseException extends Data.TaggedError(DATABASE_EXCEPTION_TAG)<
     name: string;
     code: string;
     message: string;
-    cause?: SqliteError;
+    cause?: SqliteError | unknown;
 }> {
-    static from(sqliteError: SqliteError): DatabaseException {
+    static from(sqliteError: unknown): DatabaseException {
         if (sqliteError instanceof SqliteError) {
             return new DatabaseException({
                 name: sqliteError.name,

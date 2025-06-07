@@ -1,6 +1,6 @@
 import { Effect } from 'effect';
+import { ServiceException } from '../common/exceptions/base/service.exception.js';
 import { TagDatabaseExceptionHandler } from '../common/exceptions/handlers/tag-exception.handler.js';
-import { ServiceException } from '../common/exceptions/service.exception.js';
 import { toTagDto } from '../mapper/tag.mapper.js';
 import { tagRepository } from '../repository/tag.repository.js';
 
@@ -20,7 +20,7 @@ class TagService {
             Effect.gen(function* () {
                 yield* Effect.logDebug('Service: getTagIdsByPromptId', { promptId });
                 const tags = yield* tagRepository.getTagsByPromptId(promptId);
-                return tags.map(toTagDto).toSorted((a, b) => a.name.localeCompare(b.name));
+                return tags.map(toTagDto);
             }),
         );
     }

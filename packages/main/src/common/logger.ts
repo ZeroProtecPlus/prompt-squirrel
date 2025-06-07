@@ -4,12 +4,12 @@ import log from 'electron-log';
 
 log.initialize();
 
-log.transports.console.level = 'error';
+log.transports.console.level = false;
 log.transports.file.level = 'error';
 log.transports.file.fileName = 'error.log';
 
 export const logger = Logger.make(({ logLevel, message }) => {
-    const logMessage = inspect(message, false, null, true);
+    const logMessage = inspect(message, false, null, false);
     switch (logLevel) {
         case LogLevel.Debug:
             log.debug(logMessage);

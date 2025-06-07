@@ -1,6 +1,6 @@
 import { Effect } from 'effect';
+import { ServiceException } from '../common/exceptions/base/service.exception.js';
 import { promptExceptionHandler } from '../common/exceptions/handlers/prompt-exception.handler.js';
-import { ServiceException } from '../common/exceptions/service.exception.js';
 import {
     toInsertPrompt,
     toInsertPromptTag,
@@ -22,7 +22,7 @@ interface IPromptService {
 }
 
 class PromptService implements IPromptService {
-    getAllPrompts(): Effect.Effect<PromptDto[], ServiceException> {
+    getAllPrompts() {
         return promptExceptionHandler(
             Effect.gen(function* () {
                 yield* Effect.logDebug('Service: getAllPrompts - start');
@@ -40,7 +40,7 @@ class PromptService implements IPromptService {
                     );
                 }
                 yield* Effect.logDebug('Service: getAllPrompts - end');
-                return dtos.toSorted((a, b) => a.name.localeCompare(b.name));
+                return dtos;
             }),
         );
     }

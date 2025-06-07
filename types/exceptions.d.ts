@@ -1,0 +1,1 @@
+type ExceptionCode = 'NOT_FOUND' | 'UNEXPECTED' | 'CONFLICT';

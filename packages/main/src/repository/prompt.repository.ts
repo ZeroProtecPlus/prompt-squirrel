@@ -1,6 +1,5 @@
 import { Effect } from 'effect';
 import { DatabaseException } from '../common/exceptions/database.exception.js';
-import { handleSqliteError } from '../common/exceptions/sqlite-error.handler.js';
 import { db } from '../database/db.js';
 import { InsertPrompt, PromptTable, SelectPrompt, UpdatePrompt } from '../database/table/prompt.js';
 import { InsertPromptTag } from '../database/table/tag-prompt.js';
@@ -16,83 +15,94 @@ interface IPromptRepository {
 
 class PromptRepository implements IPromptRepository {
     getAllPrompts() {
-        return handleSqliteError(
-            Effect.gen(function* () {
-                yield* Effect.logDebug('Repository getAllPrompts - start');
-                const prompts = yield* Effect.promise(() =>
-                    db.selectFrom('prompt').selectAll().execute(),
-                );
-                yield* Effect.logDebug('Repository getAllPrompts - end');
-                return prompts;
-            }),
-        );
+        return Effect.gen(function* () {
+            yield* Effect.logDebug('Repository getAllPrompts - start');
+            const prompts = yield* Effect.tryPromise({
+                try: () =>
+                    db
+                        .selectFrom('prompt')
+                        .selectAll()
+                        .orderBy('id', 'desc')
+                        .orderBy('name', 'asc')
+                        .execute(),
+                catch: (error) => DatabaseException.from(error),
+            });
+            yield* Effect.logDebug('Repository getAllPrompts - end');
+            return prompts;
+        });
     }
 
     addPrompt(insert: InsertPrompt) {
-        return handleSqliteError(
-            Effect.gen(function* () {
-                yield* Effect.logDebug('Repository addPrompt - start');
-                const prompt = yield* Effect.promise(() =>
+        return Effect.gen(function* () {
+            yield* Effect.logDebug('Repository addPrompt - start');
+            const prompt = yield* Effect.tryPromise({
+                try: () =>
                     db.insertInto('prompt').values(insert).returningAll().executeTakeFirstOrThrow(),
-                );
-                yield* Effect.logDebug('Repository addPrompt - end');
-                return prompt;
-            }),
-        );
+                catch: (error) => DatabaseException.from(error),
+            });
+            yield* Effect.logDebug('Repository addPrompt - end');
+            return prompt;
+        });
     }
 
     addTagsToPrompt(inserts: InsertPromptTag[]) {
-        return handleSqliteError(
-            Effect.gen(function* () {
-                yield* Effect.logDebug('Repository addTagsToPrompt - start');
-                yield* Effect.promise(() => db.insertInto('prompt_tag').values(inserts).execute());
-                yield* Effect.logDebug('Repository addTagsToPrompt - end');
-            }),
-        );
+        return Effect.gen(function* () {
+            yield* Effect.logDebug('Repository addTagsToPrompt - start');
+            yield* Effect.tryPromise({
+                try: () => db.insertInto('prompt_tag').values(inserts).execute(),
+                catch: (error) => DatabaseException.from(error),
+            });
+            yield* Effect.logDebug('Repository addTagsToPrompt - end');
+        });
     }
 
     removeTagFromPrompt(promptId: number, tagId: number) {
-        return handleSqliteError(
-            Effect.gen(function* () {
-                yield* Effect.logDebug('Repository removeTagFromPrompt - start');
-                yield* Effect.promise(() =>
+        return Effect.gen(function* () {
+            yield* Effect.logDebug('Repository removeTagFromPrompt - start');
+            yield* Effect.tryPromise({
+                try: () =>
                     db
                         .deleteFrom('prompt_tag')
                         .where('prompt_id', '=', promptId)
                         .where('tag_id', '=', tagId)
                         .execute(),
-                );
-                yield* Effect.logDebug('Repository removeTagFromPrompt - end');
-            }),
-        );
+                catch: (error) => DatabaseException.from(error),
+            });
+            yield* Effect.logDebug('Repository removeTagFromPrompt - end');
+        });
     }
 
     updatePrompt(updatePrompt: UpdatePrompt) {
-        return handleSqliteError(
-            Effect.gen(function* () {
-                yield* Effect.logDebug('Repository updatePrompt - start');
-                const prompt = yield* Effect.promise(() =>
+        return Effect.gen(function* () {
+            yield* Effect.logDebug('Repository updatePrompt - start');
+            const prompt = yield* Effect.tryPromise({
+                try: () =>
                     db
                         .updateTable('prompt')
-                        .set(updatePrompt)
+                        .set({
+                            name: updatePrompt.name,
+                            prompt: updatePrompt.prompt,
+                            category_id: updatePrompt.category_id,
+                        })
                         .where('id', '=', updatePrompt.id)
                         .returningAll()
                         .executeTakeFirstOrThrow(),
-                );
-                yield* Effect.logDebug('Repository updatePrompt - end');
-                return prompt;
-            }),
-        );
+                catch: (error) => DatabaseException.from(error),
+            });
+            yield* Effect.logDebug('Repository updatePrompt - end');
+            return prompt;
+        });
     }
 
     removePromptById(id: number) {
-        return handleSqliteError(
-            Effect.gen(function* () {
-                yield* Effect.logDebug('Repository removePromptById - start');
-                yield* Effect.promise(() => db.deleteFrom('prompt').where('id', '=', id).execute());
-                yield* Effect.logDebug('Repository removePromptById - end');
-            }),
-        );
+        return Effect.gen(function* () {
+            yield* Effect.logDebug('Repository removePromptById - start');
+            yield* Effect.tryPromise({
+                try: () => db.deleteFrom('prompt').where('id', '=', id).execute(),
+                catch: (error) => DatabaseException.from(error),
+            });
+            yield* Effect.logDebug('Repository removePromptById - end');
+        });
     }
 }
 
