@@ -35,10 +35,10 @@ class DatabaseModule implements AppModule {
             .createTable('prompt')
             .ifNotExists()
             .addColumn('id', 'integer', (col) => col.primaryKey().autoIncrement())
-            .addColumn('name', 'varchar(255)', (col) => col.notNull())
+            .addColumn('name', 'varchar(255)', (col) => col.notNull().unique())
             .addColumn('prompt', 'text', (col) => col.notNull())
             .addColumn('category_id', 'integer', (col) =>
-            col.references('category.id').onDelete('cascade')
+                col.references('category.id').onDelete('cascade')
             )
             .addColumn('created_at', 'datetime', (col) => col.defaultTo(sql`CURRENT_TIMESTAMP`).notNull())
             .execute();
