@@ -1,3 +1,8 @@
+import {
+    addTagToPromptCommand,
+    removeTagFromPromptCommand,
+    updatePromptCategoryCommand,
+} from '@/commands/prompt';
 import TagSelector from '@/components/tag/tag-seletor';
 import {
     Sheet,
@@ -7,7 +12,6 @@ import {
     SheetTitle,
 } from '@/components/ui/sheet';
 import { Textarea } from '@/components/ui/textarea';
-import { toNullableCategory } from '@/lib/category-utils';
 import { cn } from '@/lib/utils';
 import { usePromptStore } from '@/store';
 import { Edit, Save } from 'lucide-react';
@@ -25,8 +29,6 @@ interface PromptDetailProps {
 
 export default function PromptDetail({ prompt, onClose }: PromptDetailProps) {
     const updatePrompt = usePromptStore((state) => state.updatePrompt);
-    const addTagToPrompt = usePromptStore((state) => state.addTagToPrompt);
-    const removeTagToPrompt = usePromptStore((state) => state.removeTagToPrompt);
 
     const [isEditMode, setIsEditMode] = useState<boolean>(false);
 
@@ -48,32 +50,12 @@ export default function PromptDetail({ prompt, onClose }: PromptDetailProps) {
         if (!open) onClose();
     }
 
-    function handleCategorySelect(category: Category | null) {
-        let newCategory: Category | null = null;
-        if (!prompt) return;
+    async function handleCategorySelect(category: Category | null) {
+        const newCategory = await updatePromptCategoryCommand(prompt, category);
 
-        if (category) newCategory = toNullableCategory(category);
+        if (!newCategory) return;
 
-        updatePrompt(
-            {
-                id: prompt.id,
-                categoryId: newCategory ? newCategory.id : null,
-            },
-            false,
-        );
         setCategory(newCategory);
-    }
-
-    async function handleAddTag(tag: Tag) {
-        if (!prompt) return;
-
-        await addTagToPrompt({ promptId: prompt.id, tagId: tag.id }, prompt);
-    }
-
-    async function handleRemoveTag(tag: Tag) {
-        if (!prompt) return;
-
-        await removeTagToPrompt({ promptId: prompt.id, tagId: tag.id }, prompt);
     }
 
     async function handleEditToggle() {
@@ -152,8 +134,8 @@ export default function PromptDetail({ prompt, onClose }: PromptDetailProps) {
                     <TagSelector
                         className="h-12"
                         initialValue={prompt?.tags}
-                        onAddTag={handleAddTag}
-                        onRemoveTag={handleRemoveTag}
+                        onAddTag={(tag) => addTagToPromptCommand(prompt, tag)}
+                        onRemoveTag={(tag) => removeTagFromPromptCommand(prompt, tag)}
                     />
                 </div>
             </SheetContent>

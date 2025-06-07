@@ -5,3 +5,5 @@ type ServiceException = {
     code: ExceptionCode;
     message: string;
 }
+
+type ServiceExceptionHandler = (error: ServiceException) => void;

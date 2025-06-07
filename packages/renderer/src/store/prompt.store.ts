@@ -26,9 +26,9 @@ type PromptSearchAction = {
 
 type PromptAction = {
     addPrompt: (prompt: CreatePromptDto) => Promise<void>;
-    updatePrompt: (prompt: UpdatePromptDto, showToast?: boolean) => Promise<void>;
+    updatePrompt: (prompt: UpdatePromptDto, showToast?: boolean) => Promise<Prompt>;
     addTagToPrompt: (addTagToPromptDto: AddTagToPromptDto, original: Prompt) => Promise<void>;
-    removeTagToPrompt: (
+    removeTagFromPrompt: (
         removeTagFromPromptDto: RemoveTagFromPromptDto,
         original: Prompt,
     ) => Promise<void>;
@@ -139,7 +139,7 @@ export const usePromptStore = create<
 
         addPrompt: async (prompt: CreatePromptDto) => {
             const response = await promptApi.addPrompt(prompt);
-            
+
             if (!response.success) return Promise.reject(response.error);
 
             const promptDto = response.data;
@@ -171,7 +171,7 @@ export const usePromptStore = create<
             }));
         },
 
-        removeTagToPrompt: async (
+        removeTagFromPrompt: async (
             removeTagFromPromptDto: RemoveTagFromPromptDto,
             original: Prompt,
         ) => {
@@ -204,9 +204,9 @@ export const usePromptStore = create<
                 prompts: state.prompts.map((p) => (p.id === updatedPrompt.id ? updatedPrompt : p)),
             }));
 
-            if (!showToast) return;
+            if (showToast) toast.success(updateSuccessMessage(promptDto.name));
 
-            toast.success(updateSuccessMessage(promptDto.name));
+            return updatedPrompt;
         },
 
         removePrompt: async (prompt: Prompt) => {

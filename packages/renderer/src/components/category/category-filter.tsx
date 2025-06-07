@@ -12,10 +12,10 @@ import {
     CommandList,
 } from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { isStaticCategory } from '@/lib/category-utils';
 import { cn } from '@/lib/utils';
 import { useCategoryStore } from '@/store';
 import { useCallback, useState } from 'react';
-import { isStaticCategory } from '@/lib/category-utils';
 
 interface CategoryFilterComboBoxProps {
     onSelect?: (category: Category | null) => void;
@@ -23,13 +23,16 @@ interface CategoryFilterComboBoxProps {
     useStaticCategory?: boolean;
 }
 
-export function CategoryFilterComboBox({ onSelect, value, useStaticCategory }: CategoryFilterComboBoxProps) {
+export function CategoryFilterComboBox({
+    onSelect,
+    value,
+    useStaticCategory,
+}: CategoryFilterComboBoxProps) {
     const categories = useCategoryStore((state) => state.categories);
     const filteredCategories = useCallback(() => {
-        console.log('Filtering categories with useStaticCategory:', useStaticCategory);
         return useStaticCategory
-        ? categories
-        : categories.filter((category) => !isStaticCategory(category.id));
+            ? categories
+            : categories.filter((category) => !isStaticCategory(category.id));
     }, [categories, useStaticCategory]);
 
     const [open, setOpen] = useState<boolean>(false);

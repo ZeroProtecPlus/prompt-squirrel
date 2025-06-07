@@ -9,11 +9,11 @@ export function isStaticCategory(category: Category | null | number): boolean {
     if (typeof category === 'number') {
         return category === ALL_CATEGORY_ID || category === NONE_CATEGORY_ID;
     }
-    
+
     return category.id === ALL_CATEGORY_ID || category.id === NONE_CATEGORY_ID;
 }
 
-export function toNullableCategory(category: Category): Category | null {
+export function staticCategoryToNull(category: Category): Category | null {
     if (category.id === ALL_CATEGORY_ID || category.id === NONE_CATEGORY_ID) {
         return null;
     }

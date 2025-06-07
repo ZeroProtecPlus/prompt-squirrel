@@ -10,7 +10,6 @@ export function promptExceptionHandler<T>(
     return effect.pipe(
         Effect.catchTag(DATABASE_EXCEPTION_TAG, (error: DatabaseException) =>
             Effect.gen(function* () {
-
                 if (error.code === 'SQLITE_CONSTRAINT_UNIQUE')
                     return yield* Effect.fail(PromptConflictException.from(error));
 

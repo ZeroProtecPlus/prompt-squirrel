@@ -1,4 +1,6 @@
+import { createPromptCommand } from '@/commands/prompt';
 import { CategoryFilterComboBox } from '@/components/category/category-filter';
+import TagSelector from '@/components/tag/tag-seletor';
 import {
     AlertDialog,
     AlertDialogCancel,
@@ -9,6 +11,7 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
+import { Button } from '@/components/ui/button';
 import {
     Form,
     FormControl,
@@ -18,18 +21,14 @@ import {
     FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
 import { cn, isServiceException } from '@/lib/utils';
-import { usePromptStore } from '@/store';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Plus } from 'lucide-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import TagSelector from '../tag/tag-seletor';
-import { Button } from '../ui/button';
-import { Separator } from '../ui/separator';
-import { isStaticCategory } from '@/lib/category-utils';
 
 const formSchema = z.object({
     name: z.string().min(1, '1자 이상 입력해주세요'),
@@ -50,8 +49,6 @@ interface PromptCreateDialogProps {
 }
 
 export default function PromptCreateDialog({ className }: PromptCreateDialogProps) {
-    const addPrompt = usePromptStore((state) => state.addPrompt);
-
     const [open, setOpen] = useState<boolean>(false);
 
     const form = useForm<PromptForm>({
@@ -66,22 +63,17 @@ export default function PromptCreateDialog({ className }: PromptCreateDialogProp
 
     async function handleSubmit(data: PromptForm) {
         try {
-            data.categoryId = isStaticCategory(data.categoryId) ? null : data.categoryId;
-
-            console.log('Form submitted:', data);
-
-            await addPrompt(data);
-
+            await createPromptCommand(data);
             setOpen(false);
             form.reset();
         } catch (error) {
-            if (isServiceException(error)) {
-                if (error.code === 'CONFLICT')
-                    form.setError('name', {
-                        type: 'validate',
-                        message: '이미 존재하는 프롬프트 이름입니다.',
-                    });
+            if (isServiceException(error) && error.code === 'CONFLICT') {
+                form.setError('name', {
+                    type: 'validate',
+                    message: '이미 존재하는 프롬프트 이름입니다.',
+                });
             }
+            console.error('프롬프트 생성 실패:', error);
         }
     }
 

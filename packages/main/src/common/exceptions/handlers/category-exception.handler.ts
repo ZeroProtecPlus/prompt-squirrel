@@ -10,7 +10,6 @@ export function categoryExceptionHandler<T>(
     return effect.pipe(
         Effect.catchTag(DATABASE_EXCEPTION_TAG, (error: DatabaseException) =>
             Effect.gen(function* () {
-
                 if (error.code === 'UNIQUE_VIOLATION')
                     return yield* Effect.fail(CategoryConflictException.from(error));
 

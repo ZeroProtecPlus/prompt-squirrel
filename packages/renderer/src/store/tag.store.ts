@@ -9,36 +9,34 @@ type TagState = {
 };
 
 type TagAction = {
-    addTag: (tag: string) => Promise<void>;
-    removeTag: (tag: string) => Promise<void>;
+    addTag: (name: string) => Promise<void>;
+    removeTag: (tag: Tag) => Promise<void>;
     loadTags: () => Promise<void>;
 };
 
 export const useTagStore = create<TagState & TagAction>((set) => ({
     tags: [],
 
-    addTag: async (tag: string) => {
-        const response = await tagApi.addTag(tag);
+    addTag: async (name: string) => {
+        const response = await tagApi.addTag(name);
         if (!response.success) return Promise.reject(response.error);
-
-        console.log('Tag added:', tag);
 
         const newTag: TagDto = response.data;
 
         set((state) => ({
             tags: [...state.tags, newTag],
         }));
-        toast.success(createSuccessMessage(tag));
+        toast.success(createSuccessMessage(name));
     },
 
-    removeTag: async (tag: string) => {
-        const response = await tagApi.removeTagByName(tag);
+    removeTag: async (tag: Tag) => {
+        const response = await tagApi.removeTagByName(tag.name);
         if (!response.success) return Promise.reject(response.error);
 
         set((state) => ({
-            tags: state.tags.filter((t) => t.name !== tag),
+            tags: state.tags.filter((t) => t.name !== tag.name),
         }));
-        toast.success(deleteSuccessMessage(tag));
+        toast.success(deleteSuccessMessage(tag.name));
         usePromptStore.getState().loadPrompts();
     },
 
