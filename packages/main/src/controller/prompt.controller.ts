@@ -9,13 +9,11 @@ class PromptController implements IPromptController {
     getAllPrompts() {
         return runWithLogger(
             Effect.gen(function* () {
-                yield* Effect.log("getAllPrompts - start");
+                yield* Effect.logDebug("getAllPrompts - start");
                 const prompts = yield* promptService.getAllPrompts();
-                yield* Effect.log("getAllPrompts - end", { length: prompts.length });
+                yield* Effect.logDebug("getAllPrompts - end", { length: prompts.length });
                 return Ok(prompts);
-            }).pipe(
-                Effect.catchAll((error) => Effect.succeed(Err(error))),
-            ),
+            }),
             this.PREFIX,
         )
     }
@@ -23,13 +21,11 @@ class PromptController implements IPromptController {
     addPrompt(createPromptDto: CreatePromptDto): Promise<IPCResponse<PromptDto>> {
         return runWithLogger(
             Effect.gen(function* () {
-                yield* Effect.log("addPrompt - start", { createPromptDto });
+                yield* Effect.logDebug("addPrompt - start", { createPromptDto });
                 const prompt = yield* promptService.addPrompt(createPromptDto);
-                yield* Effect.log("addPrompt - end", { prompt });
+                yield* Effect.logDebug("addPrompt - end", { prompt });
                 return Ok(prompt);
-            }).pipe(
-                Effect.catchAll((error) => Effect.succeed(Err(error))),
-            ),
+            }),
             this.PREFIX,
         );
     }
@@ -37,13 +33,11 @@ class PromptController implements IPromptController {
     updatePrompt(updatePromptDto: UpdatePromptDto): Promise<IPCResponse<PromptDto>> {
         return runWithLogger(
             Effect.gen(function* () {
-                yield* Effect.log("updatePrompt - start", { updatePromptDto });
+                yield* Effect.logDebug("updatePrompt - start", { updatePromptDto });
                 const prompt = yield* promptService.updatePrompt(updatePromptDto);
-                yield* Effect.log("updatePrompt - end", { prompt });
+                yield* Effect.logDebug("updatePrompt - end", { prompt });
                 return Ok(prompt);
-            }).pipe(
-                Effect.catchAll((error) => Effect.succeed(Err(error))),
-            ),
+            }),
             this.PREFIX,
         );
     }
@@ -51,13 +45,11 @@ class PromptController implements IPromptController {
     addTagToPrompt(addTagToPromptDto: AddTagToPromptDto): Promise<IPCResponse<void>> {
         return runWithLogger(
             Effect.gen(function* () {
-                yield* Effect.log("addTagToPrompt - start", { addTagToPromptDto });
+                yield* Effect.logDebug("addTagToPrompt - start", { addTagToPromptDto });
                 yield* promptService.addTagToPrompt(addTagToPromptDto);
-                yield* Effect.log("addTagToPrompt - end", { addTagToPromptDto });
+                yield* Effect.logDebug("addTagToPrompt - end");
                 return Ok();
-            }).pipe(
-                Effect.catchAll((error) => Effect.succeed(Err(error))),
-            ),
+            }),
             this.PREFIX,
         );
     }
@@ -65,13 +57,11 @@ class PromptController implements IPromptController {
     removeTagFromPrompt(removeTagFromPromptDto: RemoveTagFromPromptDto): Promise<IPCResponse<void>> {
         return runWithLogger(
             Effect.gen(function* () {
-                yield* Effect.log("removeTagFromPrompt - start", { removeTagFromPromptDto });
+                yield* Effect.logDebug("removeTagFromPrompt - start", { removeTagFromPromptDto });
                 yield* promptService.removeTagFromPrompt(removeTagFromPromptDto);
-                yield* Effect.log("removeTagFromPrompt - end", { removeTagFromPromptDto });
+                yield* Effect.logDebug("removeTagFromPrompt - end", { removeTagFromPromptDto });
                 return Ok();
-            }).pipe(
-                Effect.catchAll((error) => Effect.succeed(Err(error))),
-            ),
+            }),
             this.PREFIX,
         );
     }
@@ -79,9 +69,9 @@ class PromptController implements IPromptController {
     removePromptById(id: number): Promise<IPCResponse<void>> {
         return runWithLogger(
             Effect.gen(function* () {
-                yield* Effect.log("removePromptById - start", { id });
+                yield* Effect.logDebug("removePromptById - start", { id });
                 yield* promptService.removePromptById(id);
-                yield* Effect.log("removePromptById - end", { id });
+                yield* Effect.logDebug("removePromptById - end", { id });
                 return Ok();
             }).pipe(
                 Effect.catchAll((error) => Effect.succeed(Err(error))),

@@ -18,6 +18,8 @@ interface ImportMetaEnv {
 
   /** Current app version */
   readonly VITE_APP_VERSION: string;
+
+  readonly NODE_ENV: 'development' | 'production';
 }
 
 interface ImportMeta {

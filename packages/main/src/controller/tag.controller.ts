@@ -9,33 +9,35 @@ class TagController implements ITagController {
     async getAllTags(): Promise<IPCResponse<TagDto[]>> {
         return runWithLogger(
             Effect.gen(function* () {
-                Effect.log("getAllTags");
+                yield* Effect.logDebug("getAllTags - start");
                 const tags = yield* tagService.getAllTags();
+                yield* Effect.logDebug("getAllTags - end", { length: tags.length });
                 return Ok(tags);
-            }).pipe(
-                Effect.catchAll((error) => Effect.succeed(Err(error))),
-            ),
+            }),
             this.PREFIX,
         )
     }
 
     async addTag(name: string): Promise<IPCResponse<TagDto>> {
         return runWithLogger(
-            tagService.addTag(name).pipe(
-                Effect.tap(() => Effect.log("addTag", { name })),
-                Effect.map((tag) => Ok(tag)),
-                Effect.catchAll((error) => Effect.succeed(Err(error))),
-            ),
+            Effect.gen(function* () {
+                yield* Effect.logDebug("addTag", { name });
+                const tag = yield* tagService.addTag(name);
+                yield* Effect.logDebug("addTag - end", { tag });
+                return Ok(tag);
+            }),
             this.PREFIX,
         )
     }
 
     async removeTagByName(name: string): Promise<IPCResponse<void>> {
         return runWithLogger(
-            tagService.removeTagByName(name).pipe(
-                Effect.map(() => Ok()),
-                Effect.catchAll((error) => Effect.succeed(Err(error))),
-            ),
+            Effect.gen(function* () {
+                yield* Effect.logDebug("removeTagByName", { name });
+                yield* tagService.removeTagByName(name);
+                yield* Effect.logDebug("removeTagByName - end");
+                return Ok();
+            }),
             this.PREFIX,
         )
     }

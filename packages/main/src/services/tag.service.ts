@@ -1,49 +1,49 @@
 import { Effect } from "effect";
-import { TagRepository } from "../repository/tag.repository.js";
-import { SqliteError } from "better-sqlite3";
+import { tagRepository } from "../repository/tag.repository.js";
 import { ServiceException } from "../common/exceptions/service.exception.js";
 import { toTagDto } from "../mapper/tag.mapper.js";
+import { TagDatabaseExceptionHandler } from "../common/exceptions/handlers/tag-exception.handler.js";
+
+
 
 class TagService {
-    private readonly tagRepository: TagRepository;
-    constructor() {
-        this.tagRepository = new TagRepository();
-    }
-
     getAllTags(): Effect.Effect<TagDto[], ServiceException> {
-        return this.tagRepository.getAllTags().pipe(
-            Effect.tap(() => Effect.log("Service: getAllTags")),
-            Effect.map((tags) => tags.map(toTagDto)),
-            Effect.map((tags) => tags.toSorted((a, b) => a.name.localeCompare(b.name))),
-            Effect.catchAll((error) => Effect.fail(ServiceException.from(error))),
-        );
+        return TagDatabaseExceptionHandler(
+            Effect.gen(function* () {
+                yield* Effect.logDebug("Service: getAllTags");
+                const tags = yield* tagRepository.getAllTags();
+                return tags.map(toTagDto).toSorted((a, b) => a.name.localeCompare(b.name));
+            }),
+        )
     }
 
     getTagIdsByPromptId(promptId: number): Effect.Effect<TagDto[], ServiceException> {
-        return this.tagRepository.getTagsByPromptId(promptId).pipe(
-            Effect.tap(() => Effect.log("Service: getTagsByPromptId", { promptId })),
-            Effect.map((tags) => tags.map(toTagDto)),
-            Effect.map((tags) => tags.toSorted((a, b) => a.name.localeCompare(b.name))),
-            Effect.catchAll((error) => Effect.fail(ServiceException.from(error))),
+        return TagDatabaseExceptionHandler(
+            Effect.gen(function* () {
+                yield* Effect.logDebug("Service: getTagIdsByPromptId", { promptId });
+                const tags = yield* tagRepository.getTagsByPromptId(promptId);
+                return tags.map(toTagDto).toSorted((a, b) => a.name.localeCompare(b.name));
+            }),
         );
     }
 
     addTag(name: string): Effect.Effect<TagDto, ServiceException> {
-        return this.tagRepository.addTag({ name }).pipe(
-            Effect.tap(() => Effect.log("Service: addTag", { name })),
-            Effect.map(toTagDto),
-            Effect.catchAll((error: SqliteError) => {
-                if (error instanceof SqliteError && error.code === "SQLITE_CONSTRAINT")
-                    return Effect.fail(new ServiceException("Tag already exists", error));
-                return Effect.fail(ServiceException.from(error));
+        return TagDatabaseExceptionHandler(
+            Effect.gen(function* () {
+                yield* Effect.logDebug("Service: addTag", { name });
+                const tag = yield* tagRepository.addTag({ name });
+                return toTagDto(tag);
             }),
         );
     }
 
     removeTagByName(name: string): Effect.Effect<void, ServiceException> {
-        return this.tagRepository.removeTagByName(name).pipe(
-            Effect.tap(() => Effect.log("Service: removeTagByName", { name })),
-            Effect.catchAll((error) => Effect.fail(ServiceException.from(error))),
+        return TagDatabaseExceptionHandler(
+            Effect.gen(function* () {
+                yield* Effect.logDebug("Service: removeTagByName", { name });
+                yield* tagRepository.removeTagByName(name);
+                yield* Effect.logDebug("Service: removeTagByName - end", { name });
+            }),
         );
     }
 }

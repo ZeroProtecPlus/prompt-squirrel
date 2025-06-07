@@ -8,32 +8,36 @@ class CategoryController implements ICategoryController {
 
     getAllCategories(): Promise<IPCResponse<CategoryDto[]>> {
         return runWithLogger(
-            categoryService.getAllCategories().pipe(
-                Effect.tap(() => Effect.log('getAllCategories')),
-                Effect.map((categories) => Ok(categories)),
-                Effect.catchAll((error) => Effect.succeed(Err(error))),
-            ),
+            Effect.gen(function* () {
+                yield* Effect.logDebug('getAllCategories - start');
+                const categories = yield* categoryService.getAllCategories();
+                yield* Effect.logDebug('getAllCategories - end', { length: categories.length });
+                return Ok(categories);
+            }),
             this.PREFIX,
-        );
+        )
     }
 
     addCategory(name: string): Promise<IPCResponse<CategoryDto>> {
         return runWithLogger(
-            categoryService.addCategory(name).pipe(
-                Effect.tap(() => Effect.log('addCategory', { name })),
-                Effect.map((category) => Ok(category)),
-                Effect.catchAll((error) => Effect.succeed(Err(error))),
-            ),
+            Effect.gen(function* () {
+                yield* Effect.logDebug('addCategory - start', { name });
+                const category = yield* categoryService.addCategory(name);
+                yield* Effect.logDebug('addCategory - end', { category });
+                return Ok(category);
+            }),
             this.PREFIX,
         );
     }
 
     removeCategoryByName(name: string): Promise<IPCResponse<void>> {
         return runWithLogger(
-            categoryService.removeCategoryByName(name).pipe(
-                Effect.map(() => Ok()),
-                Effect.catchAll((error) => Effect.succeed(Err(error))),
-            ),
+            Effect.gen(function* () {
+                yield* Effect.logDebug('removeCategoryByName - start', { name });
+                yield* categoryService.removeCategoryByName(name);
+                yield* Effect.logDebug('removeCategoryByName - end');
+                return Ok();
+            }),
             this.PREFIX,
         );
     }

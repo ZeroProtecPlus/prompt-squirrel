@@ -5,3 +5,10 @@ export class ServiceException extends Error {
         return new ServiceException(String(unknownError));
     }
 }
+
+export class UnexpectedException extends ServiceException {
+    constructor(cause?: unknown) {
+        super("An unexpected error occurred in the service layer.");
+        this.cause = cause;
+    }
+}
