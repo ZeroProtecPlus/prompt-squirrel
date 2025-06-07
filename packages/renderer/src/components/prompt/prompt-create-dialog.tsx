@@ -95,7 +95,7 @@ export default function PromptCreateDialog({ className }: PromptCreateDialogProp
                     <Form {...form}>
                         <form
                             onSubmit={form.handleSubmit(handleSubmit)}
-                            className="h-full flex flex-col space-y-4"
+                            className="h-full flex flex-col space-y-4 p-1"
                         >
                             <FormField
                                 control={form.control}
@@ -115,12 +115,12 @@ export default function PromptCreateDialog({ className }: PromptCreateDialogProp
                                 control={form.control}
                                 name="prompt"
                                 render={({ field }) => (
-                                    <FormItem className="flex-1 flex flex-col">
+                                    <FormItem className="flex-1 flex flex-col min-h-0">
                                         <FormLabel>프롬프트 내용</FormLabel>
                                         <FormControl>
                                             <Textarea
                                                 placeholder="프롬프트 내용..."
-                                                className="overflow-y-auto h-full resize-none"
+                                                className="h-full w-full resize-none overflow-y-auto"
                                                 {...field}
                                             />
                                         </FormControl>
