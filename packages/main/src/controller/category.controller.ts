@@ -15,7 +15,7 @@ class CategoryController implements ICategoryController {
                 return Ok(categories);
             }),
             this.PREFIX,
-        )
+        );
     }
 
     addCategory(name: string): Promise<IPCResponse<CategoryDto>> {

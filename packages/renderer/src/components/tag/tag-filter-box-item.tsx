@@ -11,7 +11,6 @@ export default function TagFilterBoxItem({ tag, onBadgeClick }: TagFilterBoxItem
         onBadgeClick?.(tag);
     }
 
-
     return (
         <Badge
             variant={'outline'}

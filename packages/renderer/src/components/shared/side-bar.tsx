@@ -1,6 +1,6 @@
 import { useCategoryStore, usePromptStore } from '@/store';
-import FilterableList from './filterable-list';
 import TagFilterableList from '../tag/tag-filterable-list';
+import FilterableList from './filterable-list';
 
 export default function Sidebar() {
     const categories = useCategoryStore((state) => state.categories);
@@ -34,7 +34,7 @@ export default function Sidebar() {
     return (
         <div className="w-4/12 min-w-48 max-w-64 border-r bg-muted/30 flex flex-col h-full">
             <div className="flex-1 max-h-1/2">
-                <TagFilterableList onTagClick={onTagClick}/>
+                <TagFilterableList onTagClick={onTagClick} />
             </div>
             <div className="flex-1 max-h-1/2">
                 <FilterableList

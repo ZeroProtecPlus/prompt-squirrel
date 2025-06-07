@@ -1,6 +1,6 @@
+import { useState } from 'react';
 import { ScrollArea } from '../ui/scroll-area';
 import TagFilterBoxItem from './tag-filter-box-item';
-import { useState } from 'react';
 
 interface TagFilterBoxProps {
     onBadgeClick?: (tag: string) => void;
@@ -15,7 +15,9 @@ export default function TagFilterBox({ onBadgeClick, value }: TagFilterBoxProps)
 
     function handleBadgeClick(tag: string) {
         if (!isControlled) {
-            setInternalValue((prev) => prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]);
+            setInternalValue((prev) =>
+                prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag],
+            );
         }
         onBadgeClick?.(tag);
     }

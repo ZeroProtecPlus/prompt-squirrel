@@ -1,28 +1,46 @@
-import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { Button } from "../ui/button";
-import { Plus } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Input } from "@/components/ui/input";
-import { CategoryFilterComboBox } from "@/components/category/category-filter";
-import { useState } from "react";
-import { ALL_CATEGORY_ID, NONE_CATEGORY_ID } from "@/components/category/constants";
-import { Textarea } from "@/components/ui/textarea";
-import { usePromptStore } from "@/store";
-import TagSelector from "../tag/tag-seletor";
-import { Separator } from "../ui/separator";
+import { CategoryFilterComboBox } from '@/components/category/category-filter';
+import { ALL_CATEGORY_ID, NONE_CATEGORY_ID } from '@/components/category/constants';
+import {
+    AlertDialog,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { cn } from '@/lib/utils';
+import { usePromptStore } from '@/store';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Plus } from 'lucide-react';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import TagSelector from '../tag/tag-seletor';
+import { Button } from '../ui/button';
+import { Separator } from '../ui/separator';
 
 const formSchema = z.object({
     name: z.string().min(1, '1자 이상 입력해주세요'),
     prompt: z.string().min(1, '프롬프트 내용을 입력해주세요'),
     categoryId: z.number().nullable(),
-    tags: z.array(z.object({
-        id: z.number(),
-        name: z.string(),
-    })),
+    tags: z.array(
+        z.object({
+            id: z.number(),
+            name: z.string(),
+        }),
+    ),
 });
 
 type PromptForm = z.infer<typeof formSchema>;
@@ -47,9 +65,10 @@ export default function PromptCreateDialog({ className }: PromptCreateDialogProp
     });
 
     async function handleSubmit(data: PromptForm) {
-        const isStaticCategory = data.categoryId === NONE_CATEGORY_ID || 
-                                data.categoryId === ALL_CATEGORY_ID ||
-                                data.categoryId === null;
+        const isStaticCategory =
+            data.categoryId === NONE_CATEGORY_ID ||
+            data.categoryId === ALL_CATEGORY_ID ||
+            data.categoryId === null;
 
         data.categoryId = isStaticCategory ? null : data.categoryId;
 
@@ -64,8 +83,8 @@ export default function PromptCreateDialog({ className }: PromptCreateDialogProp
     return (
         <AlertDialog open={open} onOpenChange={setOpen}>
             <AlertDialogTrigger asChild>
-                <Button className={cn("size-12 rounded-4xl animate-scale-pulse", className)}>
-                    <Plus className="size-8"/>
+                <Button className={cn('size-12 rounded-4xl animate-scale-pulse', className)}>
+                    <Plus className="size-8" />
                 </Button>
             </AlertDialogTrigger>
 
@@ -77,32 +96,35 @@ export default function PromptCreateDialog({ className }: PromptCreateDialogProp
 
                 <div className="flex-1 overflow-hidden">
                     <Form {...form}>
-                        <form onSubmit={form.handleSubmit(handleSubmit)} className="h-full flex flex-col space-y-4">
-                            <FormField 
+                        <form
+                            onSubmit={form.handleSubmit(handleSubmit)}
+                            className="h-full flex flex-col space-y-4"
+                        >
+                            <FormField
                                 control={form.control}
                                 name="name"
                                 render={({ field }) => (
                                     <FormItem className="flex-shrink-0">
                                         <FormLabel>프롬프트 이름</FormLabel>
                                         <FormControl>
-                                            <Input placeholder='프롬프트 이름...' {...field}/>
+                                            <Input placeholder="프롬프트 이름..." {...field} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
                                 )}
                             />
 
-                            <FormField 
+                            <FormField
                                 control={form.control}
                                 name="prompt"
                                 render={({ field }) => (
                                     <FormItem className="flex-1 flex flex-col">
                                         <FormLabel>프롬프트 내용</FormLabel>
                                         <FormControl>
-                                            <Textarea 
-                                                placeholder='프롬프트 내용...' 
+                                            <Textarea
+                                                placeholder="프롬프트 내용..."
                                                 className="overflow-y-auto h-full resize-none"
-                                                {...field} 
+                                                {...field}
                                             />
                                         </FormControl>
                                         <FormMessage />
@@ -110,15 +132,17 @@ export default function PromptCreateDialog({ className }: PromptCreateDialogProp
                                 )}
                             />
 
-                            <FormField 
+                            <FormField
                                 control={form.control}
                                 name="categoryId"
                                 render={({ field }) => (
                                     <FormItem className="flex-shrink-0">
                                         <FormLabel>카테고리</FormLabel>
                                         <FormControl>
-                                            <CategoryFilterComboBox 
-                                                onSelect={(category) => field.onChange(category?.id ?? null)}
+                                            <CategoryFilterComboBox
+                                                onSelect={(category) =>
+                                                    field.onChange(category?.id ?? null)
+                                                }
                                             />
                                         </FormControl>
                                         <FormMessage />
@@ -144,7 +168,9 @@ export default function PromptCreateDialog({ className }: PromptCreateDialogProp
 
                             <Separator />
                             <AlertDialogFooter>
-                                <AlertDialogCancel onClick={() => form.reset()}>취소</AlertDialogCancel>
+                                <AlertDialogCancel onClick={() => form.reset()}>
+                                    취소
+                                </AlertDialogCancel>
                                 <Button type="submit">프롬프트 생성</Button>
                             </AlertDialogFooter>
                         </form>

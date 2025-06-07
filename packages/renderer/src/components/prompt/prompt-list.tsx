@@ -1,12 +1,12 @@
 import { usePromptStore } from '@/store';
+import { useState } from 'react';
 import { CategoryFilterComboBox } from '../category/category-filter';
 import TagFilterBox from '../tag/tag-filter-box';
 import { Input } from '../ui/input';
 import { ScrollArea } from '../ui/scroll-area';
+import PromptDetail from './prompt-detail';
 import PromptListItemEmpty from './prompt-list-empty';
 import PromptListItem from './prompt-list-item';
-import PromptDetail from './prompt-detail';
-import { useState } from 'react';
 
 export default function PromptList() {
     const prompts = usePromptStore((state) => state.prompts);
@@ -51,7 +51,7 @@ export default function PromptList() {
             </div>
             <div className="h-9 flex gap-1">
                 <div className="flex-0">
-                    <CategoryFilterComboBox 
+                    <CategoryFilterComboBox
                         onSelect={handleCategoryChange}
                         value={searchFilter.category}
                     />
@@ -68,15 +68,18 @@ export default function PromptList() {
                     {prompts.length === 0 ? (
                         <PromptListItemEmpty />
                     ) : (
-                        prompts.map((prompt) => <PromptListItem key={prompt.id} prompt={prompt} onClick={handlePromptClick} />)
+                        prompts.map((prompt) => (
+                            <PromptListItem
+                                key={prompt.id}
+                                prompt={prompt}
+                                onClick={handlePromptClick}
+                            />
+                        ))
                     )}
                 </div>
             </ScrollArea>
 
-            <PromptDetail 
-                prompt={selectedPrompt}
-                onClose={() => setSelectedPrompt(null)}
-            />
+            <PromptDetail prompt={selectedPrompt} onClose={() => setSelectedPrompt(null)} />
         </div>
     );
 }

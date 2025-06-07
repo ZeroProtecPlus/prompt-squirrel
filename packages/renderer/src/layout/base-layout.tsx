@@ -10,7 +10,12 @@ interface BaseLayoutProps {
 
 export default function BaseLayout({ children, className }: BaseLayoutProps) {
     return (
-        <div className={cn("container max-w-none w-screen h-screen flex flex-col bg-background", className)}>
+        <div
+            className={cn(
+                'container max-w-none w-screen h-screen flex flex-col bg-background',
+                className,
+            )}
+        >
             <div>
                 <AppMenu />
             </div>

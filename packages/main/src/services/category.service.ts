@@ -1,9 +1,9 @@
 import { SqliteError } from 'better-sqlite3';
 import { Effect } from 'effect';
+import { categoryDatabaseExceptionHandler } from '../common/exceptions/handlers/category-database-exception.handler.js';
 import { ServiceException } from '../common/exceptions/service.exception.js';
 import { toCategoryDto } from '../mapper/category.mapper.js';
 import { categoryRepository } from '../repository/category.repository.js';
-import { categoryDatabaseExceptionHandler } from '../common/exceptions/handlers/category-database-exception.handler.js';
 
 interface ICategoryService {
     getAllCategories(): Effect.Effect<CategoryDto[], ServiceException>;
@@ -19,7 +19,7 @@ class CategoryService {
                 const categories = yield* categoryRepository.getAllCategories();
                 yield* Effect.logDebug('Service: getAllCategories - end');
                 return categories.map(toCategoryDto);
-            })
+            }),
         );
     }
 
@@ -30,7 +30,7 @@ class CategoryService {
                 const category = yield* categoryRepository.addCategory({ name });
                 yield* Effect.logDebug('Service: addCategory - end', { category });
                 return toCategoryDto(category);
-            })
+            }),
         );
     }
 
@@ -40,7 +40,7 @@ class CategoryService {
                 yield* Effect.logDebug('Service: removeCategoryByName - start', { name });
                 yield* categoryRepository.removeCategoryByName(name);
                 yield* Effect.logDebug('Service: removeCategoryByName - end', { name });
-            })
+            }),
         );
     }
 }

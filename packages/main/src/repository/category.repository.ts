@@ -1,8 +1,8 @@
 import { Effect, Logger } from 'effect';
+import { DatabaseException } from '../common/exceptions/database.exception.js';
+import { handleSqliteError } from '../common/exceptions/sqlite-error.handler.js';
 import { db } from '../database/db.js';
 import { InsertCategory, SelectCategory } from '../database/table/index.js';
-import { handleSqliteError } from '../common/exceptions/sqlite-error.handler.js';
-import { DatabaseException } from '../common/exceptions/database.exception.js';
 
 interface ICategoryRepository {
     getAllCategories(): Effect.Effect<SelectCategory[], DatabaseException>;
@@ -21,7 +21,7 @@ class CategoryRepository implements ICategoryRepository {
                 yield* Effect.logDebug('Repository getAllCategories - end');
                 return categories;
             }),
-        )
+        );
     }
 
     addCategory(insert: InsertCategory) {
@@ -29,7 +29,11 @@ class CategoryRepository implements ICategoryRepository {
             Effect.gen(function* () {
                 yield* Effect.logDebug('Repository addCategory - start');
                 const category = yield* Effect.promise(() =>
-                    db.insertInto('category').values(insert).returningAll().executeTakeFirstOrThrow(),
+                    db
+                        .insertInto('category')
+                        .values(insert)
+                        .returningAll()
+                        .executeTakeFirstOrThrow(),
                 );
                 yield* Effect.logDebug('Repository addCategory - end');
                 return category;
@@ -39,7 +43,7 @@ class CategoryRepository implements ICategoryRepository {
 
     removeCategoryByName(name: string) {
         return handleSqliteError(
-                Effect.gen(function* () {
+            Effect.gen(function* () {
                 yield* Effect.logDebug('Repository removeCategoryByName - start');
                 yield* Effect.promise(() =>
                     db.deleteFrom('category').where('name', '=', name).execute(),

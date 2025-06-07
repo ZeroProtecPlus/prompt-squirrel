@@ -72,9 +72,7 @@ export function CategoryFilterComboBox({ onSelect, value }: CategoryFilterComboB
                                     <Check
                                         className={cn(
                                             'ml-auto',
-                                            value?.id === category.id
-                                                ? 'opacity-100'
-                                                : 'opacity-0',
+                                            value?.id === category.id ? 'opacity-100' : 'opacity-0',
                                         )}
                                     />
                                 </CommandItem>

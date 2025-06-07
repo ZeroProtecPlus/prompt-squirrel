@@ -1,7 +1,7 @@
 import { CategoryTable } from './category.js';
-import { TagTable } from './tag.js';
 import { PromptTable } from './prompt.js';
 import { PromptTagTable } from './tag-prompt.js';
+import { TagTable } from './tag.js';
 
 export type {
     PromptTable,

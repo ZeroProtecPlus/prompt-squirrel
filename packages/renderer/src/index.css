@@ -3,7 +3,8 @@
 
 @layer utilities {
   @keyframes scale-pulse {
-    0%, 100% {
+    0%,
+    100% {
       transform: scale(0.9);
     }
     50% {
@@ -17,7 +18,7 @@
 
 @font-face {
   font-family: "Pretendard";
-  src: url('./assets/fonts/PretendardJP-Regular.woff2') format('woff2');
+  src: url("./assets/fonts/PretendardJP-Regular.woff2") format("woff2");
 }
 
 @theme {

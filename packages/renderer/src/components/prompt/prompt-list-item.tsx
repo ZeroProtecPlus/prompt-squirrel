@@ -1,9 +1,9 @@
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { usePromptStore } from '@/store';
 import CategoryBadge from '../category/category-badge';
+import CopyButton from '../shared/copy-button';
 import TagBadgeList from '../tag/tag-badge-list';
 import { Separator } from '../ui/separator';
-import { usePromptStore } from '@/store';
-import CopyButton from '../shared/copy-button';
 
 interface PromptListItemProps {
     prompt: Prompt;
@@ -30,7 +30,10 @@ export default function PromptListItem({ prompt, onClick }: PromptListItemProps)
     }
 
     return (
-        <Card className="p-2 gap-2 hover:bg-muted/40 select-none cursor-pointer" onClick={onPromptCardClick}>
+        <Card
+            className="p-2 gap-2 hover:bg-muted/40 select-none cursor-pointer"
+            onClick={onPromptCardClick}
+        >
             <CardHeader className="p-0">
                 <CardTitle className="text-sm font-semibold">{prompt.name}</CardTitle>
             </CardHeader>
@@ -38,14 +41,14 @@ export default function PromptListItem({ prompt, onClick }: PromptListItemProps)
                 <p className="text-sm text-muted-foreground text-ellipsis line-clamp-1 max-w-max">
                     {prompt.prompt}
                 </p>
-                <CopyButton 
+                <CopyButton
                     text={prompt.prompt}
                     className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity"
                 />
             </CardContent>
             <Separator />
             <CardFooter className="p-0 flex gap-1">
-                <CategoryBadge category={prompt.category} onBadgeClick={onCategoryBadgeClick}/>
+                <CategoryBadge category={prompt.category} onBadgeClick={onCategoryBadgeClick} />
                 <TagBadgeList tags={prompt.tags} onBadgeClick={onTagBadgeClick} />
             </CardFooter>
         </Card>

@@ -1,6 +1,6 @@
-import { Logger, LogLevel } from "effect";
+import { inspect } from 'node:util';
+import { LogLevel, Logger } from 'effect';
 import log from 'electron-log';
-import { inspect } from "node:util";
 
 log.initialize();
 
@@ -30,4 +30,4 @@ export const logger = Logger.make(({ logLevel, message }) => {
             log.info(logMessage);
             break;
     }
-})
+});

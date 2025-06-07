@@ -18,7 +18,9 @@ class DatabaseModule implements AppModule {
             .ifNotExists()
             .addColumn('id', 'integer', (col) => col.primaryKey().autoIncrement())
             .addColumn('name', 'varchar(255)', (col) => col.notNull().unique())
-            .addColumn('created_at', 'datetime', (col) => col.defaultTo(sql`CURRENT_TIMESTAMP`).notNull())
+            .addColumn('created_at', 'datetime', (col) =>
+                col.defaultTo(sql`CURRENT_TIMESTAMP`).notNull(),
+            )
             .execute();
 
         // Tag
@@ -27,7 +29,9 @@ class DatabaseModule implements AppModule {
             .ifNotExists()
             .addColumn('id', 'integer', (col) => col.primaryKey().autoIncrement())
             .addColumn('name', 'varchar(255)', (col) => col.notNull().unique())
-            .addColumn('created_at', 'datetime', (col) => col.defaultTo(sql`CURRENT_TIMESTAMP`).notNull())
+            .addColumn('created_at', 'datetime', (col) =>
+                col.defaultTo(sql`CURRENT_TIMESTAMP`).notNull(),
+            )
             .execute();
 
         // Prompt
@@ -38,9 +42,11 @@ class DatabaseModule implements AppModule {
             .addColumn('name', 'varchar(255)', (col) => col.notNull().unique())
             .addColumn('prompt', 'text', (col) => col.notNull())
             .addColumn('category_id', 'integer', (col) =>
-                col.references('category.id').onDelete('cascade')
+                col.references('category.id').onDelete('cascade'),
             )
-            .addColumn('created_at', 'datetime', (col) => col.defaultTo(sql`CURRENT_TIMESTAMP`).notNull())
+            .addColumn('created_at', 'datetime', (col) =>
+                col.defaultTo(sql`CURRENT_TIMESTAMP`).notNull(),
+            )
             .execute();
 
         // PromptTag
@@ -48,10 +54,10 @@ class DatabaseModule implements AppModule {
             .createTable('prompt_tag')
             .ifNotExists()
             .addColumn('prompt_id', 'integer', (col) =>
-            col.notNull().references('prompt.id').onDelete('cascade')
+                col.notNull().references('prompt.id').onDelete('cascade'),
             )
             .addColumn('tag_id', 'integer', (col) =>
-            col.notNull().references('tag.id').onDelete('cascade')
+                col.notNull().references('tag.id').onDelete('cascade'),
             )
             .addPrimaryKeyConstraint('pk_prompt_tag', ['prompt_id', 'tag_id'])
             .execute();
@@ -75,22 +81,18 @@ class DatabaseModule implements AppModule {
 
         await db
             .insertInto('tag')
-            .values([
-                { name: '태그1' },
-                { name: '태그2' },
-                { name: '태그3' },
-            ])
+            .values([{ name: '태그1' }, { name: '태그2' }, { name: '태그3' }])
             .execute();
 
         await db
             .insertInto('prompt')
             .values([
-                { 
+                {
                     name: '예시 프롬프트 1',
                     prompt: '귀여운 캐릭터, 아름다운 의상, 헤어스타일, 장소, 자세, 표정, 구도, 스타일, 장면',
                     category_id: 1,
                 },
-                { 
+                {
                     name: '예시 프롬프트 2',
                     prompt: '아름다운 의상',
                     category_id: 2,

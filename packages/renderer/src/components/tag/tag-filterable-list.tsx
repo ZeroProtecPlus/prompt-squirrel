@@ -1,5 +1,5 @@
-import { useTagStore } from "@/store";
-import FilterableList from "../shared/filterable-list";
+import { useTagStore } from '@/store';
+import FilterableList from '../shared/filterable-list';
 
 interface TagFilterableListProps {
     onTagClick: (tag: Tag) => void;

@@ -1,9 +1,9 @@
 import { STATIC_CATEGORIES } from '@/components/category/constants';
+import { createSuccessMessage, deleteSuccessMessage } from '@/lib/message';
 import { categoryApi } from '@app/preload';
+import { toast } from 'sonner';
 import { create } from 'zustand';
 import { usePromptStore } from './prompt.store';
-import { toast } from 'sonner';
-import { createSuccessMessage, deleteSuccessMessage } from '@/lib/message';
 
 type CategoryState = {
     categories: CategoryDto[];

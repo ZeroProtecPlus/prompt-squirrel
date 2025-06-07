@@ -1,4 +1,4 @@
-import { useTagStore } from "@/store";
+import { useTagStore } from '@/store';
 
 export function tagIdToTag(tagId: number): Tag;
 export function tagIdToTag(tagIds: number[]): Tag[];

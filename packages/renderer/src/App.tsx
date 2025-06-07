@@ -22,7 +22,7 @@ function App() {
             loading('태그 로딩중...');
             await loadTags();
             loading('프롬프트 로딩중...');
-            await loadPrompts()
+            await loadPrompts();
             stopLoading();
         }
 
@@ -34,9 +34,9 @@ function App() {
             <TooltipProvider>
                 <Loading />
                 <Toaster expand={false} position="top-center" richColors />
-                <BaseLayout className='relative'>
+                <BaseLayout className="relative">
                     <PromptList />
-                    <PromptCreateDialog className='absolute right-10 bottom-10'/>
+                    <PromptCreateDialog className="absolute right-10 bottom-10" />
                 </BaseLayout>
             </TooltipProvider>
         </>

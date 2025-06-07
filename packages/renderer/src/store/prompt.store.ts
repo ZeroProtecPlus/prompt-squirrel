@@ -1,12 +1,12 @@
 import { ALL_CATEGORY_ID, NONE_CATEGORY_ID } from '@/components/category/constants';
-import { searchResultToPrompt } from '@/lib/search-utils';
-import MiniSearch, { type SearchResult } from 'minisearch';
-import { create } from 'zustand';
-import { promptApi } from '@app/preload';
 import { toPrompt } from '@/lib/mapper';
-import { toast } from 'sonner';
 import { createSuccessMessage, deleteSuccessMessage, updateSuccessMessage } from '@/lib/message';
+import { searchResultToPrompt } from '@/lib/search-utils';
 import { tagIdToTag } from '@/lib/tag-utils';
+import { promptApi } from '@app/preload';
+import MiniSearch, { type SearchResult } from 'minisearch';
+import { toast } from 'sonner';
+import { create } from 'zustand';
 
 type PromptState = {
     prompts: Prompt[];
@@ -28,7 +28,10 @@ type PromptAction = {
     addPrompt: (prompt: CreatePromptDto) => Promise<void>;
     updatePrompt: (prompt: UpdatePromptDto, showToast?: boolean) => Promise<void>;
     addTagToPrompt: (addTagToPromptDto: AddTagToPromptDto, original: Prompt) => Promise<void>;
-    removeTagToPrompt: (removeTagFromPromptDto: RemoveTagFromPromptDto, original: Prompt) => Promise<void>;
+    removeTagToPrompt: (
+        removeTagFromPromptDto: RemoveTagFromPromptDto,
+        original: Prompt,
+    ) => Promise<void>;
     removePrompt: (prompt: Prompt) => Promise<void>;
     loadPrompts: () => Promise<void>;
 };
@@ -166,7 +169,10 @@ export const usePromptStore = create<
             }));
         },
 
-        removeTagToPrompt: async (removeTagFromPromptDto: RemoveTagFromPromptDto, original: Prompt) => {
+        removeTagToPrompt: async (
+            removeTagFromPromptDto: RemoveTagFromPromptDto,
+            original: Prompt,
+        ) => {
             const response = await promptApi.removeTagFromPrompt(removeTagFromPromptDto);
             if (!response.success) return Promise.reject(response.error);
 
@@ -197,7 +203,7 @@ export const usePromptStore = create<
             }));
 
             if (!showToast) return;
-            
+
             toast.success(updateSuccessMessage(promptDto.name));
         },
 

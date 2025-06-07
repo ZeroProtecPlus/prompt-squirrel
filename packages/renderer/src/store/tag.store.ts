@@ -1,8 +1,8 @@
-import { create } from 'zustand';
-import { tagApi } from '@app/preload';
-import { usePromptStore } from './prompt.store';
-import { toast } from 'sonner';
 import { createSuccessMessage, deleteSuccessMessage } from '@/lib/message';
+import { tagApi } from '@app/preload';
+import { toast } from 'sonner';
+import { create } from 'zustand';
+import { usePromptStore } from './prompt.store';
 
 type TagState = {
     tags: Tag[];
@@ -20,7 +20,7 @@ export const useTagStore = create<TagState & TagAction>((set) => ({
     addTag: async (tag: string) => {
         const response = await tagApi.addTag(tag);
         if (!response.success) return Promise.reject(response.error);
-    
+
         console.log('Tag added:', tag);
 
         const newTag: TagDto = response.data;

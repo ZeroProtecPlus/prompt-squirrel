@@ -1,9 +1,9 @@
-import { Effect } from "effect";
-import { db } from "../database/db.js";
-import { InsertPrompt, PromptTable, SelectPrompt, UpdatePrompt } from "../database/table/prompt.js";
-import { InsertPromptTag } from "../database/table/tag-prompt.js";
-import { DatabaseException } from "../common/exceptions/database.exception.js";
-import { handleSqliteError } from "../common/exceptions/sqlite-error.handler.js";
+import { Effect } from 'effect';
+import { DatabaseException } from '../common/exceptions/database.exception.js';
+import { handleSqliteError } from '../common/exceptions/sqlite-error.handler.js';
+import { db } from '../database/db.js';
+import { InsertPrompt, PromptTable, SelectPrompt, UpdatePrompt } from '../database/table/prompt.js';
+import { InsertPromptTag } from '../database/table/tag-prompt.js';
 
 interface IPromptRepository {
     getAllPrompts(): Effect.Effect<SelectPrompt[], DatabaseException>;
@@ -19,18 +19,22 @@ class PromptRepository implements IPromptRepository {
         return handleSqliteError(
             Effect.gen(function* () {
                 yield* Effect.logDebug('Repository getAllPrompts - start');
-                const prompts = yield* Effect.promise(() => db.selectFrom('prompt').selectAll().execute());
+                const prompts = yield* Effect.promise(() =>
+                    db.selectFrom('prompt').selectAll().execute(),
+                );
                 yield* Effect.logDebug('Repository getAllPrompts - end');
                 return prompts;
             }),
-        )
+        );
     }
 
     addPrompt(insert: InsertPrompt) {
         return handleSqliteError(
-                Effect.gen(function* () {
+            Effect.gen(function* () {
                 yield* Effect.logDebug('Repository addPrompt - start');
-                const prompt = yield* Effect.promise(() => db.insertInto('prompt').values(insert).returningAll().executeTakeFirstOrThrow());
+                const prompt = yield* Effect.promise(() =>
+                    db.insertInto('prompt').values(insert).returningAll().executeTakeFirstOrThrow(),
+                );
                 yield* Effect.logDebug('Repository addPrompt - end');
                 return prompt;
             }),
@@ -39,7 +43,7 @@ class PromptRepository implements IPromptRepository {
 
     addTagsToPrompt(inserts: InsertPromptTag[]) {
         return handleSqliteError(
-                Effect.gen(function* () {
+            Effect.gen(function* () {
                 yield* Effect.logDebug('Repository addTagsToPrompt - start');
                 yield* Effect.promise(() => db.insertInto('prompt_tag').values(inserts).execute());
                 yield* Effect.logDebug('Repository addTagsToPrompt - end');
@@ -49,16 +53,17 @@ class PromptRepository implements IPromptRepository {
 
     removeTagFromPrompt(promptId: number, tagId: number) {
         return handleSqliteError(
-                Effect.gen(function* () {
+            Effect.gen(function* () {
                 yield* Effect.logDebug('Repository removeTagFromPrompt - start');
                 yield* Effect.promise(() =>
-                    db.deleteFrom('prompt_tag')
+                    db
+                        .deleteFrom('prompt_tag')
                         .where('prompt_id', '=', promptId)
                         .where('tag_id', '=', tagId)
                         .execute(),
                 );
                 yield* Effect.logDebug('Repository removeTagFromPrompt - end');
-            })
+            }),
         );
     }
 
@@ -67,7 +72,8 @@ class PromptRepository implements IPromptRepository {
             Effect.gen(function* () {
                 yield* Effect.logDebug('Repository updatePrompt - start');
                 const prompt = yield* Effect.promise(() =>
-                    db.updateTable('prompt')
+                    db
+                        .updateTable('prompt')
                         .set(updatePrompt)
                         .where('id', '=', updatePrompt.id)
                         .returningAll()
@@ -83,9 +89,7 @@ class PromptRepository implements IPromptRepository {
         return handleSqliteError(
             Effect.gen(function* () {
                 yield* Effect.logDebug('Repository removePromptById - start');
-                yield* Effect.promise(() =>
-                    db.deleteFrom('prompt').where('id', '=', id).execute(),
-                );
+                yield* Effect.promise(() => db.deleteFrom('prompt').where('id', '=', id).execute());
                 yield* Effect.logDebug('Repository removePromptById - end');
             }),
         );

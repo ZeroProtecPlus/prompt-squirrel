@@ -1,8 +1,8 @@
-import { Effect } from "effect";
-import { db } from "../database/db.js";
-import { SelectTag } from "../database/table/tag.js";
-import { DatabaseException } from "../common/exceptions/database.exception.js";
-import { handleSqliteError } from "../common/exceptions/sqlite-error.handler.js";
+import { Effect } from 'effect';
+import { DatabaseException } from '../common/exceptions/database.exception.js';
+import { handleSqliteError } from '../common/exceptions/sqlite-error.handler.js';
+import { db } from '../database/db.js';
+import { SelectTag } from '../database/table/tag.js';
 
 interface ITagRepository {
     getAllTags(): Effect.Effect<SelectTag[], DatabaseException>;
@@ -22,7 +22,7 @@ class TagRepository implements ITagRepository {
                 yield* Effect.logDebug('Repository getAllTags - after');
                 return tags;
             }),
-        )
+        );
     }
 
     getTagsByPromptId(promptId: number) {
@@ -30,7 +30,8 @@ class TagRepository implements ITagRepository {
             Effect.gen(function* () {
                 yield* Effect.logDebug('Repository getTagsByPromptId - before');
                 const tags = yield* Effect.promise(() =>
-                    db.selectFrom('tag')
+                    db
+                        .selectFrom('tag')
                         .innerJoin('prompt_tag', 'tag.id', 'prompt_tag.tag_id')
                         .where('prompt_tag.prompt_id', '=', promptId)
                         .selectAll()

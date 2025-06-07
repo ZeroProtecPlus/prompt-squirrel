@@ -1,5 +1,5 @@
-import { InsertPromptTag } from "../database/table/tag-prompt.js";
-import { InsertPrompt, PromptTable, SelectPrompt, UpdatePrompt } from "../database/table/prompt.js";
+import { InsertPrompt, PromptTable, SelectPrompt, UpdatePrompt } from '../database/table/prompt.js';
+import { InsertPromptTag } from '../database/table/tag-prompt.js';
 
 export function toPromptDto(promptTable: SelectPrompt, tagIds: number[]): PromptDto {
     return {

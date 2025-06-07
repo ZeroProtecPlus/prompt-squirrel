@@ -1,4 +1,4 @@
-import { ColumnType, Generated, Insertable, Selectable, Updateable } from "kysely";
+import { ColumnType, Generated, Insertable, Selectable, Updateable } from 'kysely';
 
 export type PromptTable = {
     id: Generated<number>;
@@ -6,7 +6,7 @@ export type PromptTable = {
     prompt: string;
     category_id: number | null;
     created_at: ColumnType<Date, string | undefined, never>;
-}
+};
 
 export type SelectPrompt = Selectable<PromptTable>;
 export type InsertPrompt = Insertable<PromptTable>;

@@ -1,7 +1,7 @@
-import { SqliteError } from "better-sqlite3";
-import { Data } from "effect";
+import { SqliteError } from 'better-sqlite3';
+import { Data } from 'effect';
 
-export const DATABASE_EXCEPTION_TAG = "DatabaseException";
+export const DATABASE_EXCEPTION_TAG = 'DatabaseException';
 
 export class DatabaseException extends Data.TaggedError(DATABASE_EXCEPTION_TAG)<{
     name: string;
@@ -20,9 +20,9 @@ export class DatabaseException extends Data.TaggedError(DATABASE_EXCEPTION_TAG)<
         }
 
         return new DatabaseException({
-            name: "DatabaseException",
-            code: "UNKNOWN_ERROR",
-            message: "An unknown database error occurred.",
+            name: 'DatabaseException',
+            code: 'UNKNOWN_ERROR',
+            message: 'An unknown database error occurred.',
             cause: sqliteError,
         });
     }

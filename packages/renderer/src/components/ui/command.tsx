@@ -58,7 +58,9 @@ function CommandDialog({
 function CommandInput({
     className,
     ...props
-}: React.ComponentProps<typeof CommandPrimitive.Input> & { onPressEnterKey?: (e: React.KeyboardEvent) => void }) {
+}: React.ComponentProps<typeof CommandPrimitive.Input> & {
+    onPressEnterKey?: (e: React.KeyboardEvent) => void;
+}) {
     const isEmpty = useCommandState((state) => state.filtered.count === 0);
     const search = useCommandState((state) => state.search);
 

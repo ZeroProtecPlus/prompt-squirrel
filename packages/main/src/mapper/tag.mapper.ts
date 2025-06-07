@@ -1,4 +1,4 @@
-import { SelectTag } from "../database/table/tag.js";
+import { SelectTag } from '../database/table/tag.js';
 
 export function toTagDto(tag: SelectTag): TagDto {
     return {

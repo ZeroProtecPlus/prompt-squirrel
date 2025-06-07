@@ -1,9 +1,9 @@
-import { Check, Copy } from "lucide-react";
-import { Button } from "../ui/button";
-import { cn } from "@/lib/utils";
-import { useState } from "react";
-import { delay } from "es-toolkit";
-import { toast } from "sonner";
+import { cn } from '@/lib/utils';
+import { delay } from 'es-toolkit';
+import { Check, Copy } from 'lucide-react';
+import { useState } from 'react';
+import { toast } from 'sonner';
+import { Button } from '../ui/button';
 
 interface CopyButtonProps {
     text: string;
@@ -24,20 +24,20 @@ export default function CopyButton({ text, className }: CopyButtonProps) {
 
     return (
         <Button
-            className={cn("relative w-full h-full hover:bg-transparent", className)}
+            className={cn('relative w-full h-full hover:bg-transparent', className)}
             variant={'ghost'}
             onClick={handleCopy}
         >
             <Copy
                 className={cn(
-                    "absolute size-6 transition-all duration-300 text-accent-foreground",
-                    isCopied ? "opacity-0 scale-75" : "opacity-100 scale-100"
+                    'absolute size-6 transition-all duration-300 text-accent-foreground',
+                    isCopied ? 'opacity-0 scale-75' : 'opacity-100 scale-100',
                 )}
             />
             <Check
                 className={cn(
-                    "absolute size-6 transition-all duration-300 text-green-600 stroke-3",
-                    isCopied ? "opacity-100 scale-100" : "opacity-0 scale-75"
+                    'absolute size-6 transition-all duration-300 text-green-600 stroke-3',
+                    isCopied ? 'opacity-100 scale-100' : 'opacity-0 scale-75',
                 )}
             />
         </Button>

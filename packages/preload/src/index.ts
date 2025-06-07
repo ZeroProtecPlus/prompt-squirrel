@@ -14,8 +14,7 @@ const tagSender = createSender<ITagController, TagChannel>();
 const tagApi: ITagController = {
     getAllTags: () => tagSender.send('tag:getAllTags'),
     addTag: (name: string) => tagSender.send('tag:addTag', name),
-    removeTagByName: (name: string) =>
-        tagSender.send('tag:removeTagByName', name),
+    removeTagByName: (name: string) => tagSender.send('tag:removeTagByName', name),
 };
 
 const promptSender = createSender<IPromptController, PromptChannel>();
@@ -29,14 +28,7 @@ const promptApi: IPromptController = {
         promptSender.send('prompt:addTagToPrompt', addTagToPromptDto),
     removeTagFromPrompt: (removeTagFromPromptDto: RemoveTagFromPromptDto) =>
         promptSender.send('prompt:removeTagFromPrompt', removeTagFromPromptDto),
-    removePromptById: (id: number) =>
-        promptSender.send('prompt:removePromptById', id),
+    removePromptById: (id: number) => promptSender.send('prompt:removePromptById', id),
 };
 
-export { 
-    sha256sum, 
-    versions,
-    promptApi,
-    categoryApi, 
-    tagApi,
- };
+export { sha256sum, versions, promptApi, categoryApi, tagApi };
