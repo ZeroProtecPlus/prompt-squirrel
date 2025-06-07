@@ -10,6 +10,7 @@ import { Edit, Save } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Label } from '../ui/label';
 import CopyButton from '../shared/copy-button';
+import { usePromptStore } from '@/store';
 
 interface PromptDetailProps {
     prompt: Prompt | null;
@@ -17,15 +18,22 @@ interface PromptDetailProps {
 }
 
 export default function PromptDetail({ prompt, onClose }: PromptDetailProps) {
+    const updatePrompt = usePromptStore((state) => state.updatePrompt);
+    const addTagToPrompt = usePromptStore((state) => state.addTagToPrompt);
+    const removeTagToPrompt = usePromptStore((state) => state.removeTagToPrompt);
+
     const [isEditMode, setIsEditMode] = useState<boolean>(false);
 
+    const [category, setCategory] = useState<Category | null>(prompt?.category || null);
     const [promptText, setPromptText] = useState<string>(prompt?.prompt || '');
+    const [originalPromptText, setOriginalPromptText] = useState<string>(promptText);
 
     const open = !!prompt;
 
     useEffect(() => {
         if (prompt) {
             setPromptText(prompt.prompt);
+            setOriginalPromptText(prompt.prompt);
             setIsEditMode(false);
         }
     }, [prompt]);
@@ -36,28 +44,42 @@ export default function PromptDetail({ prompt, onClose }: PromptDetailProps) {
 
     function handleCategorySelect(category: Category | null) {
         let newCategory: Category | null = null;
+        if (!prompt) return;
 
         if (category) newCategory = toNullableCategory(category);
 
-        console.log('New category:', newCategory);
+        updatePrompt({
+            id: prompt.id,
+            categoryId: newCategory ? newCategory.id : null,
+        }, false);
+        setCategory(newCategory);
     }
 
-    function handleAddTag(tag: Tag) {
-        console.log('태그 추가:', tag);
+    async function handleAddTag(tag: Tag) {
+        if (!prompt) return;
+
+        await addTagToPrompt({ promptId: prompt.id, tagId: tag.id }, prompt);
     }
 
-    function handleRemoveTag(tag: Tag) {
-        console.log('태그 제거:', tag);
+    async function handleRemoveTag(tag: Tag) {
+        if (!prompt) return;
+
+        await removeTagToPrompt({ promptId: prompt.id, tagId: tag.id }, prompt);
     }
 
-    function handleEditToggle() {
+    async function handleEditToggle() {
+        if (!prompt) return;
+
         if (isEditMode) {
             setIsEditMode(false);
-            console.log('프롬프트 저장');
+            if (promptText === originalPromptText) return;
+            await updatePrompt({
+                id: prompt.id,
+                prompt: promptText,
+            })
         }
         else {
             setIsEditMode(true);
-            console.log('프롬프트 편집 모드 활성화');
         }
     }
 
@@ -68,7 +90,7 @@ export default function PromptDetail({ prompt, onClose }: PromptDetailProps) {
                     <SheetHeader className='p-0 pt-4'>
                         <SheetTitle>{prompt?.name}</SheetTitle>
                         <SheetDescription className='sr-only' />
-                        <CategoryFilterComboBox value={prompt?.category} onSelect={handleCategorySelect} />
+                        <CategoryFilterComboBox value={category} onSelect={handleCategorySelect} />
                     </SheetHeader>
                     <Separator className='mt-2'/>
                 </div>

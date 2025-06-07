@@ -1,13 +1,12 @@
-import { ALL_CATEGORY_ID, NONE_CATEGORY, NONE_CATEGORY_ID } from '@/components/category/constants';
+import { ALL_CATEGORY_ID, NONE_CATEGORY_ID } from '@/components/category/constants';
 import { searchResultToPrompt } from '@/lib/search-utils';
 import MiniSearch, { type SearchResult } from 'minisearch';
 import { create } from 'zustand';
 import { promptApi } from '@app/preload';
-import { useCategoryStore } from './category.store';
-import { useTagStore } from './tag.store';
 import { toPrompt } from '@/lib/mapper';
 import { toast } from 'sonner';
-import { createSuccessMessage, deleteSuccessMessage } from '@/lib/message';
+import { createSuccessMessage, deleteSuccessMessage, updateSuccessMessage } from '@/lib/message';
+import { tagIdToTag } from '@/lib/tag-utils';
 
 type PromptState = {
     prompts: Prompt[];
@@ -27,6 +26,9 @@ type PromptSearchAction = {
 
 type PromptAction = {
     addPrompt: (prompt: CreatePromptDto) => Promise<void>;
+    updatePrompt: (prompt: UpdatePromptDto, showToast?: boolean) => Promise<void>;
+    addTagToPrompt: (addTagToPromptDto: AddTagToPromptDto, original: Prompt) => Promise<void>;
+    removeTagToPrompt: (removeTagFromPromptDto: RemoveTagFromPromptDto, original: Prompt) => Promise<void>;
     removePrompt: (prompt: Prompt) => Promise<void>;
     loadPrompts: () => Promise<void>;
 };
@@ -138,25 +140,65 @@ export const usePromptStore = create<
 
             const promptDto = response.data;
 
-            const category = prompt.categoryId === null
-                ? NONE_CATEGORY
-                : useCategoryStore.getState().categories.find((c) => c.id === prompt.categoryId) ?? NONE_CATEGORY;
-
-            const matchedTags = prompt.tags
-                .map((tag) => useTagStore.getState().tags.find((t) => t.id === tag.id))
-                .filter((tag) => tag !== undefined);
-
-            const newPrompt: Prompt = {
-                ...promptDto,
-                category,
-                tags: matchedTags,
-            };
+            const newPrompt = toPrompt(promptDto);
 
             minisearch.add(newPrompt);
             set((state) => ({
                 prompts: [...state.prompts, newPrompt],
             }));
             toast.success(createSuccessMessage(prompt.name));
+        },
+
+        addTagToPrompt: async (addTagToPromptDto: AddTagToPromptDto, original: Prompt) => {
+            const response = await promptApi.addTagToPrompt(addTagToPromptDto);
+            if (!response.success) return Promise.reject(response.error);
+
+            const tag = tagIdToTag(addTagToPromptDto.tagId);
+
+            const updatedPrompt = {
+                ...original,
+                tags: [...original.tags, tag],
+            };
+
+            minisearch.replace(updatedPrompt);
+            set((state) => ({
+                prompts: state.prompts.map((p) => (p.id === updatedPrompt.id ? updatedPrompt : p)),
+            }));
+        },
+
+        removeTagToPrompt: async (removeTagFromPromptDto: RemoveTagFromPromptDto, original: Prompt) => {
+            const response = await promptApi.removeTagFromPrompt(removeTagFromPromptDto);
+            if (!response.success) return Promise.reject(response.error);
+
+            const tag = tagIdToTag(removeTagFromPromptDto.tagId);
+
+            const updatedPrompt = {
+                ...original,
+                tags: original.tags.filter((t) => t.id !== tag.id),
+            };
+
+            minisearch.replace(updatedPrompt);
+            set((state) => ({
+                prompts: state.prompts.map((p) => (p.id === updatedPrompt.id ? updatedPrompt : p)),
+            }));
+        },
+
+        updatePrompt: async (UpdatePromptDto: UpdatePromptDto, showToast = true) => {
+            const response = await promptApi.updatePrompt(UpdatePromptDto);
+            if (!response.success) return Promise.reject(response.error);
+
+            const promptDto = response.data;
+
+            const updatedPrompt = toPrompt(promptDto);
+
+            minisearch.replace(updatedPrompt);
+            set((state) => ({
+                prompts: state.prompts.map((p) => (p.id === updatedPrompt.id ? updatedPrompt : p)),
+            }));
+
+            if (!showToast) return;
+            
+            toast.success(updateSuccessMessage(promptDto.name));
         },
 
         removePrompt: async (prompt: Prompt) => {

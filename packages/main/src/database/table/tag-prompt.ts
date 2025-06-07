@@ -5,4 +5,4 @@ export type PromptTagTable = {
     tag_id: number;
 }
 
-export type InsertablePromptTag = Insertable<PromptTagTable>;
+export type InsertPromptTag = Insertable<PromptTagTable>;

@@ -10,4 +10,4 @@ export type PromptTable = {
 
 export type SelectPrompt = Selectable<PromptTable>;
 export type InsertPrompt = Insertable<PromptTable>;
-export type UpdatePrompt = Updateable<PromptTable>;
+export type UpdatePrompt = Pick<SelectPrompt, 'id'> & Omit<Updateable<PromptTable>, 'id'>;

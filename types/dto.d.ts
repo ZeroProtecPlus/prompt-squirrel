@@ -19,6 +19,20 @@ type CreatePromptDto = {
     tags: Tag[];
 }
 
+type UpdatePromptDto = {
+    id: number;
+    name?: string;
+    prompt?: string;
+    categoryId?: number | null;
+}
+
+type AddTagToPromptDto = {
+    promptId: number;
+    tagId: number;
+}
+
+type RemoveTagFromPromptDto = AddTagToPromptDto;
+
 type PromptDto = {
     id: number;
     name: string;

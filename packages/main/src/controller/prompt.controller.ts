@@ -34,6 +34,48 @@ class PromptController implements IPromptController {
         );
     }
 
+    updatePrompt(updatePromptDto: UpdatePromptDto): Promise<IPCResponse<PromptDto>> {
+        return runWithLogger(
+            Effect.gen(function* () {
+                yield* Effect.log("updatePrompt - start", { updatePromptDto });
+                const prompt = yield* promptService.updatePrompt(updatePromptDto);
+                yield* Effect.log("updatePrompt - end", { prompt });
+                return Ok(prompt);
+            }).pipe(
+                Effect.catchAll((error) => Effect.succeed(Err(error))),
+            ),
+            this.PREFIX,
+        );
+    }
+
+    addTagToPrompt(addTagToPromptDto: AddTagToPromptDto): Promise<IPCResponse<void>> {
+        return runWithLogger(
+            Effect.gen(function* () {
+                yield* Effect.log("addTagToPrompt - start", { addTagToPromptDto });
+                yield* promptService.addTagToPrompt(addTagToPromptDto);
+                yield* Effect.log("addTagToPrompt - end", { addTagToPromptDto });
+                return Ok();
+            }).pipe(
+                Effect.catchAll((error) => Effect.succeed(Err(error))),
+            ),
+            this.PREFIX,
+        );
+    }
+
+    removeTagFromPrompt(removeTagFromPromptDto: RemoveTagFromPromptDto): Promise<IPCResponse<void>> {
+        return runWithLogger(
+            Effect.gen(function* () {
+                yield* Effect.log("removeTagFromPrompt - start", { removeTagFromPromptDto });
+                yield* promptService.removeTagFromPrompt(removeTagFromPromptDto);
+                yield* Effect.log("removeTagFromPrompt - end", { removeTagFromPromptDto });
+                return Ok();
+            }).pipe(
+                Effect.catchAll((error) => Effect.succeed(Err(error))),
+            ),
+            this.PREFIX,
+        );
+    }
+
     removePromptById(id: number): Promise<IPCResponse<void>> {
         return runWithLogger(
             Effect.gen(function* () {

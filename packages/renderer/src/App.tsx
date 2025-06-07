@@ -7,7 +7,6 @@ import { useEffect } from 'react';
 import PromptCreateDialog from './components/prompt/prompt-create-dialog';
 import Loading from './components/shared/loading';
 import { useLoading } from './hooks/use-loading';
-import { delay } from 'es-toolkit';
 
 function App() {
     const { loading, stopLoading } = useLoading();
@@ -24,7 +23,6 @@ function App() {
             await loadTags();
             loading('프롬프트 로딩중...');
             await loadPrompts()
-            await delay(3000); // @TODO 로딩 애니메이션을 위해 임시로 추가
             stopLoading();
         }
 
