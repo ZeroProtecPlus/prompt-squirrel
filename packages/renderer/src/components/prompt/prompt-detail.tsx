@@ -17,10 +17,10 @@ import { usePromptStore } from '@/store';
 import { useEffect, useRef, useState } from 'react';
 import { CategoryFilterComboBox } from '../category/category-filter';
 import CopyButton from '../shared/copy-button';
-import { Label } from '../ui/label';
-import { Separator } from '../ui/separator';
 import EditSaveToggle from '../shared/edit-save-toggle';
 import { Input } from '../ui/input';
+import { Label } from '../ui/label';
+import { Separator } from '../ui/separator';
 
 interface PromptDetailProps {
     prompt: Prompt | null;
@@ -111,12 +111,13 @@ export default function PromptDetail({ prompt, onClose }: PromptDetailProps) {
                 <div className="flex-shrink-0">
                     <SheetHeader className="p-0 pt-6">
                         <SheetTitle asChild>
-                            <div className='flex items-center justify-between gap-2'>
+                            <div className="flex items-center justify-between gap-2">
                                 <Input
-                                    className={cn('p-0 transition-all text-3xl sm:text-2xl md:text-3xl lg:text-4xl',
+                                    className={cn(
+                                        'p-0 transition-all text-3xl sm:text-2xl md:text-3xl lg:text-4xl',
                                         isNameEditMode
-                                        ? 'border shadow-sm focus-visible:ring-1'
-                                        : 'border-none shadow-none bg-transparent pointer-events-none focus-visible:ring-0 select-none text-ellipsis'
+                                            ? 'border shadow-sm focus-visible:ring-1'
+                                            : 'border-none shadow-none bg-transparent pointer-events-none focus-visible:ring-0 select-none text-ellipsis',
                                     )}
                                     value={promptName}
                                     onChange={(e) => setPromptName(e.target.value)}

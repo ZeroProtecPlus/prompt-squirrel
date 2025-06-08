@@ -14,7 +14,9 @@ interface IPromptService {
     getAllPrompts(): Effect.Effect<PromptDto[], ServiceException>;
     addPrompt(createPromptDto: CreatePromptDto): Effect.Effect<PromptDto, ServiceException>;
     updatePrompt(updatePromptDto: UpdatePromptDto): Effect.Effect<PromptDto, ServiceException>;
-    addTagToPrompt(addTagToPromptDto: AddTagToPromptDto): Effect.Effect<PromptDto, ServiceException>;
+    addTagToPrompt(
+        addTagToPromptDto: AddTagToPromptDto,
+    ): Effect.Effect<PromptDto, ServiceException>;
     removeTagFromPrompt(
         removeTagFromPromptDto: RemoveTagFromPromptDto,
     ): Effect.Effect<PromptDto, ServiceException>;
@@ -83,7 +85,9 @@ class PromptService implements IPromptService {
         );
     }
 
-    addTagToPrompt(addTagToPromptDto: AddTagToPromptDto): Effect.Effect<PromptDto, ServiceException> {
+    addTagToPrompt(
+        addTagToPromptDto: AddTagToPromptDto,
+    ): Effect.Effect<PromptDto, ServiceException> {
         return promptExceptionHandler(
             Effect.gen(function* () {
                 yield* Effect.logDebug('Service: addTagToPrompt - start', { addTagToPromptDto });

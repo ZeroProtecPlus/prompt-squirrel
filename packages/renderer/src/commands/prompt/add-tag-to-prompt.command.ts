@@ -11,7 +11,7 @@ export async function addTagToPromptCommand(
     const addTagToPrompt = usePromptStore.getState().addTagToPrompt;
 
     try {
-        await addTagToPrompt({ promptId: prompt.id, tagId: tag.id }, prompt);
+        await addTagToPrompt({ promptId: prompt.id, tagId: tag.id });
     } catch (error) {
         if (isServiceException(error)) onError?.(error);
         console.error('Failed to add tag to prompt:', error);

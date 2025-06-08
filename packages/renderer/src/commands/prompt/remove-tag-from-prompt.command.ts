@@ -11,7 +11,7 @@ export async function removeTagFromPromptCommand(
     const removeTagFromPrompt = usePromptStore.getState().removeTagFromPrompt;
 
     try {
-        await removeTagFromPrompt({ promptId: prompt.id, tagId: tag.id }, prompt);
+        await removeTagFromPrompt({ promptId: prompt.id, tagId: tag.id });
     } catch (error) {
         if (isServiceException(error)) onError?.(error);
         console.error('Failed to remove tag from prompt:', error);

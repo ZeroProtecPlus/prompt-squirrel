@@ -35,7 +35,9 @@ export default function PromptListItem({ prompt, onClick }: PromptListItemProps)
             onClick={onPromptCardClick}
         >
             <CardHeader className="p-0">
-                <CardTitle className="text-sm font-semibold line-clamp-1 break-all">{prompt.name}</CardTitle>
+                <CardTitle className="text-sm font-semibold line-clamp-1 break-all">
+                    {prompt.name}
+                </CardTitle>
             </CardHeader>
             <CardContent className="p-0 h-full relative group">
                 <p className="text-sm text-muted-foreground text-ellipsis line-clamp-1 max-w-max">

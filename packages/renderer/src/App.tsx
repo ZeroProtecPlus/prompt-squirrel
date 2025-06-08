@@ -33,7 +33,7 @@ function App() {
         <>
             <TooltipProvider>
                 <Loading />
-                <Toaster expand={false} position="bottom-left" richColors closeButton/>
+                <Toaster expand={false} position="bottom-left" richColors closeButton />
                 <BaseLayout className="relative">
                     <PromptList />
                     <PromptCreateDialog className="absolute right-10 bottom-10" />

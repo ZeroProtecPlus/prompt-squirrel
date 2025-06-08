@@ -60,7 +60,8 @@ class PromptController implements IPromptController {
         return runWithLogger(
             Effect.gen(function* () {
                 yield* Effect.logDebug('removeTagFromPrompt - start', { removeTagFromPromptDto });
-                const updatedPrompt = yield* promptService.removeTagFromPrompt(removeTagFromPromptDto);
+                const updatedPrompt =
+                    yield* promptService.removeTagFromPrompt(removeTagFromPromptDto);
                 yield* Effect.logDebug('removeTagFromPrompt - end', { removeTagFromPromptDto });
                 return Ok(updatedPrompt);
             }),
