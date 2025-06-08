@@ -2,6 +2,7 @@ import { sql } from 'kysely';
 import { AppModule } from 'src/AppModule.js';
 import { ModuleContext } from 'src/ModuleContext.js';
 import { db } from '../database/db.js';
+import { isDevMode } from 'src/utils/env.js';
 
 class DatabaseModule implements AppModule {
     async enable(context: ModuleContext): Promise<void> {
@@ -64,6 +65,8 @@ class DatabaseModule implements AppModule {
     }
 
     async seed(): Promise<void> {
+        if (!isDevMode()) return;
+
         await db
             .insertInto('category')
             .values([
