@@ -23,7 +23,6 @@ export default function PromptListItem({ prompt, onClick }: PromptListItemProps)
     function onCategoryBadgeClick(category: Category) {
         setSearchFilter('category', category);
         search();
-        console.log('Category badge clicked:', category);
     }
 
     function onPromptCardClick() {

@@ -115,7 +115,6 @@ export const usePromptStore = create<
         },
 
         setSearchFilter(by: Filterable<Prompt>, value: string | Category | null) {
-            console.log('Setting search filter:', by, value);
             set((state) => {
                 const newSearchFilter = { ...state.searchFilter };
 
@@ -130,7 +129,6 @@ export const usePromptStore = create<
                 }
                 return { searchFilter: newSearchFilter };
             });
-            console.log('Updated search filter:', get().searchFilter);
         },
 
         addPrompt: async (prompt: CreatePromptDto) => {
@@ -197,7 +195,6 @@ export const usePromptStore = create<
         },
 
         removePrompt: async (promptId: number) => {
-            console.log('Removing prompt with ID:', promptId);
             const response = await promptApi.removePromptById(promptId);
             if (!response.success) return Promise.reject(response.error);
 
@@ -210,7 +207,6 @@ export const usePromptStore = create<
         },
 
         loadPrompts: async () => {
-            console.log('Loading prompts...');
             const response = await promptApi.getAllPrompts();
             if (!response.success) return Promise.reject(response.error);
 

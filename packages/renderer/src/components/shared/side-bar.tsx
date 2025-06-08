@@ -11,14 +11,12 @@ export default function Sidebar() {
     const search = usePromptStore((state) => state.search);
 
     function onTagClick(tag: Tag) {
-        console.log('Selected tag:', tag);
         setSearchFilter('tags', tag.name);
         search();
     }
 
     // Category
     function onCategoryClick(category: Category) {
-        console.log('Selected category:', category);
         setSearchFilter('category', category);
         search();
     }

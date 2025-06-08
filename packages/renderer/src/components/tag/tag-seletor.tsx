@@ -35,7 +35,6 @@ export default function TagSelector({
     }
 
     function handleTagClick(tag: Tag) {
-        console.log('Selected tag:', tag);
         toggleTag(tag);
     }
 

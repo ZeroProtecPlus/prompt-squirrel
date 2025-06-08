@@ -22,8 +22,6 @@ export const useCategoryStore = create<CategoryState & CategoryAction>((set) => 
         const response = await categoryApi.addCategory(name);
         if (!response.success) return Promise.reject(response.error);
 
-        console.log('Category added:', name);
-
         const category = response.data;
 
         set((state) => ({
@@ -39,20 +37,17 @@ export const useCategoryStore = create<CategoryState & CategoryAction>((set) => 
         set((state) => ({
             categories: state.categories.filter((c) => c.name !== name),
         }));
-        console.log('Category removed:', name);
         toast.success(deleteSuccessMessage(name));
 
         usePromptStore.getState().loadPrompts();
     },
 
     loadCategories: async () => {
-        console.log('Loading categories...');
         const response = await categoryApi.getAllCategories();
         if (!response.success) return Promise.reject(response.error);
 
         const categories: CategoryDto[] = [...STATIC_CATEGORIES, ...response.data];
 
         set({ categories });
-        console.log('Categories loaded:', categories.length);
     },
 }));

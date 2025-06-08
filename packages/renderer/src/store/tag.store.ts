@@ -41,7 +41,6 @@ export const useTagStore = create<TagState & TagAction>((set) => ({
     },
 
     loadTags: async () => {
-        console.log('Loading tags...');
         const response = await tagApi.getAllTags();
         if (!response.success) return Promise.reject(response.error);
 
