@@ -1,9 +1,9 @@
+import { importCommand, exportCommand } from '@/commands/menu';
 import {
     Menubar,
     MenubarContent,
     MenubarItem,
     MenubarMenu,
-    MenubarSeparator,
     MenubarTrigger,
 } from '@/components/ui/menubar';
 
@@ -13,10 +13,8 @@ export default function AppMenu() {
             <MenubarMenu>
                 <MenubarTrigger>파일</MenubarTrigger>
                 <MenubarContent>
-                    <MenubarItem>불러오기</MenubarItem>
-                    <MenubarItem>내보내기</MenubarItem>
-                    <MenubarSeparator />
-                    <MenubarItem>종료</MenubarItem>
+                    <MenubarItem onClick={importCommand}>불러오기</MenubarItem>
+                    <MenubarItem onClick={exportCommand}>내보내기</MenubarItem>
                 </MenubarContent>
             </MenubarMenu>
             <MenubarMenu>
