@@ -48,6 +48,8 @@ export default function PromptDetail({ prompt, onClose }: PromptDetailProps) {
         originalPromptText.current = prompt.prompt;
         setPromptName(prompt.name);
         originalPromptName.current = prompt.name;
+        setCategory(prompt.category);
+
         setIsPromptEditMode(false);
         setIsNameEditMode(false);
     }, [prompt]);
