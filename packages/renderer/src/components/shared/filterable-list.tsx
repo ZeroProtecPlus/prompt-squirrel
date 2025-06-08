@@ -58,18 +58,18 @@ export default function FilterableList({
         onDeleteItem?.(item);
     }
 
+    function handleEmptyButtonClick() {
+        onEmptyButtonClick?.(value.trim());
+        setValue('');
+    }
+
     return (
         <Command>
             <CommandInput
                 placeholder={placeholder || '검색...'}
                 value={value}
                 onValueChange={onValueChange}
-                onPressEnterKey={() => {
-                    if (onEmptyButtonClick) {
-                        onEmptyButtonClick(value.trim());
-                        setValue('');
-                    }
-                }}
+                onPressEnterKey={handleEmptyButtonClick}
             />
             <CommandList className="h-full">
                 <CommandEmpty asChild>
@@ -77,7 +77,7 @@ export default function FilterableList({
                         <Button
                             className="w-full h-full m-1"
                             variant={'ghost'}
-                            onClick={() => onEmptyButtonClick(value)}
+                            onClick={handleEmptyButtonClick}
                         >
                             "{value}" 생성
                         </Button>
