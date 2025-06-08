@@ -111,7 +111,7 @@ export default function PromptDetail({ prompt, onClose }: PromptDetailProps) {
                         <SheetTitle asChild>
                             <div className='flex items-center justify-between gap-2'>
                                 <Input
-                                    className={cn('transition-all',
+                                    className={cn('p-0 transition-all text-3xl sm:text-2xl md:text-3xl lg:text-4xl',
                                         isNameEditMode
                                         ? 'border shadow-sm focus-visible:ring-1'
                                         : 'border-none shadow-none bg-transparent pointer-events-none focus-visible:ring-0 select-none text-ellipsis'
@@ -123,7 +123,6 @@ export default function PromptDetail({ prompt, onClose }: PromptDetailProps) {
                                     onKeyDown={handleNameInputKeyDown}
                                 />
                                 <EditSaveToggle
-                                    className="size-9 sm:size-10"
                                     value={isNameEditMode}
                                     onEditMode={() => setIsNameEditMode(true)}
                                     onSaveMode={handleNameSave}
