@@ -22,6 +22,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { cn, isServiceException } from '@/lib/utils';
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
+import PromptRemoveButton from './prompt-remove-button';
 
 interface PromptDetailProps {
     prompt: Prompt | null;
@@ -29,9 +30,12 @@ interface PromptDetailProps {
 }
 
 export default function PromptDetail({ prompt, onClose }: PromptDetailProps) {
+    const open = !!prompt;
+
     const [isNameEditMode, setIsNameEditMode] = useState<boolean>(false);
     const [isPromptEditMode, setIsPromptEditMode] = useState<boolean>(false);
 
+    const promptId = useRef<number | null>(prompt?.id || null);
     const [category, setCategory] = useState<Category | null>(prompt?.category || null);
     const [promptName, setPromptName] = useState<string>(prompt?.name || '');
     const originalPromptName = useRef<string>(promptName);
@@ -39,11 +43,10 @@ export default function PromptDetail({ prompt, onClose }: PromptDetailProps) {
     const originalPromptText = useRef<string>(promptText);
     const [tags, setTags] = useState<Tag[]>(prompt?.tags || []);
 
-    const open = !!prompt;
-
     useEffect(() => {
         if (!prompt) return;
 
+        promptId.current = prompt.id;
         setCategory(prompt.category);
         setPromptName(prompt.name);
         originalPromptName.current = prompt.name;
@@ -120,9 +123,13 @@ export default function PromptDetail({ prompt, onClose }: PromptDetailProps) {
                     <SheetHeader className="p-0 pt-6">
                         <SheetTitle asChild>
                             <div className="flex items-center justify-between gap-2">
+                                <PromptRemoveButton
+                                    promptId={promptId.current}
+                                    onRemove={onClose}
+                                />
                                 <Input
                                     className={cn(
-                                        'p-0 transition-all text-3xl sm:text-2xl md:text-3xl lg:text-4xl',
+                                        'p-2 transition-all text-xl sm:text-2xl md:text-3xl lg:text-4xl',
                                         isNameEditMode
                                             ? 'border shadow-sm focus-visible:ring-1'
                                             : 'border-none shadow-none bg-transparent pointer-events-none focus-visible:ring-0 select-none text-ellipsis',

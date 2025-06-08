@@ -4,6 +4,7 @@ import TagBadgeList from '@/components/tag/tag-badge-list';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { usePromptStore } from '@/store';
+import PromptRemoveButton from './prompt-remove-button';
 
 interface PromptListItemProps {
     prompt: Prompt;
@@ -50,8 +51,11 @@ export default function PromptListItem({ prompt, onClick }: PromptListItemProps)
             </CardContent>
             <Separator />
             <CardFooter className="p-0 flex gap-1">
-                <CategoryBadge category={prompt.category} onBadgeClick={onCategoryBadgeClick} />
-                <TagBadgeList tags={prompt.tags} onBadgeClick={onTagBadgeClick} />
+                <div className="flex items-center gap-1 flex-1">
+                    <CategoryBadge category={prompt.category} onBadgeClick={onCategoryBadgeClick} />
+                    <TagBadgeList tags={prompt.tags} onBadgeClick={onTagBadgeClick} />
+                </div>
+                <PromptRemoveButton className="size-5" promptId={prompt.id} />
             </CardFooter>
         </Card>
     );

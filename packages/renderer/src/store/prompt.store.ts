@@ -28,7 +28,7 @@ type PromptAction = {
     updatePrompt: (prompt: UpdatePromptDto, showToast?: boolean) => Promise<Prompt>;
     addTagToPrompt: (addTagToPromptDto: AddTagToPromptDto) => Promise<void>;
     removeTagFromPrompt: (removeTagFromPromptDto: RemoveTagFromPromptDto) => Promise<void>;
-    removePrompt: (prompt: Prompt) => Promise<void>;
+    removePrompt: (promptId: number) => Promise<void>;
     loadPrompts: () => Promise<void>;
 };
 
@@ -196,16 +196,17 @@ export const usePromptStore = create<
             return updatedPrompt;
         },
 
-        removePrompt: async (prompt: Prompt) => {
-            const response = await promptApi.removePromptById(prompt.id);
+        removePrompt: async (promptId: number) => {
+            console.log('Removing prompt with ID:', promptId);
+            const response = await promptApi.removePromptById(promptId);
             if (!response.success) return Promise.reject(response.error);
 
-            minisearch.remove(prompt.id);
+            minisearch.remove({ id: promptId });
             set((state) => ({
-                prompts: state.prompts.filter((p) => p.id !== prompt.id),
+                prompts: state.prompts.filter((p) => p.id !== promptId),
             }));
 
-            toast.success(deleteSuccessMessage(prompt.name));
+            toast.success(deleteSuccessMessage());
         },
 
         loadPrompts: async () => {
