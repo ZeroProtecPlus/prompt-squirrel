@@ -1,3 +1,5 @@
+type Theme = 'dark' | 'light' | 'green' | 'system';
+
 type Filterable<T> = keyof Pick<T, Extract<keyof T, 'category' | 'tags'>>;
 
 type SearchFilterOptions = {

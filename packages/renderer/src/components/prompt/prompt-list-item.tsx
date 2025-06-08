@@ -1,9 +1,9 @@
+import CategoryBadge from '@/components/category/category-badge';
+import CopyButton from '@/components/shared/copy-button';
+import TagBadgeList from '@/components/tag/tag-badge-list';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
 import { usePromptStore } from '@/store';
-import CategoryBadge from '../category/category-badge';
-import CopyButton from '../shared/copy-button';
-import TagBadgeList from '../tag/tag-badge-list';
-import { Separator } from '../ui/separator';
 
 interface PromptListItemProps {
     prompt: Prompt;

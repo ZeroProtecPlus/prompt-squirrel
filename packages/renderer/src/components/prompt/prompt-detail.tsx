@@ -3,7 +3,13 @@ import {
     removeTagFromPromptCommand,
     updatePromptCategoryCommand,
 } from '@/commands/prompt';
+import { CategoryFilterComboBox } from '@/components/category/category-filter';
+import CopyButton from '@/components/shared/copy-button';
+import EditSaveToggle from '@/components/shared/edit-save-toggle';
 import TagSelector from '@/components/tag/tag-seletor';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Separator } from '@/components/ui/separator';
 import {
     Sheet,
     SheetContent,
@@ -15,12 +21,6 @@ import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import { usePromptStore } from '@/store';
 import { useEffect, useRef, useState } from 'react';
-import { CategoryFilterComboBox } from '../category/category-filter';
-import CopyButton from '../shared/copy-button';
-import EditSaveToggle from '../shared/edit-save-toggle';
-import { Input } from '../ui/input';
-import { Label } from '../ui/label';
-import { Separator } from '../ui/separator';
 
 interface PromptDetailProps {
     prompt: Prompt | null;

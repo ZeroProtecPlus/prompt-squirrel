@@ -1,12 +1,13 @@
+import { useLoading } from '@/components/hooks/use-loading';
+import PromptCreateDialog from '@/components/prompt/prompt-create-dialog';
 import PromptList from '@/components/prompt/prompt-list';
+import Loading from '@/components/shared/loading';
 import { Toaster } from '@/components/ui/sonner';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import BaseLayout from '@/layout/base-layout';
 import { useCategoryStore, usePromptStore, useTagStore } from '@/store';
 import { useEffect } from 'react';
-import PromptCreateDialog from './components/prompt/prompt-create-dialog';
-import Loading from './components/shared/loading';
-import { useLoading } from './hooks/use-loading';
+import { ThemeProvider } from './components/provider/theme-provider';
 
 function App() {
     const { loading, stopLoading } = useLoading();
@@ -30,7 +31,7 @@ function App() {
     }, [loadCategories, loadTags, loadPrompts, loading, stopLoading]);
 
     return (
-        <>
+        <ThemeProvider>
             <TooltipProvider>
                 <Loading />
                 <Toaster expand={false} position="bottom-left" richColors closeButton />
@@ -39,7 +40,7 @@ function App() {
                     <PromptCreateDialog className="absolute right-10 bottom-10" />
                 </BaseLayout>
             </TooltipProvider>
-        </>
+        </ThemeProvider>
     );
 }
 

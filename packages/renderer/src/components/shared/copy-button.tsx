@@ -3,7 +3,7 @@ import { delay } from 'es-toolkit';
 import { Check, Copy } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { Button } from '../ui/button';
+import { Button } from '@/components/ui/button';
 
 interface CopyButtonProps {
     text: string;
