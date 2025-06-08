@@ -2,7 +2,6 @@ import { ALL_CATEGORY_ID, NONE_CATEGORY_ID } from '@/components/category/constan
 import { toPrompt } from '@/lib/mapper';
 import { createSuccessMessage, deleteSuccessMessage, updateSuccessMessage } from '@/lib/message';
 import { searchResultToPrompt } from '@/lib/search-utils';
-import { tagIdToTag } from '@/lib/tag-utils';
 import { promptApi } from '@app/preload';
 import MiniSearch, { type SearchResult } from 'minisearch';
 import { toast } from 'sonner';
@@ -27,11 +26,8 @@ type PromptSearchAction = {
 type PromptAction = {
     addPrompt: (prompt: CreatePromptDto) => Promise<void>;
     updatePrompt: (prompt: UpdatePromptDto, showToast?: boolean) => Promise<Prompt>;
-    addTagToPrompt: (addTagToPromptDto: AddTagToPromptDto, original: Prompt) => Promise<void>;
-    removeTagFromPrompt: (
-        removeTagFromPromptDto: RemoveTagFromPromptDto,
-        original: Prompt,
-    ) => Promise<void>;
+    addTagToPrompt: (addTagToPromptDto: AddTagToPromptDto) => Promise<void>;
+    removeTagFromPrompt: (removeTagFromPromptDto: RemoveTagFromPromptDto) => Promise<void>;
     removePrompt: (prompt: Prompt) => Promise<void>;
     loadPrompts: () => Promise<void>;
 };
@@ -154,16 +150,13 @@ export const usePromptStore = create<
             toast.success(createSuccessMessage(prompt.name));
         },
 
-        addTagToPrompt: async (addTagToPromptDto: AddTagToPromptDto, original: Prompt) => {
+        addTagToPrompt: async (addTagToPromptDto: AddTagToPromptDto) => {
             const response = await promptApi.addTagToPrompt(addTagToPromptDto);
             if (!response.success) return Promise.reject(response.error);
 
-            const tag = tagIdToTag(addTagToPromptDto.tagId);
+            const PromptDto = response.data;
 
-            const updatedPrompt = {
-                ...original,
-                tags: [...original.tags, tag],
-            };
+            const updatedPrompt = toPrompt(PromptDto);
 
             minisearch.replace(updatedPrompt);
             set((state) => ({
@@ -171,19 +164,13 @@ export const usePromptStore = create<
             }));
         },
 
-        removeTagFromPrompt: async (
-            removeTagFromPromptDto: RemoveTagFromPromptDto,
-            original: Prompt,
-        ) => {
+        removeTagFromPrompt: async (removeTagFromPromptDto: RemoveTagFromPromptDto) => {
             const response = await promptApi.removeTagFromPrompt(removeTagFromPromptDto);
             if (!response.success) return Promise.reject(response.error);
 
-            const tag = tagIdToTag(removeTagFromPromptDto.tagId);
+            const promptDto = response.data;
 
-            const updatedPrompt = {
-                ...original,
-                tags: original.tags.filter((t) => t.id !== tag.id),
-            };
+            const updatedPrompt = toPrompt(promptDto);
 
             minisearch.replace(updatedPrompt);
             set((state) => ({

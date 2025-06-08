@@ -42,13 +42,13 @@ class PromptController implements IPromptController {
         );
     }
 
-    addTagToPrompt(addTagToPromptDto: AddTagToPromptDto): Promise<IPCResponse<void>> {
+    addTagToPrompt(addTagToPromptDto: AddTagToPromptDto): Promise<IPCResponse<PromptDto>> {
         return runWithLogger(
             Effect.gen(function* () {
                 yield* Effect.logDebug('addTagToPrompt - start', { addTagToPromptDto });
-                yield* promptService.addTagToPrompt(addTagToPromptDto);
+                const updatedPrompt = yield* promptService.addTagToPrompt(addTagToPromptDto);
                 yield* Effect.logDebug('addTagToPrompt - end');
-                return Ok();
+                return Ok(updatedPrompt);
             }),
             this.PREFIX,
         );
@@ -56,13 +56,13 @@ class PromptController implements IPromptController {
 
     removeTagFromPrompt(
         removeTagFromPromptDto: RemoveTagFromPromptDto,
-    ): Promise<IPCResponse<void>> {
+    ): Promise<IPCResponse<PromptDto>> {
         return runWithLogger(
             Effect.gen(function* () {
                 yield* Effect.logDebug('removeTagFromPrompt - start', { removeTagFromPromptDto });
-                yield* promptService.removeTagFromPrompt(removeTagFromPromptDto);
+                const updatedPrompt = yield* promptService.removeTagFromPrompt(removeTagFromPromptDto);
                 yield* Effect.logDebug('removeTagFromPrompt - end', { removeTagFromPromptDto });
-                return Ok();
+                return Ok(updatedPrompt);
             }),
             this.PREFIX,
         );

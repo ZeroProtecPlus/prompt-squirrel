@@ -14,10 +14,10 @@ interface IPromptService {
     getAllPrompts(): Effect.Effect<PromptDto[], ServiceException>;
     addPrompt(createPromptDto: CreatePromptDto): Effect.Effect<PromptDto, ServiceException>;
     updatePrompt(updatePromptDto: UpdatePromptDto): Effect.Effect<PromptDto, ServiceException>;
-    addTagToPrompt(addTagToPromptDto: AddTagToPromptDto): Effect.Effect<void, ServiceException>;
+    addTagToPrompt(addTagToPromptDto: AddTagToPromptDto): Effect.Effect<PromptDto, ServiceException>;
     removeTagFromPrompt(
         removeTagFromPromptDto: RemoveTagFromPromptDto,
-    ): Effect.Effect<void, ServiceException>;
+    ): Effect.Effect<PromptDto, ServiceException>;
     removePromptById(id: number): Effect.Effect<void, ServiceException>;
 }
 
@@ -31,7 +31,7 @@ class PromptService implements IPromptService {
                 const dtos: PromptDto[] = [];
 
                 for (const prompt of prompts) {
-                    const tagIds = yield* tagService.getTagIdsByPromptId(prompt.id);
+                    const tagIds = yield* tagService.getTagsByPromptId(prompt.id);
                     dtos.push(
                         toPromptDto(
                             prompt,
@@ -57,7 +57,7 @@ class PromptService implements IPromptService {
                     );
                     yield* promptRepository.addTagsToPrompt(inserts);
                 }
-                const tags = yield* tagService.getTagIdsByPromptId(prompt.id);
+                const tags = yield* tagService.getTagsByPromptId(prompt.id);
                 yield* Effect.logDebug('Service: addPrompt - end', { prompt });
                 return toPromptDto(
                     prompt,
@@ -73,7 +73,7 @@ class PromptService implements IPromptService {
                 yield* Effect.logDebug('Service: updatePrompt - start', { updatePromptDto });
                 const update = toUpdatePrompt(updatePromptDto);
                 const prompt = yield* promptRepository.updatePrompt(update);
-                const tagIds = yield* tagService.getTagIdsByPromptId(prompt.id);
+                const tagIds = yield* tagService.getTagsByPromptId(prompt.id);
                 yield* Effect.logDebug('Service: updatePrompt - end', { prompt });
                 return toPromptDto(
                     prompt,
@@ -83,21 +83,27 @@ class PromptService implements IPromptService {
         );
     }
 
-    addTagToPrompt(addTagToPromptDto: AddTagToPromptDto): Effect.Effect<void, ServiceException> {
+    addTagToPrompt(addTagToPromptDto: AddTagToPromptDto): Effect.Effect<PromptDto, ServiceException> {
         return promptExceptionHandler(
             Effect.gen(function* () {
                 yield* Effect.logDebug('Service: addTagToPrompt - start', { addTagToPromptDto });
                 yield* promptRepository.addTagsToPrompt([
                     toInsertPromptTag(addTagToPromptDto.promptId, addTagToPromptDto.tagId),
                 ]);
+                const prompt = yield* promptRepository.findById(addTagToPromptDto.promptId);
+                const tagIds = yield* tagService.getTagsByPromptId(prompt.id);
                 yield* Effect.logDebug('Service: addTagToPrompt - end');
+                return toPromptDto(
+                    prompt,
+                    tagIds.map((tag) => tag.id),
+                );
             }),
         );
     }
 
     removeTagFromPrompt(
         removeTagFromPromptDto: RemoveTagFromPromptDto,
-    ): Effect.Effect<void, ServiceException> {
+    ): Effect.Effect<PromptDto, ServiceException> {
         return promptExceptionHandler(
             Effect.gen(function* () {
                 yield* Effect.logDebug('Service: removeTagFromPrompt - start', {
@@ -107,7 +113,13 @@ class PromptService implements IPromptService {
                     removeTagFromPromptDto.promptId,
                     removeTagFromPromptDto.tagId,
                 );
+                const prompt = yield* promptRepository.findById(removeTagFromPromptDto.promptId);
+                const tagIds = yield* tagService.getTagsByPromptId(prompt.id);
                 yield* Effect.logDebug('Service: removeTagFromPrompt - end');
+                return toPromptDto(
+                    prompt,
+                    tagIds.map((tag) => tag.id),
+                );
             }),
         );
     }

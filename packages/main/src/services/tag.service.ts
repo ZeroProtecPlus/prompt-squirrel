@@ -15,7 +15,7 @@ class TagService {
         );
     }
 
-    getTagIdsByPromptId(promptId: number): Effect.Effect<TagDto[], ServiceException> {
+    getTagsByPromptId(promptId: number): Effect.Effect<TagDto[], ServiceException> {
         return TagDatabaseExceptionHandler(
             Effect.gen(function* () {
                 yield* Effect.logDebug('Service: getTagIdsByPromptId', { promptId });

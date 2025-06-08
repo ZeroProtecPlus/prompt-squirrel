@@ -38,17 +38,19 @@ export default function PromptDetail({ prompt, onClose }: PromptDetailProps) {
     const originalPromptName = useRef<string>(promptName);
     const [promptText, setPromptText] = useState<string>(prompt?.prompt || '');
     const originalPromptText = useRef<string>(promptText);
+    const [tags, setTags] = useState<Tag[]>(prompt?.tags || []);
 
     const open = !!prompt;
 
     useEffect(() => {
         if (!prompt) return;
 
-        setPromptText(prompt.prompt);
-        originalPromptText.current = prompt.prompt;
+        setCategory(prompt.category);
         setPromptName(prompt.name);
         originalPromptName.current = prompt.name;
-        setCategory(prompt.category);
+        setPromptText(prompt.prompt);
+        originalPromptText.current = prompt.prompt;
+        setTags(prompt.tags);
 
         setIsPromptEditMode(false);
         setIsNameEditMode(false);
@@ -170,7 +172,7 @@ export default function PromptDetail({ prompt, onClose }: PromptDetailProps) {
                     <Label>태그</Label>
                     <TagSelector
                         className="h-12"
-                        initialValue={prompt?.tags}
+                        initialValue={tags}
                         onAddTag={(tag) => addTagToPromptCommand(prompt, tag)}
                         onRemoveTag={(tag) => removeTagFromPromptCommand(prompt, tag)}
                     />
