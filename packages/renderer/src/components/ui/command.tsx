@@ -57,6 +57,7 @@ function CommandDialog({
 
 function CommandInput({
     className,
+    onPressEnterKey,
     ...props
 }: React.ComponentProps<typeof CommandPrimitive.Input> & {
     onPressEnterKey?: (e: React.KeyboardEvent) => void;
@@ -80,7 +81,7 @@ function CommandInput({
                 onKeyDown={(e) => {
                     if (isEmpty && e.key === 'Enter' && search.trim()) {
                         e.preventDefault();
-                        props.onPressEnterKey?.(e);
+                        onPressEnterKey?.(e);
                     }
                 }}
             />

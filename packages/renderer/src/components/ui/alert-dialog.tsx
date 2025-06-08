@@ -30,6 +30,7 @@ function AlertDialogOverlay({
                 className,
             )}
             {...props}
+            onClick={(e) => e.stopPropagation()}
         />
     );
 }
