@@ -1,5 +1,5 @@
-import { useState } from 'react';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { useState } from 'react';
 import TagFilterBoxItem from './tag-filter-box-item';
 
 interface TagFilterBoxProps {

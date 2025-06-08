@@ -1,5 +1,5 @@
-import { useCategoryStore, usePromptStore } from '@/store';
 import TagFilterableList from '@/components/tag/tag-filterable-list';
+import { useCategoryStore, usePromptStore } from '@/store';
 import FilterableList from './filterable-list';
 
 export default function Sidebar() {

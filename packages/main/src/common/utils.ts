@@ -26,6 +26,9 @@ export function runWithLogger<T>(
                     }
 
                     if (error instanceof ServiceException) {
+                        yield* Effect.logWarning('Expected service exception:', {
+                            name: error.name,
+                        });
                         return yield* Effect.succeed(
                             Err({
                                 name: error.name,

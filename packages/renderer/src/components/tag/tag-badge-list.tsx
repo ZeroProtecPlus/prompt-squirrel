@@ -1,6 +1,6 @@
+import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { Ellipsis } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import TagBadge from './tag-badge';
 
 type TagBadgeListProps = {

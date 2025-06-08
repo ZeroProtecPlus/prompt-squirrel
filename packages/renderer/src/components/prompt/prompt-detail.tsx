@@ -2,6 +2,7 @@ import {
     addTagToPromptCommand,
     removeTagFromPromptCommand,
     updatePromptCategoryCommand,
+    updatePromptCommand,
 } from '@/commands/prompt';
 import { CategoryFilterComboBox } from '@/components/category/category-filter';
 import CopyButton from '@/components/shared/copy-button';
@@ -18,9 +19,9 @@ import {
     SheetTitle,
 } from '@/components/ui/sheet';
 import { Textarea } from '@/components/ui/textarea';
-import { cn } from '@/lib/utils';
-import { usePromptStore } from '@/store';
+import { cn, isServiceException } from '@/lib/utils';
 import { useEffect, useRef, useState } from 'react';
+import { toast } from 'sonner';
 
 interface PromptDetailProps {
     prompt: Prompt | null;
@@ -28,8 +29,6 @@ interface PromptDetailProps {
 }
 
 export default function PromptDetail({ prompt, onClose }: PromptDetailProps) {
-    const updatePrompt = usePromptStore((state) => state.updatePrompt);
-
     const [isNameEditMode, setIsNameEditMode] = useState<boolean>(false);
     const [isPromptEditMode, setIsPromptEditMode] = useState<boolean>(false);
 
@@ -73,10 +72,11 @@ export default function PromptDetail({ prompt, onClose }: PromptDetailProps) {
         setIsPromptEditMode(false);
         if (promptText === originalPromptText.current) return;
 
-        const updatedPrompt = await updatePrompt({
+        const updatedPrompt = await updatePromptCommand({
             id: prompt.id,
             prompt: promptText,
         });
+
         originalPromptText.current = updatedPrompt.prompt;
     }
 
@@ -85,11 +85,19 @@ export default function PromptDetail({ prompt, onClose }: PromptDetailProps) {
         setIsNameEditMode(false);
         if (promptName === originalPromptName.current) return;
 
-        const updatedPrompt = await updatePrompt({
-            id: prompt.id,
-            name: promptName,
-        });
-        originalPromptName.current = updatedPrompt.name;
+        try {
+            const updatedPrompt = await updatePromptCommand({
+                id: prompt.id,
+                name: promptName,
+            });
+            originalPromptName.current = updatedPrompt.name;
+        } catch (error) {
+            if (isServiceException(error)) {
+                setPromptName(originalPromptName.current);
+                toast.error('동일한 이름의 프롬프트가 이미 존재합니다.');
+                setIsNameEditMode(true);
+            }
+        }
     }
 
     async function handleNameInputKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {

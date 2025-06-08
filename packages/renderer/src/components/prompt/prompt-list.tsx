@@ -1,9 +1,9 @@
-import { usePromptStore } from '@/store';
-import { useState } from 'react';
 import { CategoryFilterComboBox } from '@/components/category/category-filter';
 import TagFilterBox from '@/components/tag/tag-filter-box';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { usePromptStore } from '@/store';
+import { useState } from 'react';
 import PromptDetail from './prompt-detail';
 import PromptListItemEmpty from './prompt-list-empty';
 import PromptListItem from './prompt-list-item';
