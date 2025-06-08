@@ -1,4 +1,4 @@
-import { importCommand, exportCommand } from '@/commands/menu';
+import { exportCommand, importCommand } from '@/commands/menu';
 import {
     Menubar,
     MenubarContent,
