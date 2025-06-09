@@ -13,7 +13,8 @@ export default function ImportMenuItem() {
             await importCommand();
             stopLoading();
         } catch (error) {
-            if (isServiceException(error)) toast.error('프롬프트를 불러오는 도중 오류가 발생했습니다.');
+            if (isServiceException(error))
+                toast.error('프롬프트를 불러오는 도중 오류가 발생했습니다.');
 
             stopLoading();
         }

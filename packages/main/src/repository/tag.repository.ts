@@ -61,9 +61,11 @@ class TagRepository implements ITagRepository {
 
     addTagsIfNotExists(tags: string[]): Effect.Effect<SelectTag[], DatabaseException> {
         return Effect.gen(function* () {
+            yield* Effect.logDebug('Repository addTagsIfNotExists - start', { tags });
+            if (tags.length === 0) return [];
+
             const result: SelectTag[] = [];
 
-            yield* Effect.logDebug('Repository addTagsIfNotExists - before');
             const existsTags = yield* Effect.tryPromise({
                 try: () => db.selectFrom('tag').selectAll().where('name', 'in', tags).execute(),
                 catch: (error) => DatabaseException.from(error),
@@ -82,7 +84,7 @@ class TagRepository implements ITagRepository {
                 });
                 result.push(...insertedTags);
             }
-
+            yield* Effect.logDebug('Repository addTagsIfNotExists - end', { result });
             return result;
         });
     }

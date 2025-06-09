@@ -7,7 +7,7 @@ import { InsertPromptTag } from '../database/table/tag-prompt.js';
 interface IPromptRepository {
     getAllPrompts(): Effect.Effect<SelectPrompt[], DatabaseException>;
     findById(id: number): Effect.Effect<SelectPrompt, DatabaseException>;
-    findByName(name: string): Effect.Effect<SelectPrompt, DatabaseException>;
+    findByName(name: string): Effect.Effect<SelectPrompt | null, DatabaseException>;
     addPrompt(insert: InsertPrompt): Effect.Effect<SelectPrompt, DatabaseException>;
     addTagsToPrompt(inserts: InsertPromptTag[]): Effect.Effect<void, DatabaseException>;
     removeTagFromPrompt(promptId: number, tagId: number): Effect.Effect<void, DatabaseException>;
@@ -56,15 +56,11 @@ class PromptRepository implements IPromptRepository {
             yield* Effect.logDebug('Repository findByName - start');
             const prompt = yield* Effect.tryPromise({
                 try: () =>
-                    db
-                        .selectFrom('prompt')
-                        .selectAll()
-                        .where('name', '=', name)
-                        .executeTakeFirstOrThrow(),
+                    db.selectFrom('prompt').selectAll().where('name', '=', name).executeTakeFirst(),
                 catch: (error) => DatabaseException.from(error),
             });
             yield* Effect.logDebug('Repository findByName - end');
-            return prompt;
+            return prompt ?? null;
         });
     }
 

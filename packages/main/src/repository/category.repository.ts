@@ -36,7 +36,7 @@ class CategoryRepository implements ICategoryRepository {
                 catch: (error) => DatabaseException.from(error),
             });
             yield* Effect.logDebug('Repository findByName - end', { category });
-            return category ?? null;
+            return category || null;
         });
     }
 

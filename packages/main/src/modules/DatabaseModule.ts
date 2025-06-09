@@ -1,6 +1,6 @@
 import { sql } from 'kysely';
-import { AppModule } from 'src/AppModule.js';
-import { ModuleContext } from 'src/ModuleContext.js';
+import { AppModule } from '../AppModule.js';
+import { ModuleContext } from '../ModuleContext.js';
 import { db } from '../database/db.js';
 import { isDevMode } from '../utils/env.js';
 
