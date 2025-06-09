@@ -33,6 +33,26 @@ class CategoryService implements ICategoryService {
         );
     }
 
+    addCategoryIfNotExists(name: string): Effect.Effect<CategoryDto, ServiceException> {
+        return categoryExceptionHandler(
+            Effect.gen(function* () {
+                yield* Effect.logDebug('Service: addCategoryIfNotExists - start', { name });
+                const existingCategory = yield* categoryRepository.findByName(name);
+                if (existingCategory) {
+                    yield* Effect.logDebug('Service: addCategoryIfNotExists - end (exists)', {
+                        name,
+                    });
+                    return toCategoryDto(existingCategory);
+                }
+                const newCategory = yield* categoryRepository.addCategory({ name });
+                yield* Effect.logDebug('Service: addCategoryIfNotExists - end (new)', {
+                    newCategory,
+                });
+                return toCategoryDto(newCategory);
+            }),
+        );
+    }
+
     removeCategoryByName(name: string): Effect.Effect<void, ServiceException> {
         return categoryExceptionHandler(
             Effect.gen(function* () {

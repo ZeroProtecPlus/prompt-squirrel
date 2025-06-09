@@ -7,6 +7,7 @@ interface ITagRepository {
     getAllTags(): Effect.Effect<SelectTag[], DatabaseException>;
     getTagsByPromptId(promptId: number): Effect.Effect<SelectTag[], DatabaseException>;
     addTag(insert: { name: string }): Effect.Effect<SelectTag, DatabaseException>;
+    addTagsIfNotExists(tags: string[]): Effect.Effect<SelectTag[], DatabaseException>;
     removeTagByName(name: string): Effect.Effect<void, DatabaseException>;
 }
 
@@ -55,6 +56,34 @@ class TagRepository implements ITagRepository {
             });
             yield* Effect.logDebug('Repository addTag - after');
             return tag;
+        });
+    }
+
+    addTagsIfNotExists(tags: string[]): Effect.Effect<SelectTag[], DatabaseException> {
+        return Effect.gen(function* () {
+            const result: SelectTag[] = [];
+
+            yield* Effect.logDebug('Repository addTagsIfNotExists - before');
+            const existsTags = yield* Effect.tryPromise({
+                try: () => db.selectFrom('tag').selectAll().where('name', 'in', tags).execute(),
+                catch: (error) => DatabaseException.from(error),
+            });
+            result.push(...existsTags);
+
+            const toInserts = tags.filter(
+                (tag) => !existsTags.some((existsTag) => existsTag.name === tag),
+            );
+
+            if (toInserts.length > 0) {
+                const inserts = toInserts.map((tag) => ({ name: tag }));
+                const insertedTags = yield* Effect.tryPromise({
+                    try: () => db.insertInto('tag').values(inserts).returningAll().execute(),
+                    catch: (error) => DatabaseException.from(error),
+                });
+                result.push(...insertedTags);
+            }
+
+            return result;
         });
     }
 

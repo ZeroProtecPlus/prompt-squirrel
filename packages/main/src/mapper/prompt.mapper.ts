@@ -20,6 +20,17 @@ export function toInsertPrompt(prompt: CreatePromptDto): InsertPrompt {
     };
 }
 
+export function squirrelObjectToInsertPrompt(
+    squirrelObject: SquirrelObject,
+    category: Category | null,
+): InsertPrompt {
+    return {
+        name: squirrelObject.name,
+        prompt: squirrelObject.prompt,
+        category_id: category ? category.id : null,
+    };
+}
+
 export function toUpdatePrompt(prompt: UpdatePromptDto): UpdatePrompt {
     return {
         id: prompt.id,

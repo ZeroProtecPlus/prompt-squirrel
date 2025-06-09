@@ -3,6 +3,7 @@ import { BrowserWindow, app, nativeImage } from 'electron';
 import type { AppInitConfig } from '../AppInitConfig.js';
 import type { AppModule } from '../AppModule.js';
 import { ModuleContext } from '../ModuleContext.js';
+import { windowService } from './MainWindow.js';
 
 class WindowManager implements AppModule {
     readonly #preload: { path: string };
@@ -65,6 +66,7 @@ class WindowManager implements AppModule {
 
         if (window === undefined) {
             window = await this.createWindow();
+            windowService.setMainWindow(window);
         }
 
         if (!show) {

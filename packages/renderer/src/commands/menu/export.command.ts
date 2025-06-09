@@ -1,5 +1,5 @@
-import { toast } from 'sonner';
+import { fileTransferApi } from '@app/preload';
 
-export function exportCommand() {
-    toast.warning('아직 구현되지 않았습니다.');
+export async function exportCommand(options: ExportOptions) {
+    await fileTransferApi.exportPrompts(options);
 }

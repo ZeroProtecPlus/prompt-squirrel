@@ -8,6 +8,7 @@ import { toast } from 'sonner';
 import { create } from 'zustand';
 
 type PromptState = {
+    minisearch: MiniSearch<Prompt>;
     prompts: Prompt[];
 };
 
@@ -53,6 +54,7 @@ export const usePromptStore = create<
     });
 
     return {
+        minisearch,
         prompts: [],
         searchFilter: {
             query: MiniSearch.wildcard,

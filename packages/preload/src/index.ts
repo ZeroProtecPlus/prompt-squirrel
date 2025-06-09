@@ -31,4 +31,11 @@ const promptApi: IPromptController = {
     removePromptById: (id: number) => promptSender.send('prompt:removePromptById', id),
 };
 
-export { sha256sum, versions, promptApi, categoryApi, tagApi };
+const fileTransferSender = createSender<IFileTransferController, FileTransferChannel>();
+const fileTransferApi: IFileTransferController = {
+    exportPrompts: (options: ExportOptions) =>
+        fileTransferSender.send('transfer:exportPrompts', options),
+    importPrompts: () => fileTransferSender.send('transfer:importPrompts'),
+};
+
+export { sha256sum, versions, promptApi, categoryApi, tagApi, fileTransferApi };

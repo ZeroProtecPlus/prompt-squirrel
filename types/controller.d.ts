@@ -18,3 +18,8 @@ interface IPromptController {
     removeTagFromPrompt(removeTagFromPromptDto: RemoveTagFromPromptDto): Promise<IPCResponse<PromptDto>>;
     removePromptById(id: number): Promise<IPCResponse<void>>;
 }
+
+interface IFileTransferController {
+    exportPrompts(options: ExportOptions): Promise<IPCResponse<void>>;
+    importPrompts(): Promise<IPCResponse<PromptDto[]>>;
+}

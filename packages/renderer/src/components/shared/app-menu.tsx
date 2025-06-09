@@ -1,4 +1,3 @@
-import { exportCommand, importCommand } from '@/commands/menu';
 import { useTheme } from '@/components/hooks';
 import {
     Menubar,
@@ -9,6 +8,8 @@ import {
     MenubarRadioItem,
     MenubarTrigger,
 } from '@/components/ui/menubar';
+import ExportMenuItem from './app-menu/export-menu-item';
+import ImportMenuItem from './app-menu/import-menu-item';
 
 export default function AppMenu() {
     const { theme, setTheme } = useTheme();
@@ -18,8 +19,8 @@ export default function AppMenu() {
             <MenubarMenu>
                 <MenubarTrigger>파일</MenubarTrigger>
                 <MenubarContent>
-                    <MenubarItem onClick={importCommand}>불러오기</MenubarItem>
-                    <MenubarItem onClick={exportCommand}>내보내기</MenubarItem>
+                    <ImportMenuItem />
+                    <ExportMenuItem />
                 </MenubarContent>
             </MenubarMenu>
             <MenubarMenu>

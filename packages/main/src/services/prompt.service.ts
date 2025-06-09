@@ -2,17 +2,23 @@ import { Effect } from 'effect';
 import { ServiceException } from '../common/exceptions/base/service.exception.js';
 import { promptExceptionHandler } from '../common/exceptions/handlers/prompt-exception.handler.js';
 import {
+    squirrelObjectToInsertPrompt,
     toInsertPrompt,
     toInsertPromptTag,
     toPromptDto,
     toUpdatePrompt,
 } from '../mapper/prompt.mapper.js';
 import { promptRepository } from '../repository/prompt.repository.js';
+import { randomId } from '../utils/gen.js';
+import { categoryService } from './category.service.js';
 import { tagService } from './tag.service.js';
 
 interface IPromptService {
     getAllPrompts(): Effect.Effect<PromptDto[], ServiceException>;
     addPrompt(createPromptDto: CreatePromptDto): Effect.Effect<PromptDto, ServiceException>;
+    addPromptsIfNotExists(
+        SquirrelObjects: SquirrelObject[],
+    ): Effect.Effect<PromptDto[], ServiceException>;
     updatePrompt(updatePromptDto: UpdatePromptDto): Effect.Effect<PromptDto, ServiceException>;
     addTagToPrompt(
         addTagToPromptDto: AddTagToPromptDto,
@@ -65,6 +71,51 @@ class PromptService implements IPromptService {
                     prompt,
                     tags.map((tag) => tag.id),
                 );
+            }),
+        );
+    }
+
+    addPromptsIfNotExists(
+        SquirrelObjects: SquirrelObject[],
+    ): Effect.Effect<PromptDto[], ServiceException> {
+        return promptExceptionHandler(
+            Effect.gen(function* () {
+                yield* Effect.logDebug('Service: addPromptsIfNotExists - start', {
+                    SquirrelObjects,
+                });
+                const identity = randomId();
+                const newPrompts: PromptDto[] = [];
+
+                for (const squirrelObject of SquirrelObjects) {
+                    const category: Category | null = squirrelObject.category
+                        ? yield* categoryService.addCategoryIfNotExists(squirrelObject.category)
+                        : null;
+                    const tags =
+                        squirrelObject.tags.length !== 0
+                            ? yield* tagService.addTagsIfNotExists(squirrelObject.tags)
+                            : [];
+
+                    const existingPrompt = yield* promptRepository.findByName(squirrelObject.name);
+                    if (existingPrompt) squirrelObject.name = `${squirrelObject.name} ${identity}`;
+
+                    const prompt = yield* promptRepository.addPrompt(
+                        squirrelObjectToInsertPrompt(squirrelObject, category),
+                    );
+
+                    if (tags.length !== 0) {
+                        const inserts = tags.map((tag) => toInsertPromptTag(prompt.id, tag.id));
+                        yield* promptRepository.addTagsToPrompt(inserts);
+                    }
+
+                    newPrompts.push(
+                        toPromptDto(
+                            prompt,
+                            tags.map((tag) => tag.id),
+                        ),
+                    );
+                }
+                yield* Effect.logDebug('Service: addPromptsIfNotExists - end');
+                return newPrompts;
             }),
         );
     }

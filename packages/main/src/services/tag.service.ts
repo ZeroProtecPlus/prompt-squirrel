@@ -4,8 +4,15 @@ import { TagDatabaseExceptionHandler } from '../common/exceptions/handlers/tag-e
 import { toTagDto } from '../mapper/tag.mapper.js';
 import { tagRepository } from '../repository/tag.repository.js';
 
+interface ITagService {
+    getAllTags(): Effect.Effect<TagDto[], ServiceException>;
+    getTagsByPromptId(promptId: number): Effect.Effect<TagDto[], ServiceException>;
+    addTag(name: string): Effect.Effect<TagDto, ServiceException>;
+    removeTagByName(name: string): Effect.Effect<void, ServiceException>;
+}
+
 class TagService {
-    getAllTags(): Effect.Effect<TagDto[], ServiceException> {
+    getAllTags() {
         return TagDatabaseExceptionHandler(
             Effect.gen(function* () {
                 yield* Effect.logDebug('Service: getAllTags');
@@ -15,7 +22,7 @@ class TagService {
         );
     }
 
-    getTagsByPromptId(promptId: number): Effect.Effect<TagDto[], ServiceException> {
+    getTagsByPromptId(promptId: number) {
         return TagDatabaseExceptionHandler(
             Effect.gen(function* () {
                 yield* Effect.logDebug('Service: getTagIdsByPromptId', { promptId });
@@ -25,12 +32,22 @@ class TagService {
         );
     }
 
-    addTag(name: string): Effect.Effect<TagDto, ServiceException> {
+    addTag(name: string) {
         return TagDatabaseExceptionHandler(
             Effect.gen(function* () {
                 yield* Effect.logDebug('Service: addTag', { name });
                 const tag = yield* tagRepository.addTag({ name });
                 return toTagDto(tag);
+            }),
+        );
+    }
+
+    addTagsIfNotExists(tags: string[]) {
+        return TagDatabaseExceptionHandler(
+            Effect.gen(function* () {
+                yield* Effect.logDebug('Service: addTagsIfNotExists', { tags });
+                const tagDtos = yield* tagRepository.addTagsIfNotExists(tags);
+                return tagDtos.map(toTagDto);
             }),
         );
     }

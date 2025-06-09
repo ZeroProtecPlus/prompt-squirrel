@@ -1,6 +1,7 @@
 import { ipcMain } from 'electron';
 import { AppModule } from '../AppModule.js';
 import { categoryController } from '../controller/category.controller.js';
+import { fileTransferController } from '../controller/file-transfer.controller.js';
 import { promptController } from '../controller/prompt.controller.js';
 import { tagController } from '../controller/tag.controller.js';
 
@@ -9,6 +10,7 @@ class IPCModule implements AppModule {
         registerIpc('category', categoryController);
         registerIpc('tag', tagController);
         registerIpc('prompt', promptController);
+        registerIpc('transfer', fileTransferController);
     }
 }
 

@@ -5,6 +5,7 @@ import { InsertCategory, SelectCategory } from '../database/table/index.js';
 
 interface ICategoryRepository {
     getAllCategories(): Effect.Effect<SelectCategory[], DatabaseException>;
+    findByName(name: string): Effect.Effect<SelectCategory | null, DatabaseException>;
     addCategory(insert: InsertCategory): Effect.Effect<SelectCategory, DatabaseException>;
     removeCategoryByName(name: string): Effect.Effect<void, DatabaseException>;
 }
@@ -19,6 +20,23 @@ class CategoryRepository implements ICategoryRepository {
             });
             yield* Effect.logDebug('Repository getAllCategories - end');
             return categories;
+        });
+    }
+
+    findByName(name: string) {
+        return Effect.gen(function* () {
+            yield* Effect.logDebug('Repository findByName - start', { name });
+            const category = yield* Effect.tryPromise({
+                try: () =>
+                    db
+                        .selectFrom('category')
+                        .selectAll()
+                        .where('name', '=', name)
+                        .executeTakeFirst(),
+                catch: (error) => DatabaseException.from(error),
+            });
+            yield* Effect.logDebug('Repository findByName - end', { category });
+            return category ?? null;
         });
     }
 

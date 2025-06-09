@@ -42,6 +42,13 @@ type PromptDto = {
     createdAt: Date;
 }
 
+type SerializablePromptDto = {
+    name: string;
+    prompt: string;
+    category: string | null;
+    tags: string[];
+}
+
 type CategoryDto = {
     id: number;
     name: string;
