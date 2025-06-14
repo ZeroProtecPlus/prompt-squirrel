@@ -1,5 +1,5 @@
-import { Image, List } from "lucide-react";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import { Image, List } from 'lucide-react';
 
 export type ViewMode = 'list' | 'image';
 
@@ -9,7 +9,6 @@ interface ViewToggleButtonProps {
 }
 
 export default function ViewToggleButton({ value, onChange }: ViewToggleButtonProps) {
-
     function handleValueChange(newValue: ViewMode) {
         if (!newValue) return;
 
@@ -18,8 +17,12 @@ export default function ViewToggleButton({ value, onChange }: ViewToggleButtonPr
 
     return (
         <ToggleGroup type="single" value={value} onValueChange={handleValueChange}>
-            <ToggleGroupItem value="list"><List /></ToggleGroupItem>
-            <ToggleGroupItem value="image"><Image /></ToggleGroupItem>
+            <ToggleGroupItem value="list">
+                <List />
+            </ToggleGroupItem>
+            <ToggleGroupItem value="image">
+                <Image />
+            </ToggleGroupItem>
         </ToggleGroup>
-    )
+    );
 }

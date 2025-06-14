@@ -1,5 +1,11 @@
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { usePromptStore } from "@/store";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
+import { usePromptStore } from '@/store';
 
 export default function PromptOrderSelect() {
     const orderBy = usePromptStore((state) => state.orderBy);
@@ -13,15 +19,13 @@ export default function PromptOrderSelect() {
     }
 
     function orderByToDisplayName(orderBy: OrderByOptions): string {
-        return `${orderBy.field === 'createdAt' ? '생성일' : '이름순' } (${orderBy.direction === 'asc' ? '오름차순' : '내림차순'})`;
+        return `${orderBy.field === 'createdAt' ? '생성일' : '이름순'} (${orderBy.direction === 'asc' ? '오름차순' : '내림차순'})`;
     }
 
     return (
         <Select onValueChange={handleValueChange} defaultValue="created_at:desc">
             <SelectTrigger>
-                <SelectValue placeholder="정렬 기준">
-                    { orderByToDisplayName(orderBy) }
-                </SelectValue>
+                <SelectValue placeholder="정렬 기준">{orderByToDisplayName(orderBy)}</SelectValue>
             </SelectTrigger>
 
             <SelectContent>

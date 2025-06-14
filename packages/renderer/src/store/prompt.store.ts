@@ -1,4 +1,5 @@
 import { ALL_CATEGORY_ID, NONE_CATEGORY_ID } from '@/components/category/constants';
+import { promptEventEmitter } from '@/lib/event-emitter';
 import { toPrompt } from '@/lib/mapper';
 import { createSuccessMessage, deleteSuccessMessage, updateSuccessMessage } from '@/lib/message';
 import { searchResultToPrompt } from '@/lib/search-utils';
@@ -112,10 +113,15 @@ export const usePromptStore = create<
             const prompts = results.map(searchResultToPrompt);
 
             const orderByOption = get().orderBy;
-            
-            const orderedPrompts = orderBy(prompts, [orderByOption.field], [orderByOption.direction]);
+
+            const orderedPrompts = orderBy(
+                prompts,
+                [orderByOption.field],
+                [orderByOption.direction],
+            );
 
             set({ prompts: orderedPrompts });
+            promptEventEmitter.emit('promptSearch');
         },
 
         setSearchString: (searchString?: string) => {

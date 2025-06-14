@@ -2,22 +2,29 @@ import { CategoryFilterComboBox } from '@/components/category/category-filter';
 import TagFilterBox from '@/components/tag/tag-filter-box';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { promptEventEmitter } from '@/lib/event-emitter';
 import { usePromptStore } from '@/store';
 import { LoaderCircle } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import PromptDetail from './prompt-detail';
+import PromptImageItem from './prompt-image-item';
 import PromptListItemEmpty from './prompt-list-empty';
 import PromptListItem from './prompt-list-item';
 import PromptOrderSelect from './prompt-order-select';
 import type { ViewMode } from './view-toggle-button';
 import ViewToggleButton from './view-toggle-button';
-import PromptImageItem from './prompt-image-item';
 
 export default function PromptList() {
+    promptEventEmitter.on('promptSearch', () => {
+        resetVisibleCount();
+    });
+
     const [viewMode, setViewMode] = useState<ViewMode>('list');
     const [visibleCount, setVisibleCount] = useState<number>(10);
+    const resetVisibleCount = () => setVisibleCount(10);
+
     const observerRef = useRef<HTMLDivElement>(null);
-    
+
     const prompts = usePromptStore((state) => state.prompts);
     const search = usePromptStore((state) => state.search);
     const setSearchString = usePromptStore((state) => state.setSearchString);
@@ -26,46 +33,44 @@ export default function PromptList() {
 
     const [selectedPrompt, setSelectedPrompt] = useState<Prompt | null>(null);
 
-  useEffect(() => {
-    if (prompts.length === 0) return;
-    const observerEl = observerRef.current;
-    if (!observerEl) return;
+    useEffect(() => {
+        const observerEl = observerRef.current;
+        if (!observerEl) return;
 
-    const observer = new IntersectionObserver(
-        ([entry]) => {
-            if (entry.isIntersecting) {
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    setVisibleCount((prev) => Math.min(prev + 10, prompts.length));
+                }
+            },
+            {
+                root: null,
+                rootMargin: '0px',
+                threshold: 1.0,
+            },
+        );
+
+        observer.observe(observerEl);
+
+        let frameId: number;
+
+        const checkVisible = () => {
+            const rect = observerEl.getBoundingClientRect();
+            const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
+
+            if (isVisible && visibleCount < prompts.length) {
                 setVisibleCount((prev) => Math.min(prev + 10, prompts.length));
+                frameId = requestAnimationFrame(checkVisible);
             }
-        },
-        {
-            root: null,
-            rootMargin: '10px',
-            threshold: 0.2,
-        },
-    );
+        };
 
-    observer.observe(observerEl);
+        frameId = requestAnimationFrame(checkVisible);
 
-    let frameId: number;
-
-    const checkVisible = () => {
-        const rect = observerEl.getBoundingClientRect();
-        const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
-
-        if (isVisible && visibleCount < prompts.length) {
-            setVisibleCount((prev) => Math.min(prev + 10, prompts.length));
-            frameId = requestAnimationFrame(checkVisible);
-        }
-    };
-
-    frameId = requestAnimationFrame(checkVisible);
-
-    return () => {
-        observer.unobserve(observerEl);
-        cancelAnimationFrame(frameId);
-    };
-}, [prompts.length, visibleCount]);
-
+        return () => {
+            observer.unobserve(observerEl);
+            cancelAnimationFrame(frameId);
+        };
+    }, [prompts.length, visibleCount]);
 
     function handleSearch(event: React.ChangeEvent<HTMLInputElement>) {
         const searchString = event.target.value;
@@ -112,33 +117,41 @@ export default function PromptList() {
                         onBadgeClick={handleTagFilterBadgeClick}
                     />
                 </div>
-                <div className='flex-0'>
+                <div className="flex-0">
                     <PromptOrderSelect />
                 </div>
                 <div className="flex-0">
-                    <ViewToggleButton value={viewMode} onChange={setViewMode}/>
+                    <ViewToggleButton value={viewMode} onChange={setViewMode} />
                 </div>
             </div>
             <ScrollArea className="overflow-y-auto">
-                <div className={viewMode === 'list' ? 'flex flex-col space-y-1' : 'grid grid-cols-2 gap-2 md:grid-cols-4 lg:grid-cols-6'}>
+                <div
+                    className={
+                        viewMode === 'list'
+                            ? 'flex flex-col space-y-1'
+                            : 'grid grid-cols-2 gap-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8'
+                    }
+                >
                     {prompts.length === 0 ? (
                         <PromptListItemEmpty />
                     ) : (
                         prompts
                             .slice(0, visibleCount)
-                            .map((prompt) => viewMode === 'list' ? (
-                                <PromptListItem
-                                    key={prompt.id}
-                                    prompt={prompt}
-                                    onClick={handlePromptClick}
-                                />
-                            ) : (
-                                <PromptImageItem
-                                    key={prompt.id}
-                                    prompt={prompt}
-                                    onClick={handlePromptClick}
-                                />
-                            ))
+                            .map((prompt) =>
+                                viewMode === 'list' ? (
+                                    <PromptListItem
+                                        key={prompt.id}
+                                        prompt={prompt}
+                                        onClick={handlePromptClick}
+                                    />
+                                ) : (
+                                    <PromptImageItem
+                                        key={prompt.id}
+                                        prompt={prompt}
+                                        onClick={handlePromptClick}
+                                    />
+                                ),
+                            )
                     )}
 
                     {visibleCount < prompts.length && (
