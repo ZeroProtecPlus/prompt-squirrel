@@ -61,7 +61,7 @@ export function CategoryFilterComboBox({
                     variant="outline"
                     role="combobox"
                     aria-expanded={open}
-                    className="min-w-48 justify-between"
+                    className="min-w-36 justify-between"
                 >
                     {selected ? selected.name : '카테고리 선택...'}
                     <ChevronsUpDown className="opacity-50" />

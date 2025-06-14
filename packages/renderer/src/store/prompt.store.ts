@@ -3,6 +3,7 @@ import { toPrompt } from '@/lib/mapper';
 import { createSuccessMessage, deleteSuccessMessage, updateSuccessMessage } from '@/lib/message';
 import { searchResultToPrompt } from '@/lib/search-utils';
 import { promptApi } from '@app/preload';
+import { orderBy } from 'es-toolkit';
 import MiniSearch, { type SearchResult } from 'minisearch';
 import { toast } from 'sonner';
 import { create } from 'zustand';
@@ -14,14 +15,17 @@ type PromptState = {
 
 type PromptSearchState = {
     searchFilter: SearchFilterOptions;
+    orderBy: OrderByOptions;
 };
 
 type PromptSearchAction = {
-    search: () => Prompt[];
+    search: () => void;
     setSearchString: (searchString?: string) => void;
     setSearchFilter(by: 'category', value: Category | null): void;
     setSearchFilter(by: 'tags', value: string): void;
     setSearchFilter(by: Filterable<Prompt>, value: string | Category | null): void;
+
+    setOrderBy: (field: OrderField, direction: OrderDirection) => void;
 };
 
 type PromptAction = {
@@ -60,6 +64,10 @@ export const usePromptStore = create<
             query: MiniSearch.wildcard,
             category: null,
             tags: [],
+        },
+        orderBy: {
+            field: 'createdAt',
+            direction: 'desc',
         },
         search: () => {
             const searchFilter = get().searchFilter;
@@ -103,9 +111,11 @@ export const usePromptStore = create<
 
             const prompts = results.map(searchResultToPrompt);
 
-            set({ prompts });
+            const orderByOption = get().orderBy;
+            
+            const orderedPrompts = orderBy(prompts, [orderByOption.field], [orderByOption.direction]);
 
-            return prompts;
+            set({ prompts: orderedPrompts });
         },
 
         setSearchString: (searchString?: string) => {
@@ -131,6 +141,10 @@ export const usePromptStore = create<
                 }
                 return { searchFilter: newSearchFilter };
             });
+        },
+
+        setOrderBy: (field: OrderField, direction: OrderDirection) => {
+            set({ orderBy: { field, direction } });
         },
 
         addPrompt: async (prompt: CreatePromptDto) => {

@@ -8,6 +8,16 @@ type SearchFilterOptions = {
     tags: string[];
 }
 
+type OrderField = keyof Pick<Prompt, 'name' | 'createdAt'>;
+type OrderDirection = 'asc' | 'desc';
+
+type OrderByOptions = {
+    field: OrderField;
+    direction: OrderDirection;
+}
+
+type OrderFunction = (prompts: Prompt[], direction: OrderDirection) => void;
+
 // T에서 함수 타입인 속성들의 키만 필터링하는 타입
 type MethodKeys<T> = {
     // biome-ignore lint/suspicious/noExplicitAny: 모든 함수를 지원하기 위해 any 사용

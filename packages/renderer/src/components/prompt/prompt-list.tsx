@@ -8,6 +8,7 @@ import { useEffect, useRef, useState } from 'react';
 import PromptDetail from './prompt-detail';
 import PromptListItemEmpty from './prompt-list-empty';
 import PromptListItem from './prompt-list-item';
+import PromptOrderSelect from './prompt-order-select';
 
 export default function PromptList() {
     const prompts = usePromptStore((state) => state.prompts);
@@ -90,6 +91,9 @@ export default function PromptList() {
                         value={searchFilter.tags}
                         onBadgeClick={handleTagFilterBadgeClick}
                     />
+                </div>
+                <div className='flex-0'>
+                    <PromptOrderSelect />
                 </div>
             </div>
             <ScrollArea className="overflow-y-auto">
