@@ -105,7 +105,7 @@ export default function PromptCreateDialog({ className }: PromptCreateDialogProp
                                     <FormItem className="flex-shrink-0">
                                         <FormLabel>프롬프트 이름</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="프롬프트 이름..." {...field} />
+                                            <Input {...field} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -120,7 +120,6 @@ export default function PromptCreateDialog({ className }: PromptCreateDialogProp
                                         <FormLabel>프롬프트 내용</FormLabel>
                                         <FormControl>
                                             <Textarea
-                                                placeholder="프롬프트 내용..."
                                                 className="h-full w-full resize-none overflow-y-auto"
                                                 onPaste={(e) =>
                                                     onPastePrompt(e, (v) => field.onChange(v))
