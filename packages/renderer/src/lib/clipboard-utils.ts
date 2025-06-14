@@ -1,4 +1,17 @@
+function isNAIPromptText(text: string): boolean {
+    const naiFormatRegex = /\b\d+(?:\.\d+)?::[^:()]+::/;
+    return naiFormatRegex.test(text);
+}
+
+function isLocalPromptText(text: string): boolean {
+    const hasWeightSyntax = /\([^():]+:[\d.]+\)/.test(text);
+    const hasEscapedParentheses = /\\\([^()]+\\\)/.test(text);
+    return hasWeightSyntax || hasEscapedParentheses;
+}
+
 export function toNAIPromptText(text: string): string {
+    if (isNAIPromptText(text)) return text;
+
     // (문자열:숫자) 문법을 :: 문법으로 변환
     const regexWeightParentheses = /(?<!\()\(([^():]+):([\d.]+)\)(?!\))/g;
 
@@ -8,6 +21,8 @@ export function toNAIPromptText(text: string): string {
 }
 
 export function toLocalPromptText(text: string): string {
+    if (isLocalPromptText(text)) return text;
+
     const regexWeightColon = /([\d.-]+)::(.+?)::/g;
     const regexWeightBrackets = /(\{+)([^{}]+)(\}+)|(\[+)([^[\]]+)(\]+)/g;
 

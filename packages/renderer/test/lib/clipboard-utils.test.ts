@@ -241,4 +241,15 @@ describe('toLocalPromptText', () => {
         // Assert
         expect(result).toBe(expected);
     });
+
+    it('이미 Local 스타일인 경우 그대로 반환한다', () => {
+        const text = '(cat:2), (dog:1.5), (flower:3)';
+        const expected = '(cat:2), (dog:1.5), (flower:3)';
+
+        // Act
+        const result = toLocalPromptText(text);
+
+        // Assert
+        expect(result).toBe(expected);
+    });
 });
