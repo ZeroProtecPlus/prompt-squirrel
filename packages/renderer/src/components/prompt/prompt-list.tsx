@@ -3,13 +3,16 @@ import TagFilterBox from '@/components/tag/tag-filter-box';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { usePromptStore } from '@/store';
-import { useState } from 'react';
+import { LoaderCircle } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 import PromptDetail from './prompt-detail';
 import PromptListItemEmpty from './prompt-list-empty';
 import PromptListItem from './prompt-list-item';
 
 export default function PromptList() {
     const prompts = usePromptStore((state) => state.prompts);
+    const [visibleCount, setVisibleCount] = useState<number>(10);
+    const observerRef = useRef<HTMLDivElement>(null);
 
     const search = usePromptStore((state) => state.search);
     const setSearchString = usePromptStore((state) => state.setSearchString);
@@ -17,6 +20,31 @@ export default function PromptList() {
     const setSearchFilter = usePromptStore((state) => state.setSearchFilter);
 
     const [selectedPrompt, setSelectedPrompt] = useState<Prompt | null>(null);
+
+    useEffect(() => {
+        const observerEl = observerRef.current;
+        if (!observerEl) return;
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                const target = entries[0];
+                if (target.isIntersecting) {
+                    setVisibleCount((prev) => Math.min(prev + 10, prompts.length));
+                }
+            },
+            {
+                root: null,
+                rootMargin: '0px',
+                threshold: 1.0,
+            },
+        );
+
+        observer.observe(observerEl);
+
+        return () => {
+            if (observerEl) observer.unobserve(observerEl);
+        };
+    }, [prompts.length]);
 
     function handleSearch(event: React.ChangeEvent<HTMLInputElement>) {
         const searchString = event.target.value;
@@ -69,13 +97,21 @@ export default function PromptList() {
                     {prompts.length === 0 ? (
                         <PromptListItemEmpty />
                     ) : (
-                        prompts.map((prompt) => (
-                            <PromptListItem
-                                key={prompt.id}
-                                prompt={prompt}
-                                onClick={handlePromptClick}
-                            />
-                        ))
+                        prompts
+                            .slice(0, visibleCount)
+                            .map((prompt) => (
+                                <PromptListItem
+                                    key={prompt.id}
+                                    prompt={prompt}
+                                    onClick={handlePromptClick}
+                                />
+                            ))
+                    )}
+
+                    {visibleCount < prompts.length && (
+                        <div ref={observerRef} className="h-10 flex items-center justify-center">
+                            <LoaderCircle className="animate-spin text-muted-foreground" />
+                        </div>
                     )}
                 </div>
             </ScrollArea>
