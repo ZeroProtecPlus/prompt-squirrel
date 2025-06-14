@@ -23,3 +23,9 @@ interface IFileTransferController {
     exportPrompts(options: ExportOptions): Promise<IPCResponse<void>>;
     importPrompts(): Promise<IPCResponse<PromptDto[]>>;
 }
+
+interface IConfigController {
+    get(key: keyof AppConfig): Promise<IPCResponse<AppConfig[keyof AppConfig]>>;
+    set(key: keyof AppConfig, value: AppConfig[keyof AppConfig]): Promise<IPCResponse<void>>;
+    getAll(): Promise<IPCResponse<AppConfig>>;
+}

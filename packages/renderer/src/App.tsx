@@ -8,16 +8,20 @@ import BaseLayout from '@/layout/base-layout';
 import { useCategoryStore, usePromptStore, useTagStore } from '@/store';
 import { useEffect } from 'react';
 import { ThemeProvider } from './components/provider/theme-provider';
+import { useConfigStore } from './store/config.store';
 
 function App() {
     const { loading, stopLoading } = useLoading();
 
+    const loadConfig = useConfigStore((state) => state.loadConfig);
     const loadCategories = useCategoryStore((state) => state.loadCategories);
     const loadTags = useTagStore((state) => state.loadTags);
     const loadPrompts = usePromptStore((state) => state.loadPrompts);
 
     useEffect(() => {
         async function load() {
+            loading('설정 로딩중...');
+            await loadConfig();
             loading('카테고리 로딩중...');
             await loadCategories();
             loading('태그 로딩중...');
@@ -28,7 +32,7 @@ function App() {
         }
 
         load();
-    }, [loadCategories, loadTags, loadPrompts, loading, stopLoading]);
+    }, [loadConfig, loadCategories, loadTags, loadPrompts, loading, stopLoading]);
 
     return (
         <ThemeProvider>

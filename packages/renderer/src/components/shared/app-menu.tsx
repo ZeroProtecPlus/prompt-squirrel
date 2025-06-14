@@ -8,11 +8,15 @@ import {
     MenubarRadioItem,
     MenubarTrigger,
 } from '@/components/ui/menubar';
+import { useState } from 'react';
 import ExportMenuItem from './app-menu/export-menu-item';
 import ImportMenuItem from './app-menu/import-menu-item';
+import ConfigDialog from './config/config-dialog';
 
 export default function AppMenu() {
     const { theme, setTheme } = useTheme();
+
+    const [configDialogOpen, setConfigDialogOpen] = useState<boolean>(false);
 
     return (
         <Menubar className="rounded-none">
@@ -47,6 +51,10 @@ export default function AppMenu() {
                         </MenubarRadioItem>
                     </MenubarRadioGroup>
                 </MenubarContent>
+            </MenubarMenu>
+            <MenubarMenu>
+                <MenubarTrigger onClick={() => setConfigDialogOpen(true)}>설정</MenubarTrigger>
+                <ConfigDialog open={configDialogOpen} onOpenChange={setConfigDialogOpen} />
             </MenubarMenu>
         </Menubar>
     );

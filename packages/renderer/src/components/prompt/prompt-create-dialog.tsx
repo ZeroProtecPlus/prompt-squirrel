@@ -1,3 +1,4 @@
+import { onPastePrompt } from '@/commands/event/on-paste';
 import { createPromptCommand } from '@/commands/prompt';
 import { CategoryFilterComboBox } from '@/components/category/category-filter';
 import TagSelector from '@/components/tag/tag-seletor';
@@ -121,6 +122,9 @@ export default function PromptCreateDialog({ className }: PromptCreateDialogProp
                                             <Textarea
                                                 placeholder="프롬프트 내용..."
                                                 className="h-full w-full resize-none overflow-y-auto"
+                                                onPaste={(e) =>
+                                                    onPastePrompt(e, (v) => field.onChange(v))
+                                                }
                                                 {...field}
                                             />
                                         </FormControl>

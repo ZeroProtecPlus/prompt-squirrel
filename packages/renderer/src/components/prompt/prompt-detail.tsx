@@ -1,3 +1,4 @@
+import { onPastePrompt } from '@/commands/event/on-paste';
 import {
     addTagToPromptCommand,
     removeTagFromPromptCommand,
@@ -169,6 +170,7 @@ export default function PromptDetail({ prompt, onClose }: PromptDetailProps) {
                                 'h-full w-full resize-none overflow-y-auto',
                                 isPromptEditMode ? 'cursor-text' : 'cursor-default',
                             )}
+                            onPaste={onPastePrompt}
                             value={promptText}
                             onChange={(e) => setPromptText(e.target.value)}
                             readOnly={!isPromptEditMode}

@@ -2,6 +2,14 @@ import { sha256sum } from './nodeCrypto.js';
 import { createSender } from './send.js';
 import { versions } from './versions.js';
 
+const configSender = createSender<IConfigController, ConfigChannel>();
+const configApi: IConfigController = {
+    get: (key: keyof AppConfig) => configSender.send('config:get', key),
+    set: (key: keyof AppConfig, value: AppConfig[keyof AppConfig]) =>
+        configSender.send('config:set', key, value),
+    getAll: () => configSender.send('config:getAll'),
+};
+
 const categorySender = createSender<ICategoryController, CategoryChannel>();
 const categoryApi: ICategoryController = {
     getAllCategories: () => categorySender.send('category:getAllCategories'),
@@ -38,4 +46,4 @@ const fileTransferApi: IFileTransferController = {
     importPrompts: () => fileTransferSender.send('transfer:importPrompts'),
 };
 
-export { sha256sum, versions, promptApi, categoryApi, tagApi, fileTransferApi };
+export { sha256sum, versions, configApi, promptApi, categoryApi, tagApi, fileTransferApi };

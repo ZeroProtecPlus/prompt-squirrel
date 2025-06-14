@@ -1,7 +1,7 @@
 {
   "name": "prompt-squirrel",
   "description": "for managing prompts in a squirrel-like manner",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "private": true,
   "type": "module",
   "main": "packages/entry-point.mjs",
@@ -15,7 +15,7 @@
     "build": "npm run build -ws --if-present",
     "rebuild": "electron-rebuild",
     "compile": "npm run build && electron-builder build --config electron-builder.mjs",
-    "test": "npx playwright test ./tests/e2e.spec.ts",
+    "test/e2e": "npx playwright test ./tests/e2e.spec.ts",
     "start": "node packages/dev-mode.js",
     "typecheck": "npm run typecheck -ws --if-present",
     "create-renderer": "cd packages && npm create vite@latest renderer",
