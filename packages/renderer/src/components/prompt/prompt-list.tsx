@@ -9,12 +9,16 @@ import PromptDetail from './prompt-detail';
 import PromptListItemEmpty from './prompt-list-empty';
 import PromptListItem from './prompt-list-item';
 import PromptOrderSelect from './prompt-order-select';
+import type { ViewMode } from './view-toggle-button';
+import ViewToggleButton from './view-toggle-button';
+import PromptImageItem from './prompt-image-item';
 
 export default function PromptList() {
-    const prompts = usePromptStore((state) => state.prompts);
+    const [viewMode, setViewMode] = useState<ViewMode>('list');
     const [visibleCount, setVisibleCount] = useState<number>(10);
     const observerRef = useRef<HTMLDivElement>(null);
-
+    
+    const prompts = usePromptStore((state) => state.prompts);
     const search = usePromptStore((state) => state.search);
     const setSearchString = usePromptStore((state) => state.setSearchString);
     const searchFilter = usePromptStore((state) => state.searchFilter);
@@ -22,30 +26,46 @@ export default function PromptList() {
 
     const [selectedPrompt, setSelectedPrompt] = useState<Prompt | null>(null);
 
-    useEffect(() => {
-        const observerEl = observerRef.current;
-        if (!observerEl) return;
+  useEffect(() => {
+    if (prompts.length === 0) return;
+    const observerEl = observerRef.current;
+    if (!observerEl) return;
 
-        const observer = new IntersectionObserver(
-            (entries) => {
-                const target = entries[0];
-                if (target.isIntersecting) {
-                    setVisibleCount((prev) => Math.min(prev + 10, prompts.length));
-                }
-            },
-            {
-                root: null,
-                rootMargin: '0px',
-                threshold: 1.0,
-            },
-        );
+    const observer = new IntersectionObserver(
+        ([entry]) => {
+            if (entry.isIntersecting) {
+                setVisibleCount((prev) => Math.min(prev + 10, prompts.length));
+            }
+        },
+        {
+            root: null,
+            rootMargin: '10px',
+            threshold: 0.2,
+        },
+    );
 
-        observer.observe(observerEl);
+    observer.observe(observerEl);
 
-        return () => {
-            if (observerEl) observer.unobserve(observerEl);
-        };
-    }, [prompts.length]);
+    let frameId: number;
+
+    const checkVisible = () => {
+        const rect = observerEl.getBoundingClientRect();
+        const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
+
+        if (isVisible && visibleCount < prompts.length) {
+            setVisibleCount((prev) => Math.min(prev + 10, prompts.length));
+            frameId = requestAnimationFrame(checkVisible);
+        }
+    };
+
+    frameId = requestAnimationFrame(checkVisible);
+
+    return () => {
+        observer.unobserve(observerEl);
+        cancelAnimationFrame(frameId);
+    };
+}, [prompts.length, visibleCount]);
+
 
     function handleSearch(event: React.ChangeEvent<HTMLInputElement>) {
         const searchString = event.target.value;
@@ -95,16 +115,25 @@ export default function PromptList() {
                 <div className='flex-0'>
                     <PromptOrderSelect />
                 </div>
+                <div className="flex-0">
+                    <ViewToggleButton value={viewMode} onChange={setViewMode}/>
+                </div>
             </div>
             <ScrollArea className="overflow-y-auto">
-                <div className="flex flex-col gap-1">
+                <div className={viewMode === 'list' ? 'flex flex-col space-y-1' : 'grid grid-cols-2 gap-2 md:grid-cols-4 lg:grid-cols-6'}>
                     {prompts.length === 0 ? (
                         <PromptListItemEmpty />
                     ) : (
                         prompts
                             .slice(0, visibleCount)
-                            .map((prompt) => (
+                            .map((prompt) => viewMode === 'list' ? (
                                 <PromptListItem
+                                    key={prompt.id}
+                                    prompt={prompt}
+                                    onClick={handlePromptClick}
+                                />
+                            ) : (
+                                <PromptImageItem
                                     key={prompt.id}
                                     prompt={prompt}
                                     onClick={handlePromptClick}
@@ -113,7 +142,7 @@ export default function PromptList() {
                     )}
 
                     {visibleCount < prompts.length && (
-                        <div ref={observerRef} className="h-10 flex items-center justify-center">
+                        <div ref={observerRef} className="flex items-center justify-center">
                             <LoaderCircle className="animate-spin text-muted-foreground" />
                         </div>
                     )}

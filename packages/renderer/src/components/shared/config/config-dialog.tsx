@@ -19,7 +19,7 @@ export default function ConfigDialog({ open, onOpenChange }: ConfigDialogProps) 
     return (
         <>
             <Dialog open={open} onOpenChange={onOpenChange}>
-                <DialogContent className="select-none sm:max-w-xl lg:max-w-2xl xl:max-w-3xl">
+                <DialogContent className="select-none lg:max-w-3xl xl:max-w-4xl">
                     <DialogHeader>
                         <DialogTitle>설정</DialogTitle>
                         <DialogDescription>
