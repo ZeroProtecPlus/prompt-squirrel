@@ -10,6 +10,7 @@ export function toPrompt(promptDto: PromptDto): Prompt {
         name: promptDto.name,
         prompt: promptDto.prompt,
         category,
+        thumbnail: promptDto.thumbnail,
         tags: matchedTags,
         createdAt: promptDto.createdAt,
     };

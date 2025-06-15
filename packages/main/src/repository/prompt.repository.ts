@@ -114,6 +114,7 @@ class PromptRepository implements IPromptRepository {
                         .set({
                             name: updatePrompt.name,
                             prompt: updatePrompt.prompt,
+                            thumbnail: updatePrompt.thumbnail,
                             category_id: updatePrompt.category_id,
                         })
                         .where('id', '=', updatePrompt.id)

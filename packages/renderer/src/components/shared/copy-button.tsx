@@ -8,9 +8,10 @@ import { toast } from 'sonner';
 interface CopyButtonProps {
     text: string;
     className?: string;
+    variant?: 'default' | 'outline' | 'ghost' | 'link';
 }
 
-export default function CopyButton({ text, className }: CopyButtonProps) {
+export default function CopyButton({ text, className, variant }: CopyButtonProps) {
     const [isCopied, setIsCopied] = useState(false);
 
     async function handleCopy(e: React.MouseEvent) {
@@ -25,7 +26,7 @@ export default function CopyButton({ text, className }: CopyButtonProps) {
     return (
         <Button
             className={cn('relative w-full h-full hover:bg-transparent', className)}
-            variant={'ghost'}
+            variant={variant || 'ghost'}
             onClick={handleCopy}
         >
             <Copy

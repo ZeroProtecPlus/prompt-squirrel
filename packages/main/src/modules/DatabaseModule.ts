@@ -1,67 +1,45 @@
-import { sql } from 'kysely';
+import { promises as fs } from 'node:fs';
+import path from 'node:path';
+import { FileMigrationProvider, Migrator, sql } from 'kysely';
 import { AppModule } from '../AppModule.js';
 import { ModuleContext } from '../ModuleContext.js';
 import { db } from '../database/db.js';
+import { AppMigrationProvider } from '../database/migration.provider.js';
 import { isDevMode } from '../utils/env.js';
 
 class DatabaseModule implements AppModule {
-    async enable(context: ModuleContext): Promise<void> {
+    async enable({ app }: ModuleContext): Promise<void> {
+        await app.whenReady();
         console.log('DatabaseModule enabled');
-        await this.table();
+        await this.migrate();
         await this.seed();
         console.log('DatabaseModule Successfully initialized');
     }
 
-    async table(): Promise<void> {
-        // Category
-        await db.schema
-            .createTable('category')
-            .ifNotExists()
-            .addColumn('id', 'integer', (col) => col.primaryKey().autoIncrement())
-            .addColumn('name', 'varchar(255)', (col) => col.notNull().unique())
-            .addColumn('created_at', 'datetime', (col) =>
-                col.defaultTo(sql`CURRENT_TIMESTAMP`).notNull(),
-            )
-            .execute();
+    async migrate(): Promise<void> {
+        const migrator = new Migrator({
+            db,
+            provider: new AppMigrationProvider(),
+        });
 
-        // Tag
-        await db.schema
-            .createTable('tag')
-            .ifNotExists()
-            .addColumn('id', 'integer', (col) => col.primaryKey().autoIncrement())
-            .addColumn('name', 'varchar(255)', (col) => col.notNull().unique())
-            .addColumn('created_at', 'datetime', (col) =>
-                col.defaultTo(sql`CURRENT_TIMESTAMP`).notNull(),
-            )
-            .execute();
+        const { error, results } = await migrator.migrateToLatest();
 
-        // Prompt
-        await db.schema
-            .createTable('prompt')
-            .ifNotExists()
-            .addColumn('id', 'integer', (col) => col.primaryKey().autoIncrement())
-            .addColumn('name', 'varchar(255)', (col) => col.notNull().unique())
-            .addColumn('prompt', 'text', (col) => col.notNull())
-            .addColumn('category_id', 'integer', (col) =>
-                col.references('category.id').onDelete('cascade'),
-            )
-            .addColumn('created_at', 'datetime', (col) =>
-                col.defaultTo(sql`CURRENT_TIMESTAMP`).notNull(),
-            )
-            .execute();
+        if (results) {
+            for (const result of results) {
+                if (result.status === 'Success') {
+                    console.log(`migration "${result.migrationName}" was executed successfully`);
+                } else if (result.status === 'Error') {
+                    console.error(`failed to execute migration "${result.migrationName}"`);
+                }
+            }
+        }
 
-        // PromptTag
-        await db.schema
-            .createTable('prompt_tag')
-            .ifNotExists()
-            .addColumn('prompt_id', 'integer', (col) =>
-                col.notNull().references('prompt.id').onDelete('cascade'),
-            )
-            .addColumn('tag_id', 'integer', (col) =>
-                col.notNull().references('tag.id').onDelete('cascade'),
-            )
-            .addPrimaryKeyConstraint('pk_prompt_tag', ['prompt_id', 'tag_id'])
-            .execute();
+        if (error) {
+            console.error('failed to migrate');
+            console.error(error);
+            db.destroy();
+            process.exit(1);
+        }
     }
 
     async seed(): Promise<void> {

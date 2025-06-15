@@ -6,8 +6,9 @@ export function toPromptDto(promptTable: SelectPrompt, tagIds: number[]): Prompt
         id: promptTable.id,
         name: promptTable.name,
         prompt: promptTable.prompt,
-        createdAt: promptTable.created_at,
         categoryId: promptTable.category_id,
+        thumbnail: promptTable.thumbnail,
+        createdAt: promptTable.created_at,
         tagIds: tagIds || [],
     };
 }

@@ -1,4 +1,3 @@
-import { removePromptCommand } from '@/commands/prompt';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -11,8 +10,11 @@ import {
     AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
+import { deleteSuccessMessage } from '@/lib/message';
 import { cn } from '@/lib/utils';
+import { usePromptStore } from '@/store';
 import { Trash } from 'lucide-react';
+import { toast } from 'sonner';
 
 interface PromptRemoveButtonProps {
     className?: string;
@@ -25,12 +27,20 @@ export default function PromptRemoveButton({
     promptId,
     onRemove,
 }: PromptRemoveButtonProps) {
+    const removePrompt = usePromptStore((state) => state.removePrompt);
+
     async function handleRemovePrompt(e: React.MouseEvent<HTMLButtonElement>) {
         e.stopPropagation();
         if (!promptId) return;
 
-        await removePromptCommand(promptId);
-        onRemove?.();
+        try {
+            await removePrompt(promptId);
+            onRemove?.();
+            toast.success(deleteSuccessMessage('프롬프트'));
+        } catch (error) {
+            console.error('프롬프트 삭제 실패:', error);
+            toast.error('프롬프트 삭제에 실패했습니다.');
+        }
     }
 
     return (

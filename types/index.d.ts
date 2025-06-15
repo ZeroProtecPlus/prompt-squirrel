@@ -4,7 +4,7 @@ type Prompt = {
     prompt: string;
     category: Category;
     tags: Tag[];
-    thumbnail?: string;
+    thumbnail: string | null;
     createdAt: Date;
 }
 

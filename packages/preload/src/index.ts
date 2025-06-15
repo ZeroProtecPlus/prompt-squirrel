@@ -32,6 +32,8 @@ const promptApi: IPromptController = {
         promptSender.send('prompt:addPrompt', createPromptDto),
     updatePrompt: (updatePromptDto: UpdatePromptDto) =>
         promptSender.send('prompt:updatePrompt', updatePromptDto),
+    addThumbnailToPrompt: (addThumbnailToPromptDto: AddThumbnailToPromptDto) =>
+        promptSender.send('prompt:addThumbnailToPrompt', addThumbnailToPromptDto),
     addTagToPrompt: (addTagToPromptDto: AddTagToPromptDto) =>
         promptSender.send('prompt:addTagToPrompt', addTagToPromptDto),
     removeTagFromPrompt: (removeTagFromPromptDto: RemoveTagFromPromptDto) =>

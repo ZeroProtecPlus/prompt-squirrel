@@ -1,7 +1,7 @@
 import { ALL_CATEGORY_ID, NONE_CATEGORY_ID } from '@/components/category/constants';
 import { promptEventEmitter } from '@/lib/event-emitter';
 import { toPrompt } from '@/lib/mapper';
-import { createSuccessMessage, deleteSuccessMessage, updateSuccessMessage } from '@/lib/message';
+import { createSuccessMessage, updateSuccessMessage } from '@/lib/message';
 import { searchResultToPrompt } from '@/lib/search-utils';
 import { promptApi } from '@app/preload';
 import { orderBy } from 'es-toolkit';
@@ -44,7 +44,7 @@ export const usePromptStore = create<
     const minisearch = new MiniSearch({
         idField: 'id',
         fields: ['name', 'prompt', 'category', 'tags'],
-        storeFields: ['id', 'name', 'prompt', 'category', 'tags', 'createdAt'],
+        storeFields: ['id', 'name', 'prompt', 'category', 'tags', 'thumbnail', 'createdAt'],
         searchOptions: {
             fuzzy: 0,
             prefix: true,
@@ -219,13 +219,11 @@ export const usePromptStore = create<
         removePrompt: async (promptId: number) => {
             const response = await promptApi.removePromptById(promptId);
             if (!response.success) return Promise.reject(response.error);
-
+            console.log('프롬프트 삭제 성공:', response.data);
             minisearch.remove({ id: promptId });
             set((state) => ({
                 prompts: state.prompts.filter((p) => p.id !== promptId),
             }));
-
-            toast.success(deleteSuccessMessage());
         },
 
         loadPrompts: async () => {

@@ -5,6 +5,7 @@ export type PromptTable = {
     name: string;
     prompt: string;
     category_id: number | null;
+    thumbnail: string | null;
     created_at: ColumnType<Date, string | undefined, never>;
 };
 

@@ -26,6 +26,17 @@ type UpdatePromptDto = {
     categoryId?: number | null;
 }
 
+type ThumbnailImage = {
+    name: string;
+    type: string;
+    buffer: ArrayBuffer;
+}
+
+type AddThumbnailToPromptDto = {
+    promptId: number;
+    image: ThumbnailImage;
+}
+
 type AddTagToPromptDto = {
     promptId: number;
     tagId: number;
@@ -38,6 +49,7 @@ type PromptDto = {
     name: string;
     prompt: string;
     categoryId: number | null;
+    thumbnail: string | null;
     tagIds: number[];
     createdAt: Date;
 }

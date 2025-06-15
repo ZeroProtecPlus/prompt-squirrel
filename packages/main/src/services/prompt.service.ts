@@ -12,6 +12,7 @@ import { promptRepository } from '../repository/prompt.repository.js';
 import { randomId } from '../utils/gen.js';
 import { categoryService } from './category.service.js';
 import { tagService } from './tag.service.js';
+import { thumbnailService } from './thumbnail.service.js';
 
 interface IPromptService {
     getAllPrompts(): Effect.Effect<PromptDto[], ServiceException>;
@@ -20,6 +21,9 @@ interface IPromptService {
         SquirrelObjects: SquirrelObject[],
     ): Effect.Effect<PromptDto[], ServiceException>;
     updatePrompt(updatePromptDto: UpdatePromptDto): Effect.Effect<PromptDto, ServiceException>;
+    addThumbnailToPrompt(
+        addThumbnailToPromptDto: AddThumbnailToPromptDto,
+    ): Effect.Effect<PromptDto, ServiceException>;
     addTagToPrompt(
         addTagToPromptDto: AddTagToPromptDto,
     ): Effect.Effect<PromptDto, ServiceException>;
@@ -136,6 +140,34 @@ class PromptService implements IPromptService {
         );
     }
 
+    addThumbnailToPrompt(
+        addThumbnailToPromptDto: AddThumbnailToPromptDto,
+    ): Effect.Effect<PromptDto, ServiceException> {
+        return promptExceptionHandler(
+            Effect.gen(function* () {
+                yield* Effect.logDebug('Service: addThumbnailToPrompt - start', {
+                    addThumbnailToPromptDto,
+                });
+                const fileName = yield* thumbnailService.saveThmumbnail(
+                    addThumbnailToPromptDto.promptId,
+                    addThumbnailToPromptDto.image,
+                );
+
+                const prompt = yield* promptRepository.updatePrompt({
+                    id: addThumbnailToPromptDto.promptId,
+                    thumbnail: fileName,
+                });
+
+                const tagIds = yield* tagService.getTagsByPromptId(prompt.id);
+                yield* Effect.logDebug('Service: addThumbnailToPrompt - end');
+                return toPromptDto(
+                    prompt,
+                    tagIds.map((tag) => tag.id),
+                );
+            }),
+        );
+    }
+
     addTagToPrompt(
         addTagToPromptDto: AddTagToPromptDto,
     ): Effect.Effect<PromptDto, ServiceException> {
@@ -183,7 +215,11 @@ class PromptService implements IPromptService {
         return promptExceptionHandler(
             Effect.gen(function* () {
                 yield* Effect.logDebug('Service: removePromptById start', { id });
+                const prompt = yield* promptRepository.findById(id);
                 yield* promptRepository.removePromptById(id);
+                if (prompt.thumbnail) {
+                    yield* thumbnailService.deleteThumbnail(prompt.thumbnail);
+                }
                 yield* Effect.logDebug('Service: removePromptById end');
             }),
         );

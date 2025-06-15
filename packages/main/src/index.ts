@@ -6,6 +6,7 @@ import { allowInternalOrigins } from './modules/BlockNotAllowdOrigins.js';
 import { databaseModule } from './modules/DatabaseModule.js';
 import { allowExternalUrls } from './modules/ExternalUrls.js';
 import { hardwareAccelerationMode } from './modules/HardwareAccelerationModule.js';
+import { protocolModule } from './modules/ProtocolModule.js';
 import { disallowMultipleAppInstance } from './modules/SingleInstanceApp.js';
 import { createWindowManagerModule } from './modules/WindowManager.js';
 import { ipcModule } from './modules/ipcModule.js';
@@ -17,6 +18,7 @@ export async function initApp(initConfig: AppInitConfig) {
         .init(terminateAppOnLastWindowClose())
         .init(hardwareAccelerationMode({ enable: false }))
         .init(autoUpdater())
+        .init(protocolModule())
         .init(databaseModule())
         .init(ipcModule())
 

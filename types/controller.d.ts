@@ -14,6 +14,7 @@ interface IPromptController {
     getAllPrompts(): Promise<IPCResponse<PromptDto[]>>;
     addPrompt(createPromptDto: CreatePromptDto): Promise<IPCResponse<PromptDto>>;
     updatePrompt(updatePromptDto: UpdatePromptDto): Promise<IPCResponse<PromptDto>>;
+    addThumbnailToPrompt(addThumbnailToPromptDto: AddThumbnailToPromptDto): Promise<IPCResponse<PromptDto>>;
     addTagToPrompt(addTagToPromptDto: AddTagToPromptDto): Promise<IPCResponse<PromptDto>>;
     removeTagFromPrompt(removeTagFromPromptDto: RemoveTagFromPromptDto): Promise<IPCResponse<PromptDto>>;
     removePromptById(id: number): Promise<IPCResponse<void>>;
