@@ -11,9 +11,9 @@
   flex-wrap: nowrap;
   max-width: 100%;
 ">
-  <img src="docs/main-dark.jpg" style="flex: 1; max-width: 100%; height: auto;">
-  <img src="docs/main.jpg" style="flex: 1; max-width: 100%; height: auto;">
-  <img src="docs/main-light.jpg" style="flex: 1; max-width: 100%; height: auto;">
+  <img src="docs/main-dark.jpg" style="flex: 1; max-width: 33%; height: auto;">
+  <img src="docs/main.jpg" style="flex: 1; max-width: 33%; height: auto;">
+  <img src="docs/main-light.jpg" style="flex: 1; max-width: 33%; height: auto;">
 </div>
 
 <div><h1></h1></div>
