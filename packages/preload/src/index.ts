@@ -2,6 +2,13 @@ import { sha256sum } from './nodeCrypto.js';
 import { createSender } from './send.js';
 import { versions } from './versions.js';
 
+const electronSender = createSender<IElectronController, ElectronChannel>();
+const electronApi: IElectronController = {
+    setPinnedWindow: (pinned: boolean) =>
+        electronSender.send('electron:setPinnedWindow', pinned),
+    setTheme: (theme: Theme) => electronSender.send('electron:setTheme', theme),
+};
+
 const configSender = createSender<IConfigController, ConfigChannel>();
 const configApi: IConfigController = {
     get: (key: keyof AppConfig) => configSender.send('config:get', key),
@@ -50,4 +57,4 @@ const fileTransferApi: IFileTransferController = {
     importPrompts: () => fileTransferSender.send('transfer:importPrompts'),
 };
 
-export { sha256sum, versions, configApi, promptApi, categoryApi, tagApi, fileTransferApi };
+export { sha256sum, versions, configApi, promptApi, categoryApi, tagApi, fileTransferApi, electronApi };

@@ -31,3 +31,8 @@ interface IConfigController {
     set(key: keyof AppConfig, value: AppConfig[keyof AppConfig]): Promise<IPCResponse<void>>;
     getAll(): Promise<IPCResponse<AppConfig>>;
 }
+
+interface IElectronController {
+    setPinnedWindow(pinned: boolean): Promise<IPCResponse<void>>;
+    setTheme(theme: Theme): Promise<IPCResponse<void>>;
+}

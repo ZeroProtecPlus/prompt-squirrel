@@ -6,11 +6,13 @@ import { configController } from '../controller/config.controller.js';
 import { fileTransferController } from '../controller/file-transfer.controller.js';
 import { promptController } from '../controller/prompt.controller.js';
 import { tagController } from '../controller/tag.controller.js';
+import { electronController } from '../controller/electron.controller.js';
 
 class IPCModule implements AppModule {
     async enable({ app }: ModuleContext) {
         await app.whenReady();
 
+        registerIpc('electron', electronController);
         registerIpc('category', categoryController);
         registerIpc('tag', tagController);
         registerIpc('prompt', promptController);

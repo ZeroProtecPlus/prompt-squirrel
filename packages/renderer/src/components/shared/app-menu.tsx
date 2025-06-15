@@ -1,21 +1,17 @@
-import { useTheme } from '@/components/hooks';
 import {
     Menubar,
     MenubarContent,
     MenubarItem,
     MenubarMenu,
-    MenubarRadioGroup,
-    MenubarRadioItem,
     MenubarTrigger,
 } from '@/components/ui/menubar';
 import { useState } from 'react';
 import ExportMenuItem from './app-menu/export-menu-item';
 import ImportMenuItem from './app-menu/import-menu-item';
 import ConfigDialog from './config/config-dialog';
+import MenubarThemeRadioGroup from './app-menu/theme-radio-group';
 
 export default function AppMenu() {
-    const { theme, setTheme } = useTheme();
-
     const [configDialogOpen, setConfigDialogOpen] = useState<boolean>(false);
 
     return (
@@ -36,20 +32,7 @@ export default function AppMenu() {
             <MenubarMenu>
                 <MenubarTrigger>테마</MenubarTrigger>
                 <MenubarContent>
-                    <MenubarRadioGroup value={theme}>
-                        <MenubarRadioItem value="light" onSelect={() => setTheme('light')}>
-                            라이트
-                        </MenubarRadioItem>
-                        <MenubarRadioItem value="dark" onSelect={() => setTheme('dark')}>
-                            다크
-                        </MenubarRadioItem>
-                        <MenubarRadioItem value="green" onSelect={() => setTheme('green')}>
-                            그린
-                        </MenubarRadioItem>
-                        <MenubarRadioItem value="system" onSelect={() => setTheme('system')}>
-                            시스템
-                        </MenubarRadioItem>
-                    </MenubarRadioGroup>
+                    <MenubarThemeRadioGroup />
                 </MenubarContent>
             </MenubarMenu>
             <MenubarMenu>
