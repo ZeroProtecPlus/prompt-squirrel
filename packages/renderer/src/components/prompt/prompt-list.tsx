@@ -129,7 +129,7 @@ export default function PromptList() {
                     className={
                         viewMode === 'list'
                             ? 'flex flex-col space-y-1'
-                            : 'grid grid-cols-2 gap-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8'
+                            : 'grid grid-cols-2 gap-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6'
                     }
                 >
                     {prompts.length === 0 ? (

@@ -43,9 +43,9 @@ class WindowManager implements AppModule {
                 preload: this.#preload.path,
             },
             resizable: true,
-            width: 800,
+            width: 1000,
             height: 800,
-            minWidth: 800,
+            minWidth: 1000,
             minHeight: 800,
             icon: appIcon,
         });
