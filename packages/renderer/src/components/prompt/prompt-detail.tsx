@@ -26,6 +26,7 @@ import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 import DragOverlay from '../shared/drag-overlay';
 import PromptRemoveButton from './prompt-remove-button';
+import PromptRemoveThumbnailButton from './prompt-remove-thumbnail-button';
 
 interface PromptDetailProps {
     prompt: Prompt | null;
@@ -45,6 +46,7 @@ export default function PromptDetail({ prompt, onClose }: PromptDetailProps) {
     const [promptText, setPromptText] = useState<string>(prompt?.prompt || '');
     const originalPromptText = useRef<string>(promptText);
     const [tags, setTags] = useState<Tag[]>(prompt?.tags || []);
+    const [thumbnail, setThumbnail] = useState<string | null>(prompt?.thumbnail || null);
 
     useEffect(() => {
         if (!prompt) return;
@@ -56,6 +58,7 @@ export default function PromptDetail({ prompt, onClose }: PromptDetailProps) {
         setPromptText(prompt.prompt);
         originalPromptText.current = prompt.prompt;
         setTags(prompt.tags);
+        setThumbnail(prompt.thumbnail);
 
         setIsPromptEditMode(false);
         setIsNameEditMode(false);
@@ -140,6 +143,11 @@ export default function PromptDetail({ prompt, onClose }: PromptDetailProps) {
         }
     }
 
+    function onRemoveThumbnail() {
+        if (!prompt) return;
+        setThumbnail(null);
+    }
+
     return (
         <Sheet open={open} onOpenChange={onOpenChange}>
             <SheetContent className="  md:max-w-md lg:max-w-lg xl:max-w-xl 2xl:max-w-2xl">
@@ -173,6 +181,11 @@ export default function PromptDetail({ prompt, onClose }: PromptDetailProps) {
                                         value={isNameEditMode}
                                         onEditMode={() => setIsNameEditMode(true)}
                                         onSaveMode={handleNameSave}
+                                    />
+                                    <PromptRemoveThumbnailButton
+                                        promptId={promptId.current}
+                                        thumbnail={thumbnail}
+                                        onRemove={onRemoveThumbnail}
                                     />
                                 </div>
                             </SheetTitle>

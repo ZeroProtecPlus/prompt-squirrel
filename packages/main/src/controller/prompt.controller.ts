@@ -57,6 +57,18 @@ class PromptController implements IPromptController {
         );
     }
 
+    removeThumbnailFromPrompt(promptId: number): Promise<IPCResponse<PromptDto>> {
+        return runWithLogger(
+            Effect.gen(function* () {
+                yield* Effect.logDebug('removeThumbnailFromPrompt - start', { promptId });
+                const updatedPrompt = yield* promptService.removeThumbnailFromPrompt(promptId);
+                yield* Effect.logDebug('removeThumbnailFromPrompt - end', { updatedPrompt });
+                return Ok(updatedPrompt);
+            }),
+            this.PREFIX,
+        );
+    }
+
     addTagToPrompt(addTagToPromptDto: AddTagToPromptDto): Promise<IPCResponse<PromptDto>> {
         return runWithLogger(
             Effect.gen(function* () {

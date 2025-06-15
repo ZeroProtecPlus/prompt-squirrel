@@ -24,6 +24,9 @@ interface IPromptService {
     addThumbnailToPrompt(
         addThumbnailToPromptDto: AddThumbnailToPromptDto,
     ): Effect.Effect<PromptDto, ServiceException>;
+    removeThumbnailFromPrompt(
+        promptId: number,
+    ): Effect.Effect<PromptDto, ServiceException>;
     addTagToPrompt(
         addTagToPromptDto: AddTagToPromptDto,
     ): Effect.Effect<PromptDto, ServiceException>;
@@ -162,6 +165,27 @@ class PromptService implements IPromptService {
                 yield* Effect.logDebug('Service: addThumbnailToPrompt - end');
                 return toPromptDto(
                     prompt,
+                    tagIds.map((tag) => tag.id),
+                );
+            }),
+        );
+    }
+
+    removeThumbnailFromPrompt(promptId: number): Effect.Effect<PromptDto, ServiceException> {
+        return promptExceptionHandler(
+            Effect.gen(function* () {
+                yield* Effect.logDebug('Service: removeThumbnailFromPrompt - start', { promptId });
+                const prompt = yield* promptRepository.findById(promptId);
+                if (prompt.thumbnail) yield* thumbnailService.deleteThumbnail(prompt.thumbnail);
+                
+                const updatedPrompt = yield* promptRepository.updatePrompt({
+                    id: promptId,
+                    thumbnail: null,
+                });
+                const tagIds = yield* tagService.getTagsByPromptId(updatedPrompt.id);
+                yield* Effect.logDebug('Service: removeThumbnailFromPrompt - end');
+                return toPromptDto(
+                    updatedPrompt,
                     tagIds.map((tag) => tag.id),
                 );
             }),
