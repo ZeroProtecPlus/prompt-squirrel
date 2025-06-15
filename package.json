@@ -1,7 +1,7 @@
 {
   "name": "prompt-squirrel",
   "description": "for managing prompts in a squirrel-like manner",
-  "version": "0.0.5",
+  "version": "0.1.0",
   "private": true,
   "type": "module",
   "main": "packages/entry-point.mjs",
