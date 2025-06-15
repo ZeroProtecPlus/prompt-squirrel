@@ -8,9 +8,9 @@ import {
 import { useState } from 'react';
 import ExportMenuItem from './app-menu/export-menu-item';
 import ImportMenuItem from './app-menu/import-menu-item';
-import ConfigDialog from './config/config-dialog';
-import MenubarThemeRadioGroup from './app-menu/theme-radio-group';
 import PinToggleButton from './app-menu/pin-toggle-button';
+import MenubarThemeRadioGroup from './app-menu/theme-radio-group';
+import ConfigDialog from './config/config-dialog';
 
 export default function AppMenu() {
     const [configDialogOpen, setConfigDialogOpen] = useState<boolean>(false);
@@ -40,8 +40,8 @@ export default function AppMenu() {
                 <MenubarTrigger onClick={() => setConfigDialogOpen(true)}>설정</MenubarTrigger>
                 <ConfigDialog open={configDialogOpen} onOpenChange={setConfigDialogOpen} />
             </MenubarMenu>
-            
-            <PinToggleButton className='ml-auto'/>
+
+            <PinToggleButton className="ml-auto" />
         </Menubar>
     );
 }

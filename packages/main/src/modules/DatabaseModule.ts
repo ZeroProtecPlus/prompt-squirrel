@@ -1,8 +1,7 @@
-import { promises as fs } from 'node:fs';
-import path from 'node:path';
-import { FileMigrationProvider, Migrator, sql } from 'kysely';
+import { Migrator } from 'kysely';
 import { AppModule } from '../AppModule.js';
 import { ModuleContext } from '../ModuleContext.js';
+import { MainLogger } from '../common/logger.js';
 import { db } from '../database/db.js';
 import { AppMigrationProvider } from '../database/migration.provider.js';
 import { isDevMode } from '../utils/env.js';
@@ -29,14 +28,14 @@ class DatabaseModule implements AppModule {
                 if (result.status === 'Success') {
                     console.log(`migration "${result.migrationName}" was executed successfully`);
                 } else if (result.status === 'Error') {
-                    console.error(`failed to execute migration "${result.migrationName}"`);
+                    MainLogger.error(`failed to execute migration "${result.migrationName}"`);
                 }
             }
         }
 
         if (error) {
-            console.error('failed to migrate');
-            console.error(error);
+            MainLogger.error('failed to migrate');
+            MainLogger.error(error);
             db.destroy();
             process.exit(1);
         }

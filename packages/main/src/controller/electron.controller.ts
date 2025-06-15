@@ -1,6 +1,6 @@
-import { app, nativeTheme } from "electron";
-import { Ok } from "../common/ipc.response.js";
-import { windowService } from "../modules/MainWindow.js";
+import { app, nativeTheme } from 'electron';
+import { Ok } from '../common/ipc.response.js';
+import { windowService } from '../modules/MainWindow.js';
 
 class ElectronController implements IElectronController {
     async setPinnedWindow(pinned: boolean): Promise<IPCResponse<void>> {
@@ -12,10 +12,8 @@ class ElectronController implements IElectronController {
     }
 
     async setTheme(theme: Theme): Promise<IPCResponse<void>> {
-        if (theme === 'green') 
-            nativeTheme.themeSource = 'light';
-        else 
-            nativeTheme.themeSource = theme;
+        if (theme === 'green') nativeTheme.themeSource = 'light';
+        else nativeTheme.themeSource = theme;
 
         return Ok();
     }

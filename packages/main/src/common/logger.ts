@@ -31,3 +31,5 @@ export const logger = Logger.make(({ logLevel, message }) => {
             break;
     }
 });
+
+export const MainLogger = log;

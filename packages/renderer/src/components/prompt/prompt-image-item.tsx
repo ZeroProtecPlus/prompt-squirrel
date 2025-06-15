@@ -1,8 +1,8 @@
+import { thumbnailEventEmitter } from '@/lib/event-emitter';
 import { ImageOff } from 'lucide-react';
 import { useState } from 'react';
 import CopyButton from '../shared/copy-button';
 import { AspectRatio } from '../ui/aspect-ratio';
-import { thumbnailEventEmitter } from '@/lib/event-emitter';
 
 interface PromptImageItemProps {
     prompt: Prompt;
@@ -21,8 +21,7 @@ export default function PromptImageItem({ prompt, onClick }: PromptImageItemProp
     function handleContextMenu(e: React.MouseEvent<HTMLDivElement>) {
         e.stopPropagation();
         e.preventDefault();
-        if (prompt.thumbnail) 
-            thumbnailEventEmitter.emit('thumbnailRightClick', prompt.thumbnail);
+        if (prompt.thumbnail) thumbnailEventEmitter.emit('thumbnailRightClick', prompt.thumbnail);
     }
 
     return (

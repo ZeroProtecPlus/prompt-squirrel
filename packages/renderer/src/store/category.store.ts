@@ -39,7 +39,7 @@ export const useCategoryStore = create<CategoryState & CategoryAction>((set) => 
         }));
         toast.success(deleteSuccessMessage(name));
 
-        usePromptStore.getState().loadPrompts();
+        await usePromptStore.getState().loadPrompts();
     },
 
     loadCategories: async () => {

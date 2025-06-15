@@ -4,8 +4,7 @@ import { versions } from './versions.js';
 
 const electronSender = createSender<IElectronController, ElectronChannel>();
 const electronApi: IElectronController = {
-    setPinnedWindow: (pinned: boolean) =>
-        electronSender.send('electron:setPinnedWindow', pinned),
+    setPinnedWindow: (pinned: boolean) => electronSender.send('electron:setPinnedWindow', pinned),
     setTheme: (theme: Theme) => electronSender.send('electron:setTheme', theme),
 };
 
@@ -57,4 +56,13 @@ const fileTransferApi: IFileTransferController = {
     importPrompts: () => fileTransferSender.send('transfer:importPrompts'),
 };
 
-export { sha256sum, versions, configApi, promptApi, categoryApi, tagApi, fileTransferApi, electronApi };
+export {
+    sha256sum,
+    versions,
+    configApi,
+    promptApi,
+    categoryApi,
+    tagApi,
+    fileTransferApi,
+    electronApi,
+};

@@ -8,6 +8,6 @@ export const promptEventEmitter = mitt<PromptEvent>();
 
 type ThumbnailEvent = {
     thumbnailRightClick: string;
-}
+};
 
 export const thumbnailEventEmitter = mitt<ThumbnailEvent>();

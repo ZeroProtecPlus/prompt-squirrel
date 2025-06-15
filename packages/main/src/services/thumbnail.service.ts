@@ -20,7 +20,8 @@ class ThumbnailService implements IThumbnailService {
                 image,
             });
 
-            if (!fs.existsSync(USER_THUMBNAIL_PATH)) fs.mkdirSync(USER_THUMBNAIL_PATH, { recursive: true });
+            if (!fs.existsSync(USER_THUMBNAIL_PATH))
+                fs.mkdirSync(USER_THUMBNAIL_PATH, { recursive: true });
 
             const ext = path.extname(image.name);
 

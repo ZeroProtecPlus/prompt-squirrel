@@ -1,8 +1,8 @@
-import { Button } from "../ui/button";
-import { removeThumbnailFromPromptCommand } from "@/commands/prompt/remove-thumbnail-from-prompt.command";
-import { usePromptStore } from "@/store";
-import { ImageMinus } from "lucide-react";
-import { toast } from "sonner";
+import { removeThumbnailFromPromptCommand } from '@/commands/prompt/remove-thumbnail-from-prompt.command';
+import { usePromptStore } from '@/store';
+import { ImageMinus } from 'lucide-react';
+import { toast } from 'sonner';
+import { Button } from '../ui/button';
 
 interface PromptRemoveThumbnailButtonProps {
     promptId: number | null;
@@ -10,7 +10,11 @@ interface PromptRemoveThumbnailButtonProps {
     onRemove?: () => void;
 }
 
-export default function PromptRemoveThumbnailButton({ promptId, thumbnail, onRemove }: PromptRemoveThumbnailButtonProps) {
+export default function PromptRemoveThumbnailButton({
+    promptId,
+    thumbnail,
+    onRemove,
+}: PromptRemoveThumbnailButtonProps) {
     const miniSearch = usePromptStore((state) => state.minisearch);
     const search = usePromptStore((state) => state.search);
 

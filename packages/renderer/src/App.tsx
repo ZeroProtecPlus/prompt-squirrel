@@ -7,9 +7,9 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import BaseLayout from '@/layout/base-layout';
 import { useCategoryStore, usePromptStore, useTagStore } from '@/store';
 import { useEffect } from 'react';
+import PromptThumbnailDetail from './components/prompt/prompt-thumbnail-detail';
 import { ThemeProvider } from './components/provider/theme-provider';
 import { useConfigStore } from './store/config.store';
-import PromptThumbnailDetail from './components/prompt/prompt-thumbnail-detail';
 
 function App() {
     const { loading, stopLoading } = useLoading();
