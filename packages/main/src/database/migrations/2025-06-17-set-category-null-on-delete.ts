@@ -3,6 +3,8 @@ import { DB } from '../table/index.js';
 
 export const setCategoryNullOnDelete20250617: Migration = {
     up: async (db: Kysely<DB>) => {
+        await sql`CREATE TABLE prompt_tag_backup AS SELECT * FROM prompt_tag`.execute(db);
+
         await db.schema
             .createTable('prompt_temp')
             .addColumn('id', 'integer', (col) => col.primaryKey().autoIncrement())
@@ -20,11 +22,18 @@ export const setCategoryNullOnDelete20250617: Migration = {
         await sql`INSERT INTO prompt_temp SELECT * FROM prompt`.execute(db);
 
         await db.schema.dropTable('prompt').execute();
-
         await sql`ALTER TABLE prompt_temp RENAME TO prompt`.execute(db);
+
+        await sql`
+            INSERT INTO prompt_tag(prompt_id, tag_id)
+            SELECT prompt_id, tag_id FROM prompt_tag_backup
+        `.execute(db);
+        await sql`DROP TABLE prompt_tag_backup`.execute(db);
     },
 
     down: async (db: Kysely<DB>) => {
+        await sql`CREATE TABLE prompt_tag_backup AS SELECT * FROM prompt_tag`.execute(db);
+
         await db.schema
             .createTable('prompt_temp')
             .addColumn('id', 'integer', (col) => col.primaryKey().autoIncrement())
@@ -40,9 +49,13 @@ export const setCategoryNullOnDelete20250617: Migration = {
             .execute();
 
         await sql`INSERT INTO prompt_temp SELECT * FROM prompt`.execute(db);
-
         await db.schema.dropTable('prompt').execute();
-
         await sql`ALTER TABLE prompt_temp RENAME TO prompt`.execute(db);
+
+        await sql`
+            INSERT INTO prompt_tag(prompt_id, tag_id)
+            SELECT prompt_id, tag_id FROM prompt_tag_backup
+        `.execute(db);
+        await sql`DROP TABLE prompt_tag_backup`.execute(db);
     },
 };
