@@ -14,6 +14,9 @@
 
 <div><h1></h1></div>
 
+[![Latest Release](https://img.shields.io/github/v/release/r3dsd/prompt-squirrel?label=release)](https://github.com/r3dsd/prompt-squirrel/releases/latest)
+
+
 # 소개
 **Prompt Squirrel**은 프롬프트를 하나하나 모아두는 윈도우 앱입니다.  
 다람쥐가 도토리를 저장하듯, 당신은 프롬프트를 저장하세요.  
