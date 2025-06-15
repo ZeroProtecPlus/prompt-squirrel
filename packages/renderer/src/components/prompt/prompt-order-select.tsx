@@ -10,12 +10,10 @@ import { usePromptStore } from '@/store';
 export default function PromptOrderSelect() {
     const orderBy = usePromptStore((state) => state.orderBy);
     const setOrderBy = usePromptStore((state) => state.setOrderBy);
-    const search = usePromptStore((state) => state.search);
 
     function handleValueChange(value: string) {
         const [field, direction] = value.split(':') as [OrderField, OrderDirection];
         setOrderBy(field, direction);
-        search();
     }
 
     function orderByToDisplayName(orderBy: OrderByOptions): string {

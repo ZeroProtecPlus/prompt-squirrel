@@ -150,7 +150,10 @@ export const usePromptStore = create<
         },
 
         setOrderBy: (field: OrderField, direction: OrderDirection) => {
-            set({ orderBy: { field, direction } });
+            set({ 
+                orderBy: { field, direction },
+                prompts: orderBy(get().prompts, [field], [direction]),
+            });
         },
 
         addPrompt: async (prompt: CreatePromptDto) => {
