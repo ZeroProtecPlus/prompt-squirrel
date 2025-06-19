@@ -33,7 +33,8 @@
     "electron-builder": "26.0.12",
     "electron-rebuild": "^3.2.9",
     "glob": "11.0.2",
-    "playwright": "^1.52.0"
+    "playwright": "^1.52.0",
+    "vite": "^6.0.0"
   },
   "dependencies": {
     "@app/main": "*"
