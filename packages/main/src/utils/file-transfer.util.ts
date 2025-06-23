@@ -3,6 +3,7 @@ import { UnexpectedException } from '../common/exceptions/unexpected.exception.j
 interface IPromptSerializer {
     templateLoader(prompts: Prompt[]): string;
     squirrel(prompts: Prompt[]): string;
+    json(prompts: Prompt[]): string;
     wildcard(prompts: Prompt[]): string;
     serialize(prompts: Prompt[], type: ExportType): string;
 }
@@ -13,7 +14,11 @@ export class PromptSerializer implements IPromptSerializer {
     }
 
     squirrel(prompts: Prompt[]): string {
-        return JSON.stringify(parseToSquirrelObject(prompts), null, 2);
+        return JSON.stringify(parseToSerializablePromptDtoArray(prompts), null, 2);
+    }
+
+    json(prompts: Prompt[]): string {
+        return JSON.stringify(parseToSerializablePromptDtoArray(prompts), null, 2);
     }
 
     wildcard(prompts: Prompt[]): string {
@@ -24,6 +29,7 @@ export class PromptSerializer implements IPromptSerializer {
         if (type === 'templateloader') return this.templateLoader(prompts);
         if (type === 'squirrel') return this.squirrel(prompts);
         if (type === 'wildcard') return this.wildcard(prompts);
+        if (type === 'json') return this.json(prompts);
 
         throw new UnexpectedException(`Unsupported export type: ${type}`);
     }
@@ -36,7 +42,7 @@ function parseToTemplateLoaderObject(prompts: Prompt[]): TemplateLoaderObject {
     }, {});
 }
 
-function parseToSquirrelObject(prompts: Prompt[]): SquirrelObject[] {
+function parseToSerializablePromptDtoArray(prompts: Prompt[]): SerializablePromptDto[] {
     return prompts.map((prompt) => ({
         name: prompt.name,
         prompt: prompt.prompt,
@@ -49,15 +55,16 @@ function parseToWildcardObject(prompts: Prompt[]): string {
     return prompts.map((prompt) => prompt.prompt.replaceAll(/\n/g, '')).join('\n');
 }
 
-export function isSquirrelObject(obj: object): obj is SquirrelObject {
+export function isSerializablePromptDto(obj: object): obj is SerializablePromptDto {
     return (
         typeof obj === 'object' &&
+        obj !== null &&
         'name' in obj &&
         typeof obj.name === 'string' &&
         'prompt' in obj &&
         typeof obj.prompt === 'string' &&
         'category' in obj &&
-        typeof obj.category === 'string' &&
+        (typeof obj.category === 'string' || obj.category === null) &&
         'tags' in obj &&
         Array.isArray(obj.tags) &&
         obj.tags.every((tag) => typeof tag === 'string')

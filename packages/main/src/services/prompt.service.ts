@@ -2,7 +2,7 @@ import { Effect } from 'effect';
 import { ServiceException } from '../common/exceptions/base/service.exception.js';
 import { promptExceptionHandler } from '../common/exceptions/handlers/prompt-exception.handler.js';
 import {
-    squirrelObjectToInsertPrompt,
+    serializablePromptDtoToInsertPrompt,
     toInsertPrompt,
     toInsertPromptTag,
     toPromptDto,
@@ -18,7 +18,7 @@ interface IPromptService {
     getAllPrompts(): Effect.Effect<PromptDto[], ServiceException>;
     addPrompt(createPromptDto: CreatePromptDto): Effect.Effect<PromptDto, ServiceException>;
     addPromptsIfNotExists(
-        SquirrelObjects: SquirrelObject[],
+        prompts: SerializablePromptDto[],
     ): Effect.Effect<PromptDto[], ServiceException>;
     updatePrompt(updatePromptDto: UpdatePromptDto): Effect.Effect<PromptDto, ServiceException>;
     addThumbnailToPrompt(
@@ -81,30 +81,34 @@ class PromptService implements IPromptService {
     }
 
     addPromptsIfNotExists(
-        SquirrelObjects: SquirrelObject[],
+        promptsToImport: SerializablePromptDto[],
     ): Effect.Effect<PromptDto[], ServiceException> {
         return promptExceptionHandler(
             Effect.gen(function* () {
                 yield* Effect.logDebug('Service: addPromptsIfNotExists - start', {
-                    SquirrelObjects,
+                    promptsToImport,
                 });
                 const identity = randomId();
                 const newPrompts: PromptDto[] = [];
 
-                for (const squirrelObject of SquirrelObjects) {
-                    const category: Category | null = squirrelObject.category
-                        ? yield* categoryService.addCategoryIfNotExists(squirrelObject.category)
+                for (const serializablePrompt of promptsToImport) {
+                    const category: Category | null = serializablePrompt.category
+                        ? yield* categoryService.addCategoryIfNotExists(serializablePrompt.category)
                         : null;
                     const tags =
-                        squirrelObject.tags.length !== 0
-                            ? yield* tagService.addTagsIfNotExists(squirrelObject.tags)
+                        serializablePrompt.tags.length !== 0
+                            ? yield* tagService.addTagsIfNotExists(serializablePrompt.tags)
                             : [];
 
-                    const existingPrompt = yield* promptRepository.findByName(squirrelObject.name);
-                    if (existingPrompt) squirrelObject.name = `${squirrelObject.name} ${identity}`;
+                    let nameToUse = serializablePrompt.name;
+                    const existingPrompt = yield* promptRepository.findByName(nameToUse);
+                    if (existingPrompt) nameToUse = `${nameToUse} ${identity}`;
 
                     const prompt = yield* promptRepository.addPrompt(
-                        squirrelObjectToInsertPrompt(squirrelObject, category),
+                        serializablePromptDtoToInsertPrompt(
+                            { ...serializablePrompt, name: nameToUse }, // Use the potentially modified name
+                            category,
+                        ),
                     );
 
                     if (tags.length !== 0) {

@@ -21,13 +21,13 @@ export function toInsertPrompt(prompt: CreatePromptDto): InsertPrompt {
     };
 }
 
-export function squirrelObjectToInsertPrompt(
-    squirrelObject: SquirrelObject,
+export function serializablePromptDtoToInsertPrompt(
+    dto: SerializablePromptDto,
     category: Category | null,
 ): InsertPrompt {
     return {
-        name: squirrelObject.name,
-        prompt: squirrelObject.prompt,
+        name: dto.name,
+        prompt: dto.prompt,
         category_id: category ? category.id : null,
     };
 }

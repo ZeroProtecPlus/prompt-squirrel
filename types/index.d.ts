@@ -13,6 +13,8 @@ type Tag = {
     name: string;
 };
 
+type ExportType = 'squirrel' | 'templateloader' | 'wildcard' | 'json';
+
 type Category = {
     id: number;
     name: string;

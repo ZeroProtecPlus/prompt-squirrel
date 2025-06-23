@@ -6,16 +6,16 @@ import { PromptExportException } from '../common/exceptions/prompt/prompt-export
 import { PromptImportException } from '../common/exceptions/prompt/prompt-import.exception.js';
 import { UnexpectedException } from '../common/exceptions/unexpected.exception.js';
 import { windowService } from '../modules/MainWindow.js';
-import { PromptSerializer, isSquirrelObject } from '../utils/file-transfer.util.js';
+import { PromptSerializer, isSerializablePromptDto } from '../utils/file-transfer.util.js';
 import { promptService } from './prompt.service.js';
 
 interface IFileTransferService {
     exportPrompts(options: ExportOptions): Effect.Effect<void, PromptExportException>;
-    importPrompts(): Effect.Effect<void, PromptImportException>;
+    importPrompts(): Effect.Effect<PromptDto[], PromptImportException>;
 }
 
 class FileTransferService implements IFileTransferService {
-    exportPrompts({ prompts, type = 'squirrel', fileName = 'export-prompts.json' }: ExportOptions) {
+    exportPrompts({ prompts, type = 'json', fileName = 'export-prompts.json' }: ExportOptions) {
         return Effect.gen(function* () {
             const defaultPath = path.join(app.getPath('exe'), fileName);
 
@@ -65,19 +65,19 @@ class FileTransferService implements IFileTransferService {
             const JSONObject = JSON.parse(content);
             Effect.logDebug('Importing prompts from file', { filePath, content: JSONObject });
 
-            const squirrelObjects = JSON.parse(content);
-            if (!Array.isArray(squirrelObjects))
+            const serializablePrompts = JSON.parse(content);
+            if (!Array.isArray(serializablePrompts))
                 throw new PromptImportException(
                     'Invalid file format: Expected an array of prompts.',
                 );
-            if (squirrelObjects.length === 0)
+            if (serializablePrompts.length === 0)
                 throw new PromptImportException('No prompts found in the file.');
-            if (!squirrelObjects.every((o) => isSquirrelObject(o)))
+            if (!serializablePrompts.every((o) => isSerializablePromptDto(o)))
                 throw new PromptImportException(
-                    'Invalid file format: Not all objects are valid Squirrel objects.',
+                    'Invalid file format: Not all objects are valid SerializablePromptDto objects.',
                 );
 
-            return yield* promptService.addPromptsIfNotExists(squirrelObjects);
+            return yield* promptService.addPromptsIfNotExists(serializablePrompts);
         }).pipe(Effect.catchAll((error) => Effect.fail(PromptImportException.from(error))));
     }
 }
