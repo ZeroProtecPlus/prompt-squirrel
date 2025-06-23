@@ -21,10 +21,10 @@ class FileTransferService implements IFileTransferService {
 
             const result = yield* Effect.tryPromise(() =>
                 dialog.showSaveDialog(windowService.getMainWindow(), {
-                    title: '프롬프트 내보내기',
+                    title: 'Exportar prompts',
                     defaultPath,
-                    buttonLabel: '내보내기',
-                    filters: [{ name: 'JSON 파일', extensions: ['json'] }],
+                    buttonLabel: 'Exportar',
+                    filters: [{ name: 'Archivo JSON', extensions: ['json'] }],
                 }),
             );
 
@@ -47,10 +47,10 @@ class FileTransferService implements IFileTransferService {
         return Effect.gen(function* () {
             const result = yield* Effect.tryPromise(() =>
                 dialog.showOpenDialog(windowService.getMainWindow(), {
-                    title: '프롬프트 가져오기',
-                    buttonLabel: '가져오기',
+                    title: 'Importar Prompt',
+                    buttonLabel: 'Importar',
                     properties: ['openFile'],
-                    filters: [{ name: 'JSON 파일', extensions: ['json'] }],
+                    filters: [{ name: 'Archivo JSON', extensions: ['json'] }],
                 }),
             );
 

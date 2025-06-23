@@ -21,13 +21,13 @@ function App() {
 
     useEffect(() => {
         async function load() {
-            loading('설정 로딩중...');
+            loading('Cargando configuración...');
             await loadConfig();
-            loading('카테고리 로딩중...');
+            loading('Cargando categorías...');
             await loadCategories();
-            loading('태그 로딩중...');
+            loading('Cargando etiquetas...');
             await loadTags();
-            loading('프롬프트 로딩중...');
+            loading('Cargando prompts...');
             await loadPrompts();
             stopLoading();
         }

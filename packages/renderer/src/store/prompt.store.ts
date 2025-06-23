@@ -222,7 +222,7 @@ export const usePromptStore = create<
         removePrompt: async (promptId: number) => {
             const response = await promptApi.removePromptById(promptId);
             if (!response.success) return Promise.reject(response.error);
-            console.log('프롬프트 삭제 성공:', response.data);
+            console.log('Prompt eliminado con éxito:', response.data);
             minisearch.remove({ id: promptId });
             set((state) => ({
                 prompts: state.prompts.filter((p) => p.id !== promptId),

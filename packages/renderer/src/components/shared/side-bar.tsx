@@ -36,7 +36,7 @@ export default function Sidebar() {
             </div>
             <div className="flex-1 max-h-1/2">
                 <FilterableList
-                    placeholder="카테고리 검색..."
+                    placeholder="Buscar categoría..."
                     items={categories}
                     onItemClick={(item) => onCategoryClick(item)}
                     onEmptyButtonClick={createNewCategory}

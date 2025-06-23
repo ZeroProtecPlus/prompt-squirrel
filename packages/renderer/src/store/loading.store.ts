@@ -14,6 +14,6 @@ export const useLoadingStore = create<LoadingState & LoadingAction>((set) => ({
     isLoading: false,
     message: '',
 
-    loading: (message = '로딩 중...') => set({ isLoading: true, message }),
+    loading: (message = 'Cargando...') => set({ isLoading: true, message }),
     stopLoading: () => set({ isLoading: false, message: '' }),
 }));

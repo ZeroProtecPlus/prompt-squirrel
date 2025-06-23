@@ -27,7 +27,7 @@ export default function PromptRemoveThumbnailButton({
         miniSearch.replace(prompt);
         onRemove?.();
         search();
-        toast.success('썸네일이 제거되었습니다.');
+        toast.success('La miniatura ha sido eliminada.');
     }
 
     return (

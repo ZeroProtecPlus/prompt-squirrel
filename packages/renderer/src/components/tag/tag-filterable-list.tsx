@@ -12,7 +12,7 @@ export default function TagFilterableList({ onTagClick }: TagFilterableListProps
 
     return (
         <FilterableList
-            placeholder="태그 검색..."
+            placeholder="Buscar etiqueta..."
             items={tags}
             onItemClick={(item) => onTagClick(item)}
             onEmptyButtonClick={addTagCommand}

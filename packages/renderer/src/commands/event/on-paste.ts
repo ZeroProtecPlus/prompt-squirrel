@@ -25,7 +25,7 @@ export async function onPastePrompt(
     if (configState.config.removeUnderbar) formattedText = removeUnderbar(formattedText);
     if (configState.config.removeArtistPrefix) formattedText = removeArtistPrefix(formattedText);
 
-    // 1. 기존 텍스트 영역에 포커스를 유지하고, 선택된 부분을 대체하는 방식 Undo 기능이 안됨
+    // 1. Mantener el foco en el área de texto existente y reemplazar la parte seleccionada - la función Deshacer no funciona
     // const target = e.currentTarget;
     // const { selectionStart, selectionEnd } = target;
     // const newValue =
@@ -39,7 +39,7 @@ export async function onPastePrompt(
 
     // afterPasted?.(newValue);
 
-    // 2. execCommand를 사용하여 현재 커서 위치에 텍스트 삽입 Undo 기능이 됨 그렇지만 deprecated 메서드
+    // 2. Usando execCommand para insertar texto en la posición actual del cursor - la función Deshacer funciona pero es un método obsoleto
     const target = e.currentTarget;
     target.focus();
 

@@ -20,13 +20,13 @@ export default function PromptTypeSelect() {
 
     return (
         <div className="flex justify-between space-x-2">
-            <Label>프롬프트 타입</Label>
+            <Label>Tipo de prompt</Label>
             <Select onValueChange={handlePromptTypeChange} defaultValue={config.promptType}>
                 <SelectTrigger className="flex-1 max-w-32" size="sm">
-                    <SelectValue placeholder={config.promptType === 'local' ? '로컬' : 'NAI'} />
+                    <SelectValue placeholder={config.promptType === 'local' ? 'Local' : 'NAI'} />
                 </SelectTrigger>
                 <SelectContent>
-                    <SelectItem value="local">로컬</SelectItem>
+                    <SelectItem value="local">Local</SelectItem>
                     <SelectItem value="nai">NAI</SelectItem>
                 </SelectContent>
             </Select>

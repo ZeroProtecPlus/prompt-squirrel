@@ -47,21 +47,21 @@ class DatabaseModule implements AppModule {
         await db
             .insertInto('category')
             .values([
-                { name: '캐릭터' },
-                { name: '의상' },
-                { name: '헤어스타일' },
-                { name: '장소' },
-                { name: '자세' },
-                { name: '표정' },
-                { name: '구도' },
-                { name: '스타일' },
-                { name: '장면' },
+                { name: 'Personaje' },
+                { name: 'Vestimenta' },
+                { name: 'Peinado' },
+                { name: 'Lugar' },
+                { name: 'Pose' },
+                { name: 'Expresión' },
+                { name: 'Composición' },
+                { name: 'Estilo' },
+                { name: 'Escena' },
             ])
             .execute();
 
         await db
             .insertInto('tag')
-            .values([{ name: '태그1' }, { name: '태그2' }, { name: '태그3' }])
+            .values([{ name: 'Etiqueta1' }, { name: 'Etiqueta2' }, { name: 'Etiqueta3' }])
             .execute();
 
         await db

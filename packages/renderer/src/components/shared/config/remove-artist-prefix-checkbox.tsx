@@ -16,7 +16,7 @@ export default function RemoveArtistPrefixCheckbox() {
                 checked={config.removeArtistPrefix}
                 onCheckedChange={handleRemoveArtistPrefixChange}
             />
-            <Label>artist: 제거</Label>
+            <Label>Eliminar artist:</Label>
         </div>
     );
 }

@@ -21,7 +21,6 @@ import {
 } from '@/components/ui/command';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { isStaticCategory } from '@/lib/category-utils';
-import { josa } from 'es-hangul';
 import { Check, Edit, X } from 'lucide-react';
 import { useState } from 'react';
 
@@ -66,7 +65,7 @@ export default function FilterableList({
     return (
         <Command>
             <CommandInput
-                placeholder={placeholder || '검색...'}
+                placeholder={placeholder || 'Buscar...'}
                 value={value}
                 onValueChange={onValueChange}
                 onPressEnterKey={handleEmptyButtonClick}
@@ -79,11 +78,11 @@ export default function FilterableList({
                             variant={'ghost'}
                             onClick={handleEmptyButtonClick}
                         >
-                            "{value}" 생성
+                            "Crear "{value}"
                         </Button>
                     ) : (
                         <p className="text-muted-foreground text-sm text-center">
-                            검색 결과가 없습니다.
+                            No hay resultados de búsqueda.
                         </p>
                     )}
                 </CommandEmpty>
@@ -118,23 +117,21 @@ export default function FilterableList({
                                                 onClick={(e) => e.stopPropagation()}
                                             >
                                                 <AlertDialogHeader>
-                                                    <AlertDialogTitle>항목 삭제</AlertDialogTitle>
+                                                    <AlertDialogTitle>Eliminar elemento</AlertDialogTitle>
                                                     <AlertDialogDescription>
-                                                        {josa(`"${item.name}"`, '을/를')}{' '}
-                                                        삭제하시겠습니까? 이 작업은 되돌릴 수
-                                                        없습니다.
+                                                        ¿Está seguro de que desea eliminar "{item.name}"? Esta acción no se puede deshacer.
                                                     </AlertDialogDescription>
                                                 </AlertDialogHeader>
                                                 <AlertDialogFooter>
                                                     <AlertDialogCancel
                                                         onClick={(e) => e.stopPropagation()}
                                                     >
-                                                        취소
+                                                        Cancelar
                                                     </AlertDialogCancel>
                                                     <AlertDialogAction
                                                         onClick={(e) => handleDeleteItem?.(e, item)}
                                                     >
-                                                        삭제
+                                                        Eliminar
                                                     </AlertDialogAction>
                                                 </AlertDialogFooter>
                                             </AlertDialogContent>

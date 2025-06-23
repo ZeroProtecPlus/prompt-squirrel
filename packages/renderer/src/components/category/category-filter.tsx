@@ -63,15 +63,15 @@ export function CategoryFilterComboBox({
                     aria-expanded={open}
                     className="min-w-36 justify-between"
                 >
-                    {selected ? selected.name : '카테고리 선택...'}
+                    {selected ? selected.name : 'Seleccionar categoría...'}
                     <ChevronsUpDown className="opacity-50" />
                 </Button>
             </PopoverTrigger>
             <PopoverContent className="w-full p-0">
                 <Command>
-                    <CommandInput placeholder="카테고리 검색..." className="h-9" />
+                    <CommandInput placeholder="Buscar categoría..." className="h-9" />
                     <CommandList>
-                        <CommandEmpty>카테고리가 존재하지 않습니다.</CommandEmpty>
+                        <CommandEmpty>No se encontraron categorías.</CommandEmpty>
                         <CommandGroup>
                             {filteredCategories().map((category) => (
                                 <CommandItem

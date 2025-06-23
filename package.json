@@ -36,6 +36,9 @@
     "playwright": "^1.52.0"
   },
   "dependencies": {
-    "@app/main": "*"
+    "@app/main": "*",
+    "crypto-js": "^4.2.0",
+    "electron-store": "^10.1.0",
+    "node-machine-id": "^1.1.12"
   }
 }

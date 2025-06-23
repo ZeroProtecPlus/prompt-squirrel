@@ -18,26 +18,26 @@ export default function AppMenu() {
     return (
         <Menubar className="rounded-none">
             <MenubarMenu>
-                <MenubarTrigger>파일</MenubarTrigger>
+                <MenubarTrigger>Archivo</MenubarTrigger>
                 <MenubarContent>
                     <ImportMenuItem />
                     <ExportMenuItem />
                 </MenubarContent>
             </MenubarMenu>
             <MenubarMenu>
-                <MenubarTrigger>도구</MenubarTrigger>
+                <MenubarTrigger>Herramientas</MenubarTrigger>
                 <MenubarContent>
-                    <MenubarItem>아직 생각중 ...</MenubarItem>
+                    <MenubarItem>Todavía pensando ...</MenubarItem>
                 </MenubarContent>
             </MenubarMenu>
             <MenubarMenu>
-                <MenubarTrigger>테마</MenubarTrigger>
+                <MenubarTrigger>Tema</MenubarTrigger>
                 <MenubarContent>
                     <MenubarThemeRadioGroup />
                 </MenubarContent>
             </MenubarMenu>
             <MenubarMenu>
-                <MenubarTrigger onClick={() => setConfigDialogOpen(true)}>설정</MenubarTrigger>
+                <MenubarTrigger onClick={() => setConfigDialogOpen(true)}>Configuración</MenubarTrigger>
                 <ConfigDialog open={configDialogOpen} onOpenChange={setConfigDialogOpen} />
             </MenubarMenu>
 

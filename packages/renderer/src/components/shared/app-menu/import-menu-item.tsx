@@ -9,16 +9,16 @@ export default function ImportMenuItem() {
 
     async function handleImport() {
         try {
-            loading('프롬프트 불러오는 중...');
+            loading('Cargando prompts...');
             await importCommand();
             stopLoading();
         } catch (error) {
             if (isServiceException(error))
-                toast.error('프롬프트를 불러오는 도중 오류가 발생했습니다.');
+                toast.error('Ocurrió un error al cargar los prompts.');
 
             stopLoading();
         }
     }
 
-    return <MenubarItem onClick={handleImport}>불러오기</MenubarItem>;
+    return <MenubarItem onClick={handleImport}>Importar</MenubarItem>;
 }

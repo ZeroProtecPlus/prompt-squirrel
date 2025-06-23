@@ -28,7 +28,7 @@ function registerIpc<T extends object>(channel: IPCChannels, controller: T) {
 
     const methods = Reflect.ownKeys(prototype).filter(
         (name): name is string & keyof T =>
-            // biome-ignore lint/suspicious/noExplicitAny: 유틸 함수로서 any를 사용합니다.
+            // biome-ignore lint/suspicious/noExplicitAny: Se usa 'any' como una función de utilidad
             name !== 'constructor' && typeof (controller as any)[name] === 'function',
     );
     console.log(`Registering IPC channels for ${channel}:`, methods);
@@ -37,7 +37,7 @@ function registerIpc<T extends object>(channel: IPCChannels, controller: T) {
         const ipcChannelName = `${channel}:${methodName}`;
         console.log(`  - Registering ${ipcChannelName}`);
         ipcMain.handle(ipcChannelName, (_, ...args: unknown[]) =>
-            // biome-ignore lint/suspicious/noExplicitAny: 유틸 함수로서 any를 사용합니다.
+            // biome-ignore lint/suspicious/noExplicitAny: Se usa 'any' como una función de utilidad
             (controller as any)[methodName](...args),
         );
     }

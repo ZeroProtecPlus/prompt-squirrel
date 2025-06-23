@@ -10,9 +10,11 @@ import { protocolModule } from './modules/ProtocolModule.js';
 import { disallowMultipleAppInstance } from './modules/SingleInstanceApp.js';
 import { createWindowManagerModule } from './modules/WindowManager.js';
 import { ipcModule } from './modules/ipcModule.js';
+import { LicenseModule } from './modules/LicenseModule/index.js';
 
 export async function initApp(initConfig: AppInitConfig) {
     const moduleRunner = createModuleRunner()
+        .init(new LicenseModule()) // Agregar el módulo de licencia primero
         .init(createWindowManagerModule({ initConfig, openDevTools: import.meta.env.DEV }))
         .init(disallowMultipleAppInstance())
         .init(terminateAppOnLastWindowClose())

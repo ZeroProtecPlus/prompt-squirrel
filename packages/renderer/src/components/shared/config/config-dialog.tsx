@@ -21,18 +21,18 @@ export default function ConfigDialog({ open, onOpenChange }: ConfigDialogProps) 
             <Dialog open={open} onOpenChange={onOpenChange}>
                 <DialogContent className="select-none lg:max-w-3xl xl:max-w-4xl">
                     <DialogHeader>
-                        <DialogTitle>설정</DialogTitle>
+                        <DialogTitle>Configuración</DialogTitle>
                         <DialogDescription>
-                            앱에서 전반적으로 사용되는 설정을 관리합니다.
+                            Gestiona la configuración general de la aplicación.
                         </DialogDescription>
                     </DialogHeader>
 
                     <div className="grid grid-cols-2 gap-4">
                         <div className="flex flex-col space-y-2 col-span-1">
-                            <Label className="font-semibold mb-2">일반</Label>
+                            <Label className="font-semibold mb-2">General</Label>
                             <PromptTypeSelect />
 
-                            <Label className="font-semibold mt-4 mb-2">붙여넣기</Label>
+                            <Label className="font-semibold mt-4 mb-2">Pegar</Label>
                             <RemoveUnderbarCheckbox />
                             <RemoveArtistPrefixCheckbox />
                         </div>

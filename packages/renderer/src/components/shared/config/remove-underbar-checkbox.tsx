@@ -16,7 +16,7 @@ export default function RemoveUnderbarCheckbox() {
                 checked={config.removeUnderbar}
                 onCheckedChange={handleRemoveUnderbarChange}
             />
-            <Label>언더바 제거</Label>
+            <Label>Eliminar guion bajo</Label>
         </div>
     );
 }

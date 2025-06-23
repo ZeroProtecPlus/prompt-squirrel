@@ -36,10 +36,10 @@ export default function PromptRemoveButton({
         try {
             await removePrompt(promptId);
             onRemove?.();
-            toast.success(deleteSuccessMessage('프롬프트'));
+            toast.success(deleteSuccessMessage('prompt'));
         } catch (error) {
-            console.error('프롬프트 삭제 실패:', error);
-            toast.error('프롬프트 삭제에 실패했습니다.');
+            console.error('Error al eliminar prompt:', error);
+            toast.error('No se pudo eliminar el prompt.');
         }
     }
 
@@ -60,14 +60,14 @@ export default function PromptRemoveButton({
             </AlertDialogTrigger>
             <AlertDialogContent className="select-none" onClick={(e) => e.stopPropagation()}>
                 <AlertDialogHeader>
-                    <AlertDialogTitle>프롬프트 삭제</AlertDialogTitle>
+                    <AlertDialogTitle>Eliminar Prompt</AlertDialogTitle>
                     <AlertDialogDescription>
-                        선택한 프롬프트를 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.
+                        ¿Está seguro de que desea eliminar el prompt seleccionado? Esta acción no se puede deshacer.
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                    <AlertDialogCancel onClick={(e) => e.stopPropagation()}>취소</AlertDialogCancel>
-                    <AlertDialogAction onClick={handleRemovePrompt}>삭제</AlertDialogAction>
+                    <AlertDialogCancel onClick={(e) => e.stopPropagation()}>Cancelar</AlertDialogCancel>
+                    <AlertDialogAction onClick={handleRemovePrompt}>Eliminar</AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>

@@ -32,8 +32,8 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 const formSchema = z.object({
-    name: z.string().min(1, '1자 이상 입력해주세요'),
-    prompt: z.string().min(1, '프롬프트 내용을 입력해주세요'),
+    name: z.string().min(1, 'Debe tener al menos 1 carácter'),
+    prompt: z.string().min(1, 'Introduce el contenido del prompt'),
     categoryId: z.number().nullable(),
     tags: z.array(
         z.object({
@@ -71,10 +71,10 @@ export default function PromptCreateDialog({ className }: PromptCreateDialogProp
             if (isServiceException(error) && error.code === 'CONFLICT') {
                 form.setError('name', {
                     type: 'validate',
-                    message: '이미 존재하는 프롬프트 이름입니다.',
+                    message: 'Ya existe un prompt con este nombre.',
                 });
             }
-            console.error('프롬프트 생성 실패:', error);
+            console.error('Error al crear prompt:', error);
         }
     }
 
@@ -88,8 +88,8 @@ export default function PromptCreateDialog({ className }: PromptCreateDialogProp
 
             <AlertDialogContent className="h-[95vh] max-h-[700px] flex flex-col">
                 <AlertDialogHeader>
-                    <AlertDialogTitle>프롬프트 생성</AlertDialogTitle>
-                    <AlertDialogDescription>새로운 프롬프트를 생성합니다.</AlertDialogDescription>
+                    <AlertDialogTitle>Crear prompt</AlertDialogTitle>
+                    <AlertDialogDescription>Crear un nuevo prompt.</AlertDialogDescription>
                 </AlertDialogHeader>
 
                 <div className="flex-1 overflow-hidden">
@@ -103,7 +103,7 @@ export default function PromptCreateDialog({ className }: PromptCreateDialogProp
                                 name="name"
                                 render={({ field }) => (
                                     <FormItem className="flex-shrink-0">
-                                        <FormLabel>프롬프트 이름</FormLabel>
+                                        <FormLabel>Nombre del prompt</FormLabel>
                                         <FormControl>
                                             <Input {...field} />
                                         </FormControl>
@@ -117,7 +117,7 @@ export default function PromptCreateDialog({ className }: PromptCreateDialogProp
                                 name="prompt"
                                 render={({ field }) => (
                                     <FormItem className="flex-1 flex flex-col min-h-0">
-                                        <FormLabel>프롬프트 내용</FormLabel>
+                                        <FormLabel>Contenido del prompt</FormLabel>
                                         <FormControl>
                                             <Textarea
                                                 className="h-full w-full resize-none overflow-y-auto"
@@ -137,7 +137,7 @@ export default function PromptCreateDialog({ className }: PromptCreateDialogProp
                                 name="categoryId"
                                 render={({ field }) => (
                                     <FormItem className="flex-shrink-0">
-                                        <FormLabel>카테고리</FormLabel>
+                                        <FormLabel>Categoría</FormLabel>
                                         <FormControl>
                                             <CategoryFilterComboBox
                                                 useStaticCategory={false}
@@ -156,7 +156,7 @@ export default function PromptCreateDialog({ className }: PromptCreateDialogProp
                                 name="tags"
                                 render={({ field }) => (
                                     <FormItem className="flex-shrink-0">
-                                        <FormLabel>태그</FormLabel>
+                                        <FormLabel>Etiquetas</FormLabel>
                                         <FormControl>
                                             <TagSelector
                                                 onChange={(tags) => field.onChange(tags)}
@@ -170,9 +170,9 @@ export default function PromptCreateDialog({ className }: PromptCreateDialogProp
                             <Separator />
                             <AlertDialogFooter>
                                 <AlertDialogCancel onClick={() => form.reset()}>
-                                    취소
+                                    Cancelar
                                 </AlertDialogCancel>
-                                <Button type="submit">프롬프트 생성</Button>
+                                <Button type="submit">Crear prompt</Button>
                             </AlertDialogFooter>
                         </form>
                     </Form>

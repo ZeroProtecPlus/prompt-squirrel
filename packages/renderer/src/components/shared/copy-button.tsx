@@ -17,7 +17,7 @@ export default function CopyButton({ text, className, variant }: CopyButtonProps
     async function handleCopy(e: React.MouseEvent) {
         e.stopPropagation();
         await navigator.clipboard.writeText(text);
-        toast.success('클립보드에 복사되었습니다.');
+        toast.success('Copiado al portapapeles.');
         setIsCopied(true);
         await delay(2000);
         setIsCopied(false);

@@ -3,12 +3,12 @@ export const NONE_CATEGORY_ID = -2;
 
 export const ALL_CATEGORY: CategoryDto = {
     id: ALL_CATEGORY_ID,
-    name: '전체',
+    name: 'Todos',
     createdAt: new Date(),
 };
 export const NONE_CATEGORY: CategoryDto = {
     id: NONE_CATEGORY_ID,
-    name: '미분류',
+    name: 'Sin categoría',
     createdAt: new Date(),
 };
 

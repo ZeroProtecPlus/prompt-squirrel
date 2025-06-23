@@ -27,13 +27,13 @@ export default function ExportMenuItem() {
     }
 
     async function handleExport() {
-        if (prompts.length === 0) return toast.warning('내보낼 프롬프트가 없습니다.');
+        if (prompts.length === 0) return toast.warning('No hay prompts para exportar.');
 
         await exportCommand({
             prompts,
             type: type.current,
         });
-        toast.success('프롬프트가 성공적으로 내보내졌습니다.');
+        toast.success('Los prompts se han exportado correctamente.');
         setOpen(false);
     }
 
@@ -47,35 +47,35 @@ export default function ExportMenuItem() {
         <>
             <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
-                    <MenubarItem onClick={handleMenuItemClick}>내보내기</MenubarItem>
+                    <MenubarItem onClick={handleMenuItemClick}>Exportar</MenubarItem>
                 </DialogTrigger>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>프롬프트 내보내기</DialogTitle>
+                        <DialogTitle>Exportar prompts</DialogTitle>
                         <DialogDescription>
-                            프롬프트를 다양한 형식으로 내보냅니다.
+                            Exporta prompts en varios formatos.
                         </DialogDescription>
                     </DialogHeader>
                     <RadioGroup defaultValue="squirrel" onValueChange={onValueChange}>
                         <div className="flex items-center space-x-2">
                             <RadioGroupItem value="squirrel" id="export-squirrel" />
-                            <Label htmlFor="export-squirrel">프롬프트</Label>
+                            <Label htmlFor="export-squirrel">Prompts</Label>
                         </div>
                         <div className="flex items-center space-x-2">
                             <RadioGroupItem value="templateloader" id="export-templateloader" />
-                            <Label htmlFor="export-templateloader">템플릿 로더</Label>
+                            <Label htmlFor="export-templateloader">Template Loader</Label>
                         </div>
                         <div className="flex items-center space-x-2">
                             <RadioGroupItem value="wildcard" id="export-wildcard" />
-                            <Label htmlFor="export-wildcard">와일드 카드</Label>
+                            <Label htmlFor="export-wildcard">Wildcard</Label>
                         </div>
                     </RadioGroup>
 
                     <DialogFooter>
                         <DialogClose asChild>
-                            <Button variant={'outline'}>취소</Button>
+                            <Button variant={'outline'}>Cancelar</Button>
                         </DialogClose>
-                        <Button onClick={handleExport}>내보내기</Button>
+                        <Button onClick={handleExport}>Exportar</Button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>

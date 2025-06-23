@@ -98,7 +98,7 @@ export default function PromptList() {
             <div className="flex items-center bg-muted/30">
                 <Input
                     type="text"
-                    placeholder="프롬프트 검색..."
+                    placeholder="Buscar prompt..."
                     onChange={handleSearch}
                     className="w-full"
                 />

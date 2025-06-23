@@ -12,7 +12,7 @@ function isLocalPromptText(text: string): boolean {
 export function toNAIPromptText(text: string): string {
     if (isNAIPromptText(text)) return text;
 
-    // (문자열:숫자) 문법을 :: 문법으로 변환
+    // Convertir la sintaxis (cadena:número) a la sintaxis ::
     const regexWeightParentheses = /(?<!\()\(([^():]+):([\d.]+)\)(?!\))/g;
 
     return text.replace(regexWeightParentheses, (_, p1, p2) => {

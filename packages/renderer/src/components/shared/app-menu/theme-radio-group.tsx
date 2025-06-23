@@ -17,10 +17,10 @@ export default function MenubarThemeRadioGroup() {
 
     return (
         <MenubarRadioGroup value={theme} onValueChange={handleThemeChange}>
-            <MenubarRadioItem value="light">라이트</MenubarRadioItem>
-            <MenubarRadioItem value="dark">다크</MenubarRadioItem>
-            <MenubarRadioItem value="green">그린</MenubarRadioItem>
-            <MenubarRadioItem value="system">시스템</MenubarRadioItem>
+            <MenubarRadioItem value="light">Claro</MenubarRadioItem>
+            <MenubarRadioItem value="dark">Oscuro</MenubarRadioItem>
+            <MenubarRadioItem value="green">Verde</MenubarRadioItem>
+            <MenubarRadioItem value="system">Sistema</MenubarRadioItem>
         </MenubarRadioGroup>
     );
 }

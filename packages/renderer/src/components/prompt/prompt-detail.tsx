@@ -103,7 +103,7 @@ export default function PromptDetail({ prompt, onClose }: PromptDetailProps) {
         } catch (error) {
             if (isServiceException(error)) {
                 setPromptName(originalPromptName.current);
-                toast.error('동일한 이름의 프롬프트가 이미 존재합니다.');
+                toast.error('Ya existe un prompt con el mismo nombre.');
                 setIsNameEditMode(true);
             }
         }
@@ -128,18 +128,18 @@ export default function PromptDetail({ prompt, onClose }: PromptDetailProps) {
             const imageFile = fileList[0];
 
             if (!imageFile || !imageFile.type.startsWith('image/')) {
-                toast.error('썸네일은 이미지 파일만 지원합니다.');
+                toast.error('Solo se admiten archivos de imagen como miniatura.');
                 return;
             }
 
             await addThumbnailToPromptCommand(prompt, imageFile);
-            toast.success('썸네일이 성공적으로 업로드되었습니다.');
+            toast.success('La miniatura se ha subido correctamente.');
         } catch (error) {
             if (isServiceException(error))
-                return toast.error(`썸네일 업로드에 실패했습니다.${error.name}`);
+                return toast.error(`Error al subir la miniatura.${error.name}`);
 
-            toast.error('썸네일 업로드에 실패했습니다. 알 수 없는 오류가 발생했습니다.');
-            console.error('썸네일 업로드 오류:', error);
+            toast.error('Error al subir la miniatura. Ocurrió un error desconocido.');
+            console.error('Error al subir miniatura:', error);
         }
     }
 
@@ -153,7 +153,7 @@ export default function PromptDetail({ prompt, onClose }: PromptDetailProps) {
             <SheetContent className="  md:max-w-md lg:max-w-lg xl:max-w-xl 2xl:max-w-2xl">
                 <DragOverlay
                     className="flex flex-col h-full gap-2 p-4"
-                    overlayMessage="썸네일 업로드"
+                    overlayMessage="Subir miniatura"
                     onDrop={onImageDrop}
                 >
                     <div className="flex-shrink-0">
@@ -200,7 +200,7 @@ export default function PromptDetail({ prompt, onClose }: PromptDetailProps) {
 
                     <div className="flex-1 flex flex-col space-y-2 min-h-0">
                         <div className="flex items-center justify-between">
-                            <Label htmlFor="prompt-textarea">프롬프트</Label>
+                            <Label htmlFor="prompt-textarea">Prompt</Label>
                             <EditSaveToggle
                                 value={isPromptEditMode}
                                 onEditMode={() => setIsPromptEditMode(true)}
@@ -231,7 +231,7 @@ export default function PromptDetail({ prompt, onClose }: PromptDetailProps) {
                     </div>
 
                     <div className="flex-shink-0 flex flex-col space-y-2">
-                        <Label>태그</Label>
+                        <Label>Etiqueta</Label>
                         <TagSelector
                             className="h-12"
                             initialValue={tags}
