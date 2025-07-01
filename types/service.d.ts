@@ -5,6 +5,19 @@ type ExportOptions = {
     fileName?: string;
 }
 
+type DuplicateHandlingStrategy = 'skip' | 'rename' | 'overwrite';
+
+type ImportOptions = {
+    filePath?: string;
+    duplicateStrategy?: DuplicateHandlingStrategy;
+}
+
+type ImportPreviewResult = {
+    totalPrompts: number;
+    duplicates: string[];
+    validPrompts: SquirrelObject[];
+}
+
 type TemplateLoaderObject = {
     [key: string]: string;
 }
