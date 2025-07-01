@@ -85,6 +85,12 @@ class PromptService implements IPromptService {
         );
     }
 
+    addPromptsIfNotExists(
+        SquirrelObjects: SquirrelObject[],
+    ): Effect.Effect<PromptDto[], ServiceException> {
+        return this.addPromptsWithStrategy(SquirrelObjects, 'rename');
+    }
+
     addPromptsWithStrategy(
         SquirrelObjects: SquirrelObject[],
         strategy: DuplicateHandlingStrategy,
