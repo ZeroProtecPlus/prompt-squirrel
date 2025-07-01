@@ -24,6 +24,8 @@ interface IPromptController {
 interface IFileTransferController {
     exportPrompts(options: ExportOptions): Promise<IPCResponse<void>>;
     importPrompts(): Promise<IPCResponse<PromptDto[]>>;
+    previewImport(): Promise<IPCResponse<ImportPreviewResult>>;
+    importPromptsWithStrategy(options: ImportOptions): Promise<IPCResponse<PromptDto[]>>;
 }
 
 interface IConfigController {
