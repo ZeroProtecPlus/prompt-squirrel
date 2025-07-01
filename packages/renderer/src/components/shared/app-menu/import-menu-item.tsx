@@ -79,8 +79,8 @@ export default function ImportMenuItem() {
             await loadCategories();
 
             const importedPrompts = response.data;
+            await minisearch.addAllAsync(importedPrompts.map((prompt) => toPrompt(prompt)));
             
-            // Reload all prompts to get the updated list
             search();
             
             toast.success(`${importedPrompts.length} prompts importados correctamente.`);
