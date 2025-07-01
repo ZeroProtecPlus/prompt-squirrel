@@ -85,13 +85,15 @@ class PromptService implements IPromptService {
         );
     }
 
-    addPromptsIfNotExists(
+    addPromptsWithStrategy(
         SquirrelObjects: SquirrelObject[],
+        strategy: DuplicateHandlingStrategy,
     ): Effect.Effect<PromptDto[], ServiceException> {
         return promptExceptionHandler(
             Effect.gen(function* () {
-                yield* Effect.logDebug('Service: addPromptsIfNotExists - start', {
+                yield* Effect.logDebug('Service: addPromptsWithStrategy - start', {
                     SquirrelObjects,
+                    strategy,
                 });
                 const identity = randomId();
                 const newPrompts: PromptDto[] = [];
@@ -106,7 +108,17 @@ class PromptService implements IPromptService {
                             : [];
 
                     const existingPrompt = yield* promptRepository.findByName(squirrelObject.name);
-                    if (existingPrompt) squirrelObject.name = `${squirrelObject.name} ${identity}`;
+                    
+                    if (existingPrompt) {
+                        if (strategy === 'skip') {
+                            continue; // Skip this prompt
+                        } else if (strategy === 'rename') {
+                            squirrelObject.name = `${squirrelObject.name} ${identity}`;
+                        } else if (strategy === 'overwrite') {
+                            // Remove existing prompt first
+                            yield* promptRepository.removePromptById(existingPrompt.id);
+                        }
+                    }
 
                     const prompt = yield* promptRepository.addPrompt(
                         squirrelObjectToInsertPrompt(squirrelObject, category),
@@ -124,8 +136,27 @@ class PromptService implements IPromptService {
                         ),
                     );
                 }
-                yield* Effect.logDebug('Service: addPromptsIfNotExists - end');
+                yield* Effect.logDebug('Service: addPromptsWithStrategy - end');
                 return newPrompts;
+            }),
+        );
+    }
+
+    findDuplicateNames(names: string[]): Effect.Effect<string[], ServiceException> {
+        return promptExceptionHandler(
+            Effect.gen(function* () {
+                yield* Effect.logDebug('Service: findDuplicateNames - start', { names });
+                const duplicates: string[] = [];
+                
+                for (const name of names) {
+                    const existingPrompt = yield* promptRepository.findByName(name);
+                    if (existingPrompt) {
+                        duplicates.push(name);
+                    }
+                }
+                
+                yield* Effect.logDebug('Service: findDuplicateNames - end', { duplicates });
+                return duplicates;
             }),
         );
     }
