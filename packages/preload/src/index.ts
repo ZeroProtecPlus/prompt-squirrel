@@ -54,6 +54,9 @@ const fileTransferApi: IFileTransferController = {
     exportPrompts: (options: ExportOptions) =>
         fileTransferSender.send('transfer:exportPrompts', options),
     importPrompts: () => fileTransferSender.send('transfer:importPrompts'),
+    previewImport: () => fileTransferSender.send('transfer:previewImport'),
+    importPromptsWithStrategy: (options: ImportOptions) =>
+        fileTransferSender.send('transfer:importPromptsWithStrategy', options),
 };
 
 export {
