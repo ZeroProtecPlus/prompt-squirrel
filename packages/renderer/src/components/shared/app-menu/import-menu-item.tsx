@@ -84,6 +84,8 @@ export default function ImportMenuItem() {
                 prompt: prompt.prompt,
                 category: null, // We'll need to fetch this if needed
                 tags: [], // We'll need to fetch this if needed
+                thumbnail: prompt.thumbnail,
+                createdAt: prompt.createdAt,
             })));
             
             search();
