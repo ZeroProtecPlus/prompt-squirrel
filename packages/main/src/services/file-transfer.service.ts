@@ -11,7 +11,9 @@ import { promptService } from './prompt.service.js';
 
 interface IFileTransferService {
     exportPrompts(options: ExportOptions): Effect.Effect<void, PromptExportException>;
-    importPrompts(): Effect.Effect<void, PromptImportException>;
+    importPrompts(): Effect.Effect<PromptDto[], PromptImportException>;
+    previewImport(): Effect.Effect<ImportPreviewResult, PromptImportException>;
+    importPromptsWithStrategy(options: ImportOptions): Effect.Effect<PromptDto[], PromptImportException>;
 }
 
 class FileTransferService implements IFileTransferService {
@@ -54,7 +56,7 @@ class FileTransferService implements IFileTransferService {
                 }),
             );
 
-            if (result.canceled || !result.filePaths.length) return;
+            if (result.canceled || !result.filePaths.length) return [];
 
             const filePath = result.filePaths[0];
             const content = yield* Effect.tryPromise({
@@ -78,6 +80,75 @@ class FileTransferService implements IFileTransferService {
                 );
 
             return yield* promptService.addPromptsIfNotExists(squirrelObjects);
+        }).pipe(Effect.catchAll((error) => Effect.fail(PromptImportException.from(error))));
+    }
+
+    previewImport() {
+        return Effect.gen(function* () {
+            const result = yield* Effect.tryPromise(() =>
+                dialog.showOpenDialog(windowService.getMainWindow(), {
+                    title: 'Seleccionar archivo de prompts',
+                    buttonLabel: 'Seleccionar',
+                    properties: ['openFile'],
+                    filters: [{ name: 'Archivo JSON', extensions: ['json'] }],
+                }),
+            );
+
+            if (result.canceled || !result.filePaths.length) 
+                throw new PromptImportException('No file selected.');
+
+            const filePath = result.filePaths[0];
+            const content = yield* Effect.tryPromise({
+                try: () => fs.readFile(filePath, 'utf-8'),
+                catch: (error) => PromptImportException.from(error),
+            });
+
+            const squirrelObjects = JSON.parse(content);
+            if (!Array.isArray(squirrelObjects))
+                throw new PromptImportException(
+                    'Invalid file format: Expected an array of prompts.',
+                );
+            if (squirrelObjects.length === 0)
+                throw new PromptImportException('No prompts found in the file.');
+            if (!squirrelObjects.every((o) => isSquirrelObject(o)))
+                throw new PromptImportException(
+                    'Invalid file format: Not all objects are valid Squirrel objects.',
+                );
+
+            // Check for duplicates
+            const duplicates = yield* promptService.findDuplicateNames(squirrelObjects.map(obj => obj.name));
+
+            return {
+                totalPrompts: squirrelObjects.length,
+                duplicates,
+                validPrompts: squirrelObjects,
+                filePath
+            } as ImportPreviewResult & { filePath: string };
+        }).pipe(Effect.catchAll((error) => Effect.fail(PromptImportException.from(error))));
+    }
+
+    importPromptsWithStrategy({ filePath, duplicateStrategy = 'rename' }: ImportOptions) {
+        return Effect.gen(function* () {
+            if (!filePath) {
+                throw new PromptImportException('File path is required.');
+            }
+
+            const content = yield* Effect.tryPromise({
+                try: () => fs.readFile(filePath, 'utf-8'),
+                catch: (error) => PromptImportException.from(error),
+            });
+
+            const squirrelObjects = JSON.parse(content);
+            if (!Array.isArray(squirrelObjects))
+                throw new PromptImportException(
+                    'Invalid file format: Expected an array of prompts.',
+                );
+            if (!squirrelObjects.every((o) => isSquirrelObject(o)))
+                throw new PromptImportException(
+                    'Invalid file format: Not all objects are valid Squirrel objects.',
+                );
+
+            return yield* promptService.addPromptsWithStrategy(squirrelObjects, duplicateStrategy);
         }).pipe(Effect.catchAll((error) => Effect.fail(PromptImportException.from(error))));
     }
 }
