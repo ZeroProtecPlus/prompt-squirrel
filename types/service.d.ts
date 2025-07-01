@@ -16,6 +16,7 @@ type ImportPreviewResult = {
     totalPrompts: number;
     duplicates: string[];
     validPrompts: SquirrelObject[];
+    filePath?: string;
 }
 
 type TemplateLoaderObject = {
