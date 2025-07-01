@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Character Portrait",
+    "prompt": "beautiful detailed portrait, elegant lighting, professional photography",
+    "category": "Portrait",
+    "tags": ["portrait", "professional", "lighting"]
+  },
+  {
+    "name": "Landscape Scene",
+    "prompt": "scenic landscape, golden hour, dramatic clouds, natural lighting",
+    "category": "Landscape",
+    "tags": ["landscape", "nature", "golden hour"]
+  },
+  {
+    "name": "example 1",
+    "prompt": "duplicate test prompt, should trigger duplicate handling",
+    "category": "Test",
+    "tags": ["test", "duplicate"]
+  },
+  {
+    "name": "Abstract Art",
+    "prompt": "colorful abstract composition, geometric shapes, modern art style",
+    "category": "Abstract",
+    "tags": ["abstract", "colorful", "geometric"]
+  }
+]
