@@ -20,6 +20,11 @@ interface IPromptService {
     addPromptsIfNotExists(
         SquirrelObjects: SquirrelObject[],
     ): Effect.Effect<PromptDto[], ServiceException>;
+    addPromptsWithStrategy(
+        SquirrelObjects: SquirrelObject[],
+        strategy: DuplicateHandlingStrategy,
+    ): Effect.Effect<PromptDto[], ServiceException>;
+    findDuplicateNames(names: string[]): Effect.Effect<string[], ServiceException>;
     updatePrompt(updatePromptDto: UpdatePromptDto): Effect.Effect<PromptDto, ServiceException>;
     addThumbnailToPrompt(
         addThumbnailToPromptDto: AddThumbnailToPromptDto,
