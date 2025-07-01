@@ -123,7 +123,7 @@ class FileTransferService implements IFileTransferService {
                 duplicates,
                 validPrompts: squirrelObjects,
                 filePath
-            } as ImportPreviewResult & { filePath: string };
+            } as ImportPreviewResult;
         }).pipe(Effect.catchAll((error) => Effect.fail(PromptImportException.from(error))));
     }
 
