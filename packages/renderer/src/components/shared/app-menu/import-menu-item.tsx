@@ -12,6 +12,7 @@ import {
 import { Label } from '@/components/ui/label';
 import { MenubarItem } from '@/components/ui/menubar';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { toPrompt } from '@/lib/mapper';
 import { isServiceException } from '@/lib/utils';
 import { useCategoryStore, usePromptStore, useTagStore } from '@/store';
 import { fileTransferApi } from '@app/preload';
