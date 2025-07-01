@@ -20,14 +20,14 @@ export default function AppMenu() {
             <MenubarMenu>
                 <MenubarTrigger>Archivo</MenubarTrigger>
                 <MenubarContent>
-                    <ImportMenuItem />
-                    <ExportMenuItem />
+                    <MenubarItem disabled>Nuevo prompt</MenubarItem>
                 </MenubarContent>
             </MenubarMenu>
             <MenubarMenu>
                 <MenubarTrigger>Herramientas</MenubarTrigger>
                 <MenubarContent>
-                    <MenubarItem>Todavía pensando ...</MenubarItem>
+                    <ImportMenuItem />
+                    <ExportMenuItem />
                 </MenubarContent>
             </MenubarMenu>
             <MenubarMenu>
