@@ -27,6 +27,30 @@ class FileTransferController implements IFileTransferController {
             'Importing prompts',
         );
     }
+
+    previewImport(): Promise<IPCResponse<ImportPreviewResult>> {
+        return runWithLogger(
+            Effect.gen(function* () {
+                yield* Effect.logDebug('Previewing import');
+                const previewResult = yield* fileTransferService.previewImport();
+                yield* Effect.logDebug('Import preview completed');
+                return Ok(previewResult);
+            }),
+            'Previewing import',
+        );
+    }
+
+    importPromptsWithStrategy(options: ImportOptions): Promise<IPCResponse<PromptDto[]>> {
+        return runWithLogger(
+            Effect.gen(function* () {
+                yield* Effect.logDebug('Importing prompts with strategy', options);
+                const importedPrompts = yield* fileTransferService.importPromptsWithStrategy(options);
+                yield* Effect.logDebug('Prompts imported with strategy successfully');
+                return Ok(importedPrompts);
+            }),
+            'Importing prompts with strategy',
+        );
+    }
 }
 
 export const fileTransferController = new FileTransferController();
